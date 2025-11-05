@@ -1,14 +1,19 @@
 // layout.tsx
 import type { Metadata } from "next";
 import "./globals.css";
-import { Anton } from "next/font/google";
+import { Anton, Poppins } from "next/font/google";
 
 // 1. Definisikan font Anton
 const fontHeading = Anton({
   subsets: ["latin"],
   weight: "400",
-  // PENTING: Set variabel CSS kustom untuk digunakan di Tailwind
   variable: "--font-anton",
+});
+
+const fontBody = Poppins({
+  subsets: ["latin"],
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+  variable: "--font-poppins",
 });
 
 export const metadata: Metadata = {
@@ -23,9 +28,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      {/* 2. Hanya tambahkan variabel font ke <body> atau <html>. */}
-      {/* Jangan menggunakan anton.className agar tidak menimpa font default. */}
-      <body className={`${fontHeading.variable} antialiased`}>{children}</body>
+      <body
+        className={`${fontHeading.variable} ${fontBody.variable} antialiased`}
+      >
+        {children}
+      </body>
     </html>
   );
 }

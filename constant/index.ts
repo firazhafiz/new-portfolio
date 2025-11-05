@@ -29,7 +29,7 @@ export const servicesData = [
     items: [
       {
         title: "Frontend Excellence",
-        description: "(React, Vue, TypeScript, Interactive UI/UX)",
+        description: "(React, Tailwind, TypeScript, Laravel, Next.js)",
       },
       {
         title: "Backend Engineering",
@@ -56,7 +56,7 @@ export const servicesData = [
       },
       {
         title: "Graphic Design",
-        description: "(Figma, Adobe Photoshop, Illustrator, Blender)",
+        description: "(Figma, Adobe Photoshop, Illustrator)",
       },
     ],
   },

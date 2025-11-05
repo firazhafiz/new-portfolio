@@ -7,8 +7,7 @@ import { useMediaQuery } from "react-responsive";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 
-const text = `I build secure, high-performance fullstack apps
-    with smoothUX and the powerful technologies.`;
+const text = `Behind the Scene, Beyond the Screen.`;
 export default function Services() {
   const serviceRefs = useRef<HTMLDivElement[]>([]);
   const isDesktop = useMediaQuery({ minWidth: "48rem" });
@@ -30,10 +29,10 @@ export default function Services() {
   return (
     <section
       id="services"
-      className="min-h-screen bg-black-100 rounded-t-[64px]"
+      className="min-h-screen bg-gray-900 rounded-t-[64px]"
     >
       <AnimatedHeaderSection
-        subtitle="Behind the Scene, Beyond the Screen"
+        subtitle=""
         title="Services"
         text={text}
         textColor="text-white"
@@ -48,7 +47,7 @@ export default function Services() {
               serviceRefs.current[index] = el;
             }
           }}
-          className="sticky px-10 pt-6 pb-12 text-white bg-black-100 border-t-2 border-white/30"
+          className="sticky px-10 pt-6 pb-12 text-white bg-gray-900 border-t-2 border-white/30"
           style={
             isDesktop
               ? {
@@ -60,19 +59,36 @@ export default function Services() {
         >
           <div className="flex items-center justify-between gap-4 font-sans font-light">
             <div className="flex flex-col gap-6">
-              <h2 className="text-4xl lg:text-5xl">{service.title}</h2>
-              <p className="text-lg leading-relaxed tracking-widest text-white/60 text-pretty lg:text-2xl">
+              <h2 className="text-4xl font-heading lg:text-5xl">
+                {service.title}
+              </h2>
+              <p className="text-lg leading-relaxed font-sans font-extralight text-white/60 text-pretty lg:text-xl">
                 {service.description}
               </p>
               <div className="flex flex-col gap-2 text-2xl sm:gap-4 lg:text-3xl text-white/80">
                 {service.items.map((item, itemIndex) => (
                   <div key={`item-${index}-${itemIndex}`}>
-                    <h3 className="flex">
-                      <span className="mr-12 text-lg text-white/30">
+                    {/* Menggunakan items-end untuk membuat garis bawah (baseline) penomoran dan judul sejajar */}
+                    <h3 className="flex items-end">
+                      {/* Penomoran: text-lg dipertahankan */}
+                      <span className="mr-8 text-lg text-white/30 w-12 flex-shrink-0">
                         0{itemIndex + 1}.
                       </span>
-                      {item.title}
+
+                      {/* Judul Item: mb-2 DIHAPUS agar sejajar rata bawah sempurna dengan nomor */}
+                      <p className="flex-1 text-2xl sm:text-3xl font-bold text-white/80">
+                        {item.title}
+                      </p>
                     </h3>
+
+                    {/* Deskripsi Item: Tambahkan mt-2 di sini untuk menciptakan gap antara Judul dan Deskripsi */}
+                    {item.description && (
+                      <p className="text-sm sm:text-base text-white/60 pl-[5rem] mt-4">
+                        {item.description}
+                      </p>
+                    )}
+
+                    {/* Garis pemisah */}
                     {itemIndex < service.items.length - 1 && (
                       <div className="w-full h-px my-2 bg-white/30" />
                     )}

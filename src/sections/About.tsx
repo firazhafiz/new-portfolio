@@ -41,12 +41,12 @@ export default function About() {
   return (
     <section
       id="about"
-      className="min-h-screen bg-gradient-to-b from-black-100 to-gray-900 rounded-b-[64px]"
+      className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 rounded-b-[64px]"
     >
       <AnimatedHeaderSection
         subtitle=""
         title="About"
-        text="Hi there!"
+        text="⟢⟢⟢"
         textColor="text-white"
         titleColor="text-[#FFE093]"
       />
@@ -61,8 +61,14 @@ export default function About() {
           priority
         />
         <div className="gap-8 flex flex-col">
-          <AnimatedTextLines text={aboutText} className="text-xl" />
-          <AnimatedTextLines text={aboutText2} className="text-xl" />
+          <AnimatedTextLines
+            text={aboutText}
+            className="text-xl font-sans font-extralight"
+          />
+          <AnimatedTextLines
+            text={aboutText2}
+            className="text-xl font-sans font-extralight"
+          />
         </div>
       </div>
     </section>

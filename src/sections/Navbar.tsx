@@ -336,7 +336,7 @@ export default function Navbar() {
   return (
     <div className="relative w-screen min-h-screen text-[#fefff8] overflow-x-hidden">
       {/* NAVBAR */}
-      <nav className="fixed top-0 left-0 w-screen p-4 flex justify-between mix-blend-difference z-50">
+      <nav className="absolute top-0 left-0 w-screen p-4 flex justify-between mix-blend-difference z-999">
         <div
           className="nav-toggle p-4 cursor-pointer tracking-wider select-none font-heading uppercase text-sm"
           ref={navToggleRef}

@@ -19,24 +19,25 @@
   --color-gold: #fffce1;
   --color-navy: #2056f7;
 
-  /* PERBAIKAN PENTING #1: Arahkan font-sans ke font kustom "Amiamie" */
-  --font-sans: "Amiamie", sans-serif;
+  /* POPPINS = Font utama (gantikan default sans) */
+  --font-sans: var(--font-poppins), sans-serif;
+  --font-body: var(--font-poppins), sans-serif;
 
-  /* PERBAIKAN PENTING #2: Tambahkan font baru 'font-heading' untuk Anton */
+  /* ANTON = Hanya untuk heading */
   --font-heading: var(--font-anton), sans-serif;
 
-  --font-mono: var(--font-geist-mono);
+  /* AMIAMIE TIDAK DIJADIKAN DEFAULT */
+  /* Tapi tetap bisa dipakai via class: font-amiamie */
 }
 
 /* --- 3. Gaya Dasar Body --- */
 body {
   background: var(--light);
-  /* PERBAIKAN #3: Warna teks harus kontras. Ini memastikan teks terlihat. */
   color: var(--foreground);
+  font-family: var(--font-poppins), sans-serif; /* Default: Poppins */
 }
 
-/* --- 4. Definisi @font-face untuk "Amiamie" (Tetap Dipertahankan) --- */
-
+/* --- 4. @font-face: Amiamie (semua varian) --- */
 /* Amiamie Regular */
 @font-face {
   font-family: "Amiamie";
@@ -57,12 +58,12 @@ body {
   font-display: swap;
 }
 
-/* Amiamie Light (PENTING: Pastikan path ini benar) */
+/* Amiamie Light */
 @font-face {
   font-family: "Amiamie";
   src: url("/fonts/otf/Amiamie-Light.otf") format("opentype"),
     url("/fonts/ttf/Amiamie-Light.ttf") format("truetype");
-  font-weight: 300; /* Ini yang diaktifkan oleh font-light */
+  font-weight: 300;
   font-style: normal;
   font-display: swap;
 }
@@ -97,7 +98,7 @@ body {
   font-display: swap;
 }
 
-/* Amiamie-Round Variants */
+/* Amiamie-Round Regular */
 @font-face {
   font-family: "Amiamie-Round";
   src: url("/fonts/otf/Amiamie-RegularRound.otf") format("opentype"),
@@ -107,6 +108,7 @@ body {
   font-display: swap;
 }
 
+/* Amiamie-Round Black */
 @font-face {
   font-family: "Amiamie-Round";
   src: url("/fonts/otf/Amiamie-BlackRound.otf") format("opentype"),
@@ -116,6 +118,7 @@ body {
   font-display: swap;
 }
 
+/* Amiamie-Round Black Italic */
 @font-face {
   font-family: "Amiamie-Round";
   src: url("/fonts/otf/Amiamie-BlackItalicRound.otf") format("opentype"),
