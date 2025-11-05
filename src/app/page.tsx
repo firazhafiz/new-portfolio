@@ -2,6 +2,7 @@ import ServiceSummary from "@/sections/ServiceSummary";
 import Navbar from "../sections/Navbar";
 import Services from "@/sections/Services";
 import ReactLenis from "lenis/react";
+import About from "@/sections/About";
 
 export default function Home() {
   return (
@@ -12,8 +13,9 @@ export default function Home() {
       <div className="overflow-hidden">
         <Navbar />
         <ServiceSummary />
-        <Services />
       </div>
+      <Services />
+      <About />
     </ReactLenis>
   );
 }
