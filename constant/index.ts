@@ -83,93 +83,78 @@ export const servicesData = [
 export const projects = [
   {
     id: 1,
-    name: "Mobile Accessories E-commerce",
+    name: "Diary Food",
     description:
-      "An online store specializing in phone accessories including cases, chargers, cables, and power banks with MagSafe compatibility.",
-    href: "",
-    image: "/assets/projects/mobile-accessories-store.jpg",
-    bgImage: "/assets/backgrounds/blanket.jpg",
+      "A website used as inspiration for finding various local and international recipes for food and drinks.",
+    href: "https://diary-food1222.vercel.app/",
+    image: "/assets/diaryfood.png",
+    bgImage: "/images/kitchen.jpg", // Placeholder
     frameworks: [
       { id: 1, name: "React" },
       { id: 2, name: "Next.js" },
-      { id: 3, name: "Node.js" },
-      { id: 4, name: "MongoDB" },
-      { id: 5, name: "Tailwind CSS" },
+      { id: 3, name: "Express.js" },
+      { id: 4, name: "Tailwind CSS" },
+      { id: 5, name: "AI Integration" },
     ],
   },
   {
     id: 2,
-    name: "Plant Shop E-commerce",
+    name: "Nesavent",
     description:
-      "An online store specializing in rare and decorative plants with a clean, user-friendly interface.",
-    href: "",
-    image: "/assets/projects/plant-shop.jpg",
-    bgImage: "/assets/backgrounds/curtains.jpg",
+      "Landing page website for an event management platform at Surabaya State University.",
+    href: "https://nesavent.vercel.app/",
+    image: "/assets/nesavent.png",
+    bgImage: "/images/event.jpg", // Placeholder
     frameworks: [
-      { id: 1, name: "React" },
-      { id: 2, name: "Next.js" },
-      { id: 3, name: "Stripe API" },
-      { id: 4, name: "Tailwind CSS" },
+      { id: 1, name: "Next.js" },
+      { id: 2, name: "React" },
+      { id: 3, name: "Tailwind CSS" },
     ],
   },
+  // {
+  //   id: 3,
+  //   name: "Personal Portfolio",
+  //   description:
+  //     "A personal portfolio website to document my journey and track record as a programmer.",
+  //   href: "https://razdev-navy.vercel.app/",
+  //   image: "/assets/portfoliofiraz.png",
+  //   bgImage: "/images/portfolio.jpg", // Placeholder
+  //   frameworks: [
+  //     { id: 1, name: "Next.js" },
+  //     { id: 2, name: "React" },
+  //     { id: 3, name: "Tailwind CSS" },
+  //     { id: 4, name: "Aceternity UI" },
+  //   ],
+  // },
   {
     id: 3,
-    name: "Apple Tech Marketplace",
+    name: "Angkutin",
     description:
-      "An e-commerce platform for Apple products and accessories with deals and category filtering.",
-    href: "",
-    image: "/assets/projects/apple-tech-store.jpg",
-    bgImage: "/assets/backgrounds/map.jpg",
+      "A smart waste management system designed to optimize waste collection and monitoring through intelligent technology.",
+    href: "https://angkutin-omega.vercel.app/",
+    image: "/assets/angkutin.png",
+    bgImage: "/images/trash.jpg", // Placeholder
     frameworks: [
-      { id: 1, name: "Blazor" },
-      { id: 2, name: "ASP.NET Core" },
-      { id: 3, name: "SQL Server" },
-      { id: 4, name: "Bootstrap" },
+      { id: 1, name: "Next.js" },
+      { id: 2, name: "React" },
+      { id: 3, name: "Express.js" },
+      { id: 4, name: "Prisma (ORM)" },
+      { id: 5, name: "IoT Sensors" },
     ],
   },
   {
     id: 4,
-    name: "Electronics & Gadgets Store",
+    name: "Sadari 4Life",
     description:
-      "A multi-category online shop featuring electronics, home appliances, and gaming gear with special offers.",
-    href: "",
-    image: "/assets/projects/electronics-store.jpg",
-    bgImage: "/assets/backgrounds/poster.jpg",
+      "A hypertension screening website that allows users to perform self-assessments through interactive tests for early detection and management.",
+    href: "https://sadari4life.vercel.app/",
+    image: "/assets/sadari.png",
+    bgImage: "/images/hospital.jpg", // Placeholder
     frameworks: [
-      { id: 1, name: "Vue.js" },
-      { id: 2, name: "Laravel" },
-      { id: 3, name: "MySQL" },
-      { id: 4, name: "SCSS" },
-    ],
-  },
-  {
-    id: 5,
-    name: "Home Decor Marketplace",
-    description:
-      "A curated collection of designer home decor items, including furniture and artisan vases.",
-    href: "",
-    image: "/assets/projects/home-decor-store.jpg",
-    bgImage: "/assets/backgrounds/table.jpg",
-    frameworks: [
-      { id: 1, name: "Angular" },
-      { id: 2, name: "Firebase" },
-      { id: 3, name: "GraphQL" },
-      { id: 4, name: "Material UI" },
-    ],
-  },
-  {
-    id: 6,
-    name: "Digital Game Store",
-    description:
-      "A gaming platform featuring discounted titles, top sellers, and genre-based browsing.",
-    href: "",
-    image: "/assets/projects/game-store.jpg",
-    bgImage: "/assets/backgrounds/curtains.jpg",
-    frameworks: [
-      { id: 1, name: "Svelte" },
-      { id: 2, name: "Node.js" },
-      { id: 3, name: "MongoDB" },
-      { id: 4, name: "Chakra UI" },
+      { id: 1, name: "Next.js" },
+      { id: 2, name: "React" },
+      { id: 3, name: "Express.js" },
+      { id: 4, name: "Prisma (ORM)" },
     ],
   },
 ];
