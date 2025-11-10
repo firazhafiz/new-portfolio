@@ -89,7 +89,7 @@ export const projects = [
     preview: "https://diary-food1222.vercel.app/",
     github: "https://github.com/firazhafiz/FE-DiaryFood",
     image: "/assets/diaryfood.png",
-    bgImage: "/assets/header-profile.jpg",
+    bgImage: "/images/kitchen.jpg", // Placeholder
     frameworks: [
       { id: 1, name: "React" },
       { id: 2, name: "Next.js" },
@@ -104,7 +104,7 @@ export const projects = [
       "Landing page website for an event management platform at Surabaya State University.",
     preview: "https://nesavent.vercel.app/",
     image: "/assets/nesavent.png",
-    bgImage: "/assets/header-profile.jpg",
+    bgImage: "/images/event.jpg", // Placeholder
     frameworks: [
       { id: 1, name: "Next.js" },
       { id: 2, name: "React" },
@@ -118,7 +118,7 @@ export const projects = [
       "A smart waste management system designed to optimize waste collection and monitoring through intelligent technology.",
     preview: "https://angkutin-omega.vercel.app/",
     image: "/assets/angkutin.png",
-    bgImage: "/assets/header-profile.jpg",
+    bgImage: "/images/trash.jpg", // Placeholder
     frameworks: [
       { id: 1, name: "Next.js" },
       { id: 2, name: "React" },
@@ -132,7 +132,7 @@ export const projects = [
       "A hypertension screening website that allows users to perform self-assessments through interactive tests for early detection and management.",
     preview: "https://sadari4life.vercel.app/",
     image: "/assets/sadari.png",
-    bgImage: "/assets/header-profile.jpg",
+    bgImage: "/images/hospital.jpg", // Placeholder
     frameworks: [
       { id: 1, name: "Next.js" },
       { id: 2, name: "React" },
@@ -146,8 +146,8 @@ export const projects = [
     description:
       "A documentary film capturing the journey of the Class of 74 at SMAN 1 Madiun and preserving their final moments of high school years.",
     preview: "https://sadari4life.vercel.app/",
-    image: "/images/cas.JPG",
-    bgImage: "/images/cas.JPG",
+    image: "/assets/cas74.jpg",
+    bgImage: "/images/cas.JPG", // Placeholder
     frameworks: [
       { id: 1, name: "Director" },
       { id: 2, name: "Script Writer" },
@@ -161,7 +161,7 @@ export const projects = [
       "A prestigious high school cinematography awards event celebrating outstanding filmmaking in the Indonesian education community.",
     preview: "https://sadari4life.vercel.app/",
     image: "/assets/bangkit.jpg",
-    bgImage: "/assets/header-profile.jpg",
+    bgImage: "/images/cinemato.jpg", // Placeholder
     frameworks: [
       { id: 1, name: "Director" },
       { id: 2, name: "Cinematographer" },
@@ -174,7 +174,7 @@ export const projects = [
       "A promotional teaser video for the Freshman Orientation Program (PKKMB) at the Faculty of Engineering, State University of Surabaya.",
     preview: "https://sadari4life.vercel.app/",
     image: "/assets/teaser-ft.png",
-    bgImage: "/assets/header-profile.jpg",
+    bgImage: "/images/ft.jpg", // Placeholder
     frameworks: [
       { id: 1, name: "Director" },
       { id: 2, name: "Cinematographer" },
@@ -188,7 +188,7 @@ export const projects = [
       "A cinematic aftermovie capturing the highlights and memorable moments from the Freshman Orientation Program (PKKMB) at the Faculty of Engineering, State University of Surabaya, celebrating the beginning of new students' academic journey.",
     preview: "https://sadari4life.vercel.app/",
     image: "/assets/aftermovie-ft.png",
-    bgImage: "/images/aftermovie-ft.JPG",
+    bgImage: "/images/aftermovie-ft.JPG", // Placeholder
     frameworks: [
       { id: 1, name: "Editor" },
       { id: 2, name: "Director" },
@@ -202,7 +202,7 @@ export const projects = [
       "Documenting a comprehensive tech workshop series on cloud computing, artificial intelligence, and data analytics held in Surabaya, featuring hands-on learning experiences and expert insights from industry leaders.",
     preview: "https://sadari4life.vercel.app/",
     image: "/assets/aftermovie-cne.png",
-    bgImage: "/assets/header-profile.jpg",
+    bgImage: "/images/cne.JPG", // Placeholder
     frameworks: [
       { id: 1, name: "Editor" },
       { id: 2, name: "Director" },

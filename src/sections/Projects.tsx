@@ -319,6 +319,8 @@ export default function Projects() {
                 alt={project.name}
                 width={400}
                 height={400}
+                sizes="(max-width: 767px) 100vw, 0px"
+                priority={index < 2}
                 className="object-cover w-full h-full rounded-xl brightness-50"
                 onError={handleImgError}
               />
@@ -327,6 +329,8 @@ export default function Projects() {
                 alt={project.name}
                 width={800}
                 height={400}
+                sizes="(max-width: 767px) 75vw, 0px"
+                priority={index < 2}
                 className="absolute object-contain w-3/4 rounded-md"
                 onError={handleImgError}
               />
@@ -372,6 +376,23 @@ export default function Projects() {
               onError={handleImgError}
             />
           )}
+        </div>
+        {/* Hidden prefetcher for desktop hover previews to warm Next Image optimizer */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute w-px h-px overflow-hidden -m-px"
+        >
+          {projects.map((p, i) => (
+            <Image
+              key={`prefetch-${p.id}`}
+              src={p.image}
+              alt=""
+              width={1200}
+              height={800}
+              sizes="600px"
+              priority={i < 6}
+            />
+          ))}
         </div>
       </div>
     </section>
