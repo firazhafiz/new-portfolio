@@ -141,11 +141,11 @@ export default function Projects() {
   useEffect(() => {
     try {
       projects.forEach((p) => {
-        const preloadMain = new Image();
+        const preloadMain = new window.Image();
         preloadMain.src = p.image;
         // Opsional: juga preload bg untuk mobile agar terasa cepat saat scroll
         if (p.bgImage) {
-          const preloadBg = new Image();
+          const preloadBg = new window.Image();
           preloadBg.src = p.bgImage;
         }
       });
