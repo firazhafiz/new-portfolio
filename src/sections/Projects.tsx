@@ -3,7 +3,7 @@ import AnimatedHeaderSection from "@/components/AnimatedHeaderSection";
 import { projects } from "../../constant";
 import { Icon } from "@iconify/react";
 import Image from "next/image";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -136,6 +136,23 @@ export default function Projects() {
     img.src = "/assets/header-profile.jpg";
     img.dataset["fallbackApplied"] = "true";
   };
+
+  // Preload semua gambar preview (desktop) agar tidak delay saat hover
+  useEffect(() => {
+    try {
+      projects.forEach((p) => {
+        const preloadMain = new Image();
+        preloadMain.src = p.image;
+        // Opsional: juga preload bg untuk mobile agar terasa cepat saat scroll
+        if (p.bgImage) {
+          const preloadBg = new Image();
+          preloadBg.src = p.bgImage;
+        }
+      });
+    } catch {
+      // ignore
+    }
+  }, []);
 
   return (
     <section className="flex flex-col min-h-screen" id="projects">
@@ -350,6 +367,7 @@ export default function Projects() {
               alt="preview"
               width={2000}
               height={2000}
+              sizes="(min-width: 768px) 600px, 100vw"
               className="object-cover w-full h-full"
               onError={handleImgError}
             />
