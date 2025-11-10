@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useState, useRef } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 export default function Projects() {
   const [currentIndex, setCurrentIndex] = useState<number | null>(null);
@@ -24,6 +25,7 @@ export default function Projects() {
 
   // FIX 3: Tambahkan dependency array kosong agar hanya jalan sekali
   useGSAP(() => {
+    gsap.registerPlugin(ScrollTrigger);
     if (!previewRef.current) return;
 
     // Buat quickTo hanya sekali
@@ -125,6 +127,14 @@ export default function Projects() {
     // FIX 5: Pastikan moveX dan moveY sudah ada
     if (moveX.current) moveX.current(mouse.current.x);
     if (moveY.current) moveY.current(mouse.current.y);
+  };
+
+  // Fallback handler untuk kegagalan pemuatan gambar (production-safe)
+  const handleImgError = (e: React.SyntheticEvent<HTMLImageElement>) => {
+    const img = e.currentTarget;
+    if (img.dataset["fallbackApplied"]) return;
+    img.src = "/assets/header-profile.jpg";
+    img.dataset["fallbackApplied"] = "true";
   };
 
   return (
@@ -293,6 +303,7 @@ export default function Projects() {
                 width={400}
                 height={400}
                 className="object-cover w-full h-full rounded-xl brightness-50"
+                onError={handleImgError}
               />
               <Image
                 src={project.image}
@@ -300,6 +311,7 @@ export default function Projects() {
                 width={800}
                 height={400}
                 className="absolute object-contain w-3/4 rounded-md"
+                onError={handleImgError}
               />
             </div>
             {(project.preview || project.github) && (
@@ -339,6 +351,7 @@ export default function Projects() {
               width={2000}
               height={2000}
               className="object-cover w-full h-full"
+              onError={handleImgError}
             />
           )}
         </div>
