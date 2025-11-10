@@ -19,8 +19,8 @@ export default function About() {
       scale: 0.95,
       scrollTrigger: {
         trigger: "#about",
-        start: "bottom 80%",
-        end: "bottom 20%",
+        start: "bottom 90%",
+        end: "bottom 10%",
         scrub: true,
         markers: false,
       },
@@ -41,7 +41,7 @@ export default function About() {
   return (
     <section
       id="about"
-      className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 rounded-b-[64px]"
+      className="min-h-screen bg-linear-to-b from-gray-900 to-gray-800 sm:rounded-b-[64px] rounded-b-4xl"
     >
       <AnimatedHeaderSection
         subtitle=""
@@ -63,11 +63,11 @@ export default function About() {
         <div className="gap-8 flex flex-col">
           <AnimatedTextLines
             text={aboutText}
-            className="text-xl font-sans font-extralight"
+            className="sm:text-xl text-lg font-sans font-extralight"
           />
           <AnimatedTextLines
             text={aboutText2}
-            className="text-xl font-sans font-extralight"
+            className="sm:text-xl text-lg font-sans font-extralight"
           />
         </div>
       </div>

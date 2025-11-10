@@ -3,7 +3,7 @@ import Navbar from "../sections/Navbar";
 import Services from "@/sections/Services";
 import ReactLenis from "lenis/react";
 import About from "@/sections/About";
-import Works from "@/sections/Works";
+import Projects from "@/sections/Projects";
 
 export default function Home() {
   return (
@@ -17,7 +17,7 @@ export default function Home() {
       </div>
       <Services />
       <About />
-      <Works />
+      <Projects />
     </ReactLenis>
   );
 }

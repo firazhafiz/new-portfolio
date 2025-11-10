@@ -29,7 +29,7 @@ export default function Services() {
   return (
     <section
       id="services"
-      className="min-h-screen bg-gray-900 rounded-t-[64px]"
+      className="min-h-screen bg-gray-900 sm:rounded-t-[64px] rounded-t-4xl"
     >
       <AnimatedHeaderSection
         subtitle=""

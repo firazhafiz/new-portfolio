@@ -61,7 +61,7 @@ export default function ServiceSummary() {
   });
 
   return (
-    <section className="sm:text-4xl text-xl mt-20 overflow-hidden font-extralight font-sans leading-snug text-center mb-42 contact-text-responsive max-w-screen">
+    <section className="sm:text-4xl text-lg sm:mt-20 mt-10 overflow-hidden font-extralight font-sans leading-snug text-center sm:mb-42 mb-25 contact-text-responsive max-w-screen">
       <div id="title-service-1">
         <p className="italic">Architecture</p>
       </div>
@@ -79,12 +79,12 @@ export default function ServiceSummary() {
       >
         <p>APIs</p>
         <div className="w-10 h-1 md:w-32 bg-[#FFE093]" />
-        <p className="italic font-bold">Frontends</p>
+        <p className="italic font-bold">Creative</p>
         <div className="w-10 h-1 md:w-16 bg-[#FFE093]" />
-        <p>Backends</p>
+        <p>Precision</p>
       </div>
       <div id="title-service-4">
-        <p>Databases</p>
+        <p>Cinematography</p>
       </div>
     </section>
   );

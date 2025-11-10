@@ -29,17 +29,33 @@ export default function Navbar() {
     // Scroll lock helpers
     const root = document.documentElement;
     const body = document.body;
+    let savedScrollY = 0;
     const getScrollbarWidth = () => window.innerWidth - root.clientWidth;
     const lockScroll = () => {
       const sbw = getScrollbarWidth();
+      savedScrollY = window.scrollY || window.pageYOffset;
       body.style.overflow = "hidden";
       root.style.overflow = "hidden";
+      // Prevent layout shift
       if (sbw > 0) body.style.paddingRight = sbw + "px";
+      // Freeze page position to avoid jumping after close
+      body.style.position = "fixed";
+      body.style.top = `-${savedScrollY}px`;
+      body.style.left = "0";
+      body.style.right = "0";
+      body.style.width = "100%";
     };
     const unlockScroll = () => {
       body.style.overflow = "";
       root.style.overflow = "";
       body.style.paddingRight = "";
+      // Restore scroll position
+      body.style.position = "";
+      body.style.top = "";
+      body.style.left = "";
+      body.style.right = "";
+      body.style.width = "";
+      window.scrollTo(0, savedScrollY);
     };
 
     let currentX = 0;
@@ -97,7 +113,7 @@ export default function Navbar() {
       isMenuAnimating = true;
 
       if (!isMenuOpen) {
-        // Lock scroll immediately on open
+        // Lock scroll immediately on open (all breakpoints)
         lockScroll();
 
         // ANIMASI SAAT MENU BUKA - HAPUS ANIMASI PADA HERO/CONTAINER
@@ -112,6 +128,8 @@ export default function Navbar() {
           clipPath: "polygon(0% 100%, 100% 100%, 100% 0%, 0% 0%)",
           duration: 1.25,
           ease: "expo.out",
+          force3D: true,
+          immediateRender: true,
           onComplete: () => {
             gsap.set(".hero-content", { y: "40%" });
             gsap.set(".menu-link", { overflow: "visible" });
@@ -180,6 +198,8 @@ export default function Navbar() {
           clipPath: "polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)",
           duration: 1.25,
           ease: "expo.out",
+          force3D: true,
+          immediateRender: true,
           onComplete: () => {
             gsap.set(menuOverlay, {
               clipPath: "polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)",
@@ -194,6 +214,7 @@ export default function Navbar() {
             currentX = 0;
             targetX = 0;
 
+            // Unlock on close (all breakpoints)
             unlockScroll();
 
             isMenuOpen = false;
@@ -204,10 +225,62 @@ export default function Navbar() {
     }
     navToggle.addEventListener("click", toggleMenu);
 
-    // ... (sisa kode event listeners tetap sama)
+    // Add smooth scroll functionality and hover effects to menu links
     const linkContainers = menuLinksWrapper.querySelectorAll(".menu-link");
+    const clickHandlers: Array<{
+      anchor: HTMLAnchorElement;
+      handler: (e: Event) => void;
+    }> = [];
+    const hoverHandlers: Array<{
+      link: Element;
+      onEnter: () => void;
+      onLeave: () => void;
+    }> = [];
+
     linkContainers.forEach((link) => {
-      link.addEventListener("mouseenter", () => {
+      // Smooth scroll functionality
+      const anchor = link.querySelector("a");
+      if (anchor) {
+        const clickHandler = (e: Event) => {
+          e.preventDefault();
+          const linkText = anchor.textContent?.trim();
+          if (!linkText) return;
+
+          // Map menu text to section IDs
+          const sectionMap: { [key: string]: string } = {
+            Home: "home",
+            About: "about",
+            Services: "services",
+            Projects: "works",
+            Experience: "experience",
+            Certificates: "certificates",
+            Contact: "contact",
+          };
+
+          const sectionId = sectionMap[linkText];
+          if (sectionId) {
+            const targetSection = document.getElementById(sectionId);
+            if (targetSection) {
+              // Close menu first
+              if (isMenuOpen) {
+                toggleMenu();
+              }
+              // Smooth scroll after menu closes
+              setTimeout(() => {
+                targetSection.scrollIntoView({
+                  behavior: "smooth",
+                  block: "start",
+                });
+              }, 1300); // Wait for menu close animation
+            }
+          }
+        };
+        anchor.addEventListener("click", clickHandler);
+        clickHandlers.push({ anchor, handler: clickHandler });
+      }
+
+      // Hover effects
+      const onEnter = () => {
         if (window.innerWidth < 1000) return;
         const spans = link.querySelectorAll("a span");
         if (spans.length < 2) return;
@@ -229,8 +302,18 @@ export default function Navbar() {
           stagger: 0.03,
           ease: "expo.inOut",
         });
-      });
-      link.addEventListener("mouseleave", () => {
+
+        // Highlighter follow
+        const linkRect = (link as HTMLElement).getBoundingClientRect();
+        const menuWrapperRect = menuLinksWrapper.getBoundingClientRect();
+        targetHighlighterX = linkRect.left - menuWrapperRect.left;
+        const firstSpan = link.querySelector("a span") as HTMLElement | null;
+        targetHighlighterWidth = firstSpan
+          ? firstSpan.offsetWidth
+          : linkRect.width;
+      };
+
+      const onLeave = () => {
         if (window.innerWidth < 1000) return;
         const spans = link.querySelectorAll("a span");
         if (spans.length < 2) return;
@@ -252,11 +335,15 @@ export default function Navbar() {
           stagger: 0.03,
           ease: "expo.inOut",
         });
-      });
+      };
+
+      link.addEventListener("mouseenter", onEnter);
+      link.addEventListener("mouseleave", onLeave);
+      hoverHandlers.push({ link, onEnter, onLeave });
     });
 
     // Parallax on overlay move
-    menuOverlay.addEventListener("mousemove", (e: MouseEvent) => {
+    const menuOverlayMouseMove = (e: MouseEvent) => {
       if (window.innerWidth < 1000) return;
       const mouseX = e.clientX;
       const viewportWidth = window.innerWidth;
@@ -275,23 +362,10 @@ export default function Navbar() {
       else mousePercentage = (mouseX - startX) / sensitivityRange;
 
       targetX = maxMoveLeft + mousePercentage * (maxMoveRight - maxMoveLeft);
-    });
+    };
+    menuOverlay.addEventListener("mousemove", menuOverlayMouseMove);
 
-    // Highlighter follow
-    linkContainers.forEach((link) => {
-      link.addEventListener("mouseenter", () => {
-        if (window.innerWidth < 1000) return;
-        const linkRect = (link as HTMLElement).getBoundingClientRect();
-        const menuWrapperRect = menuLinksWrapper.getBoundingClientRect();
-        targetHighlighterX = linkRect.left - menuWrapperRect.left;
-        const firstSpan = link.querySelector("a span") as HTMLElement | null;
-        targetHighlighterWidth = firstSpan
-          ? firstSpan.offsetWidth
-          : linkRect.width;
-      });
-    });
-
-    menuLinksWrapper.addEventListener("mouseleave", () => {
+    const menuLinksWrapperMouseLeave = () => {
       const defaultLink = menuLinksWrapper.querySelector(
         ".menu-link:first-child"
       ) as HTMLElement;
@@ -300,7 +374,8 @@ export default function Navbar() {
       const menuWrapperRect = menuLinksWrapper.getBoundingClientRect();
       targetHighlighterX = linkRect.left - menuWrapperRect.left;
       targetHighlighterWidth = defaultSpan.offsetWidth;
-    });
+    };
+    menuLinksWrapper.addEventListener("mouseleave", menuLinksWrapperMouseLeave);
 
     // RAF animate loop
     let rafId = 0;
@@ -330,32 +405,45 @@ export default function Navbar() {
     return () => {
       cancelAnimationFrame(rafId);
       navToggle.removeEventListener("click", toggleMenu as any);
+      // Cleanup click handlers
+      clickHandlers.forEach(({ anchor, handler }) => {
+        anchor.removeEventListener("click", handler);
+      });
+      // Cleanup hover handlers
+      hoverHandlers.forEach(({ link, onEnter, onLeave }) => {
+        link.removeEventListener("mouseenter", onEnter);
+        if (onLeave) link.removeEventListener("mouseleave", onLeave);
+      });
+      // Cleanup parallax and wrapper listeners
+      menuOverlay.removeEventListener("mousemove", menuOverlayMouseMove);
+      menuLinksWrapper.removeEventListener(
+        "mouseleave",
+        menuLinksWrapperMouseLeave
+      );
     };
   }, []);
 
   return (
-    <div className="relative w-screen min-h-screen text-[#fefff8] overflow-x-hidden">
+    <div className="relative isolate w-screen min-h-screen  text-[#2056F7] overflow-x-hidden">
       {/* NAVBAR */}
-      <nav className="absolute top-0 left-0 w-screen p-4 flex justify-between mix-blend-difference z-999">
+      <nav className="absolute top-0 left-0 w-screen pt-4 px-4 flex justify-between mix-blend-difference z-[1000] will-change-[transform,opacity] [transform:translateZ(0)]">
         <div
           className="nav-toggle p-4 cursor-pointer tracking-wider select-none font-heading uppercase text-sm"
           ref={navToggleRef}
         >
           Menu
         </div>
-        <div className="p-4 cursor-pointer font-heading  tracking-wider select-none uppercase text-sm">
-          Archive
-        </div>
+        <div className="p-4 cursor-pointer font-heading  tracking-wider select-none uppercase text-sm"></div>
       </nav>
 
       {/* MENU OVERLAY */}
       <div
-        className="menu-overlay fixed top-0 left-0 w-screen h-[100svh] overflow-hidden bg-[#1e1e1e] text-[#fefff8] z-40 [clip-path:polygon(0%_100%,_100%_100%,_100%_100%,_0%_100%)]"
+        className="menu-overlay fixed top-0 left-0 w-screen h-[100svh] overflow-hidden md:overflow-hidden overscroll-contain [touch-action:pan-y] will-change-[clip-path] [transform:translateZ(0)] bg-[#1e1e1e] text-[#fefff8] z-40 pt-26 md:pt-16 pb-0 md:pb-0 [clip-path:polygon(0%_100%,_100%_100%,_100%_100%,_0%_100%)]"
         ref={menuOverlayRef}
       >
         {/* ... menu content sama persis seperti sebelumnya ... */}
         <div
-          className="menu-content absolute top-[25%] md:top-[30%] lg:top-1/2 -translate-y-1/2 w-full p-8 md:p-10 lg:p-8 flex justify-between items-start md:items-center"
+          className="menu-content hidden md:flex md:absolute md:top-[30%] lg:top-1/2 md:-translate-y-1/2 w-full px-8 pt-8 md:p-10 lg:p-8 justify-between items-start md:items-center md:mb-0"
           ref={menuContentRef}
         >
           <div className="text-left font-heading">
@@ -390,7 +478,7 @@ export default function Navbar() {
           </div>
         </div>
         <div
-          className="menu-img absolute top-[45%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[150px] hidden lg:block"
+          className="menu-img absolute top-[45%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200px] hidden lg:block"
           ref={menuImageRef}
         >
           <Image
@@ -398,15 +486,24 @@ export default function Navbar() {
             alt="menu-img"
             width={600}
             height={600}
+            className="rounded-lg"
           />
         </div>
         <div
-          className="menu-links-wrapper absolute left-0 bottom-0 w-full lg:w-max p-8 md:p-6 lg:p-5 flex gap-0 lg:gap-8 flex-col lg:flex-row z-20 mb-4 md:mb-6 lg:mb-0 min-h-[200px] md:min-h-[150px] lg:min-h-0"
+          className=" menu-links-wrapper relative md:absolute md:left-0 md:bottom-0 w-full lg:w-max px-8 md:p-6 lg:p-5 flex gap-2 lg:gap-8 flex-col lg:flex-row z-20 mt-0 md:mt-0 mb-0 md:mb-6 lg:mb-0 min-h-[200px] md:min-h-[150px] lg:min-h-0"
           ref={menuLinksWrapperRef}
         >
-          {["Home", "About", "Projects", "Awards", "Contact"].map((txt) => (
+          {[
+            "Home",
+            "About",
+            "Services",
+            "Projects",
+            "Experience",
+            "Certificates",
+            "Contact",
+          ].map((txt) => (
             <div className="menu-link relative overflow-hidden" key={txt}>
-              <a className="relative uppercase text-light font-[Anton] text-[4rem] md:text-[4rem] lg:text-[6.5rem] tracking-[0] lg:tracking-[-0.02rem] inline-block overflow-hidden leading-none">
+              <a className="relative uppercase text-light font-[Anton] text-6xl md:text-[4rem] lg:text-[6.5rem] tracking-[0] lg:tracking-[-0.02rem] inline-block overflow-hidden leading-none">
                 <span>{txt}</span>
                 <span className="absolute top-0 left-0">{txt}</span>
               </a>
