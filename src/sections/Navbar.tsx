@@ -17,8 +17,6 @@ export default function Navbar() {
   useEffect(() => {
     gsap.registerPlugin(SplitText);
 
-    // HAPUS REFERENSI KE CONTAINER, GUNAKAN DOCUMENT BODY
-    const container = document.body;
     const navToggle = navToggleRef.current!;
     const menuOverlay = menuOverlayRef.current!;
     const menuContent = menuContentRef.current!;
@@ -223,7 +221,11 @@ export default function Navbar() {
         });
       }
     }
-    navToggle.addEventListener("click", toggleMenu);
+    const onToggleClick: EventListener = (e) => {
+      e.preventDefault();
+      toggleMenu();
+    };
+    navToggle.addEventListener("click", onToggleClick);
 
     // Add smooth scroll functionality and hover effects to menu links
     const linkContainers = menuLinksWrapper.querySelectorAll(".menu-link");
@@ -404,7 +406,7 @@ export default function Navbar() {
 
     return () => {
       cancelAnimationFrame(rafId);
-      navToggle.removeEventListener("click", toggleMenu as any);
+      navToggle.removeEventListener("click", onToggleClick);
       // Cleanup click handlers
       clickHandlers.forEach(({ anchor, handler }) => {
         anchor.removeEventListener("click", handler);

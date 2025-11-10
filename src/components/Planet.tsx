@@ -5,9 +5,7 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 
 // Define props type (optional, adjust as needed)
-type PlanetProps = {
-  [key: string]: any;
-};
+type PlanetProps = Record<string, unknown>;
 
 // Define type for nodes and materials from useGLTF
 type GLTFResult = {
