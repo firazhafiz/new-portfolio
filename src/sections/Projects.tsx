@@ -137,21 +137,29 @@ export default function Projects() {
     img.dataset["fallbackApplied"] = "true";
   };
 
-  // Preload semua gambar preview (desktop) agar tidak delay saat hover
+  // Preload semua gambar preview (desktop) dengan kualitas tinggi sejak awal
   useEffect(() => {
-    try {
-      projects.forEach((p) => {
-        const preloadMain = new window.Image();
-        preloadMain.src = p.image;
-        // Opsional: juga preload bg untuk mobile agar terasa cepat saat scroll
-        if (p.bgImage) {
-          const preloadBg = new window.Image();
-          preloadBg.src = p.bgImage;
-        }
-      });
-    } catch {
-      // ignore
-    }
+    if (typeof window === "undefined") return;
+
+    // Preload semua gambar desktop preview dengan kualitas tinggi
+    // Menggunakan link prefetch untuk memanfaatkan Next.js Image optimization
+    projects.forEach((p) => {
+      // Preload gambar utama untuk desktop preview
+      const link = document.createElement("link");
+      link.rel = "prefetch";
+      link.as = "image";
+      link.href = p.image;
+      document.head.appendChild(link);
+
+      // Juga preload bg untuk mobile
+      if (p.bgImage) {
+        const bgLink = document.createElement("link");
+        bgLink.rel = "prefetch";
+        bgLink.as = "image";
+        bgLink.href = p.bgImage;
+        document.head.appendChild(bgLink);
+      }
+    });
   }, []);
 
   return (
@@ -372,25 +380,29 @@ export default function Projects() {
               width={2000}
               height={2000}
               sizes="(min-width: 768px) 600px, 100vw"
+              quality={100}
               className="object-cover w-full h-full"
               onError={handleImgError}
             />
           )}
         </div>
-        {/* Hidden prefetcher for desktop hover previews to warm Next Image optimizer */}
+        {/* Hidden prefetcher for desktop hover previews - render semua gambar dengan kualitas tinggi sejak awal */}
         <div
           aria-hidden
-          className="pointer-events-none absolute w-px h-px overflow-hidden -m-px"
+          className="pointer-events-none absolute w-px h-px overflow-hidden -m-px opacity-0"
         >
           {projects.map((p, i) => (
             <Image
               key={`prefetch-${p.id}`}
               src={p.image}
               alt=""
-              width={1200}
-              height={800}
-              sizes="600px"
-              priority={i < 6}
+              width={2000}
+              height={2000}
+              sizes="(min-width: 768px) 600px, 0px"
+              quality={100}
+              priority={i < 3}
+              loading={i < 3 ? "eager" : "lazy"}
+              className="object-cover"
             />
           ))}
         </div>
