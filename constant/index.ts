@@ -145,7 +145,7 @@ export const projects = [
     name: "Catatan Akhir Sekolah 74 SMAN 1 Madiun",
     description:
       "A documentary film capturing the journey of the Class of 74 at SMAN 1 Madiun and preserving their final moments of high school years.",
-    preview: "https://sadari4life.vercel.app/",
+    preview: "https://www.youtube.com/watch?v=KYcp1ZC5v-U&t=71s",
     image: "/assets/cas74.jpg",
     bgImage: "/images/cas.JPG", // Placeholder
     frameworks: [
@@ -159,7 +159,7 @@ export const projects = [
     name: "BANGKIT - Cinematography SMA Awards",
     description:
       "A prestigious high school cinematography awards event celebrating outstanding filmmaking in the Indonesian education community.",
-    preview: "https://sadari4life.vercel.app/",
+    preview: "https://www.youtube.com/watch?v=KTGtOQgDrOo&t=344s",
     image: "/assets/bangkit.jpg",
     bgImage: "/images/cinemato.jpg", // Placeholder
     frameworks: [
@@ -172,7 +172,8 @@ export const projects = [
     name: "Teaser PKKMB FT Unesa 2024",
     description:
       "A promotional teaser video for the Freshman Orientation Program (PKKMB) at the Faculty of Engineering, State University of Surabaya.",
-    preview: "https://sadari4life.vercel.app/",
+    preview:
+      "https://www.instagram.com/reel/C99mrI6pU8d/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA%3D%3D",
     image: "/assets/teaser-ft.png",
     bgImage: "/images/ft.jpg", // Placeholder
     frameworks: [
@@ -186,7 +187,8 @@ export const projects = [
     name: "Aftermovie PKKMB FT Unesa 2024",
     description:
       "A cinematic aftermovie capturing the highlights and memorable moments from the Freshman Orientation Program (PKKMB) at the Faculty of Engineering, State University of Surabaya, celebrating the beginning of new students' academic journey.",
-    preview: "https://sadari4life.vercel.app/",
+    preview:
+      "https://www.instagram.com/reel/C_xt9xsAvCj/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA%3D%3D",
     image: "/assets/aftermovie-ft.png",
     bgImage: "/images/aftermovie-ft.JPG", // Placeholder
     frameworks: [
@@ -200,7 +202,8 @@ export const projects = [
     name: "Aftermovie Google CNE Surabaya 2025",
     description:
       "Documenting a comprehensive tech workshop series on cloud computing, artificial intelligence, and data analytics held in Surabaya, featuring hands-on learning experiences and expert insights from industry leaders.",
-    preview: "https://sadari4life.vercel.app/",
+    preview:
+      "https://www.instagram.com/reel/DNDBqCfxHWb/?igsh=d3NzdjZtOGpwdmFx",
     image: "/assets/aftermovie-cne.png",
     bgImage: "/images/cne.JPG", // Placeholder
     frameworks: [

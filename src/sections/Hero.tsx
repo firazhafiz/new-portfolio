@@ -8,14 +8,12 @@ import AnimatedHeaderSection from "@/components/AnimatedHeaderSection";
 
 export default function Hero() {
   const isMobile = useMediaQuery({ maxWidth: 853 });
-  const text = `I help developing brands and startups gain an 
-        unfair advantage through premium 
-        results.`;
+  const text = `Creativity beyond the screen.`;
 
   return (
     <section
       id="home"
-      className="flex flex-col justify-end min-h-screen overflow-hidden"
+      className="flex sm:pb-0 pb-10 flex-col justify-end min-h-screen overflow-hidden"
     >
       <AnimatedHeaderSection
         subtitle="404 No Bugs Found"
