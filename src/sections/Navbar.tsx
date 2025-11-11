@@ -13,6 +13,10 @@ export default function Navbar() {
   const menuImageRef = useRef<HTMLDivElement | null>(null);
   const menuLinksWrapperRef = useRef<HTMLDivElement | null>(null);
   const linkHighlighterRef = useRef<HTMLDivElement | null>(null);
+  const mobileTopLineRef = useRef<HTMLDivElement | null>(null);
+  const mobileBottomLineRef = useRef<HTMLDivElement | null>(null);
+  const mobileSocialLineRef = useRef<HTMLDivElement | null>(null);
+  const mobileSocialBottomLineRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     gsap.registerPlugin(SplitText);
@@ -23,6 +27,10 @@ export default function Navbar() {
     const menuImage = menuImageRef.current!;
     const menuLinksWrapper = menuLinksWrapperRef.current!;
     const linkHighlighter = linkHighlighterRef.current!;
+    const mobileTopLine = mobileTopLineRef.current;
+    const mobileBottomLine = mobileBottomLineRef.current;
+    const mobileSocialLine = mobileSocialLineRef.current;
+    const mobileSocialBottomLine = mobileSocialBottomLineRef.current;
 
     // Scroll lock helpers
     const root = document.documentElement;
@@ -86,6 +94,19 @@ export default function Navbar() {
     gsap.set(menuImage, { scale: 0.5, opacity: 0.25 });
     gsap.set(menuLinks, { y: "150%" });
     gsap.set(linkHighlighter, { y: "150%" });
+
+    // Set initial state for mobile divider lines (scaleX: 0)
+    if (mobileTopLine)
+      gsap.set(mobileTopLine, { scaleX: 0, transformOrigin: "center" });
+    if (mobileBottomLine)
+      gsap.set(mobileBottomLine, { scaleX: 0, transformOrigin: "center" });
+    if (mobileSocialLine)
+      gsap.set(mobileSocialLine, { scaleX: 0, transformOrigin: "center" });
+    if (mobileSocialBottomLine)
+      gsap.set(mobileSocialBottomLine, {
+        scaleX: 0,
+        transformOrigin: "center",
+      });
 
     const defaultLinkText = menuLinksWrapper.querySelector(
       ".menu-link:first-child a span"
@@ -164,6 +185,42 @@ export default function Navbar() {
           delay: 1,
           ease: "expo.out",
         });
+
+        // Animate mobile divider lines (only on mobile)
+        if (window.innerWidth < 768) {
+          if (mobileTopLine) {
+            gsap.to(mobileTopLine, {
+              scaleX: 1,
+              duration: 0.8,
+              delay: 0.3,
+              ease: "expo.out",
+            });
+          }
+          if (mobileBottomLine) {
+            gsap.to(mobileBottomLine, {
+              scaleX: 1,
+              duration: 0.8,
+              delay: 0.5,
+              ease: "expo.out",
+            });
+          }
+          if (mobileSocialLine) {
+            gsap.to(mobileSocialLine, {
+              scaleX: 1,
+              duration: 0.8,
+              delay: 0.7,
+              ease: "expo.out",
+            });
+          }
+          if (mobileSocialBottomLine) {
+            gsap.to(mobileSocialBottomLine, {
+              scaleX: 1,
+              duration: 0.8,
+              delay: 0.9,
+              ease: "expo.out",
+            });
+          }
+        }
       } else {
         gsap.to(".hero-content", {
           y: "0%",
@@ -171,6 +228,41 @@ export default function Navbar() {
           duration: 1.25,
           ease: "expo.out",
         });
+
+        // Animate mobile divider lines out (only on mobile)
+        if (window.innerWidth < 768) {
+          if (mobileTopLine) {
+            gsap.to(mobileTopLine, {
+              scaleX: 0,
+              duration: 0.6,
+              ease: "expo.in",
+            });
+          }
+          if (mobileBottomLine) {
+            gsap.to(mobileBottomLine, {
+              scaleX: 0,
+              duration: 0.6,
+              delay: 0.1,
+              ease: "expo.in",
+            });
+          }
+          if (mobileSocialLine) {
+            gsap.to(mobileSocialLine, {
+              scaleX: 0,
+              duration: 0.6,
+              delay: 0.2,
+              ease: "expo.in",
+            });
+          }
+          if (mobileSocialBottomLine) {
+            gsap.to(mobileSocialBottomLine, {
+              scaleX: 0,
+              duration: 0.6,
+              delay: 0.3,
+              ease: "expo.in",
+            });
+          }
+        }
 
         gsap.to(menuLinks, {
           y: "-200%",
@@ -207,6 +299,13 @@ export default function Navbar() {
             gsap.set(menuContent, { y: "50%", opacity: 0.25 });
             gsap.set(menuImage, { y: "0%", scale: 0.5, opacity: 0.25 });
             gsap.set(".menu-link", { overflow: "hidden" });
+
+            // Reset mobile divider lines
+            if (mobileTopLine) gsap.set(mobileTopLine, { scaleX: 0 });
+            if (mobileBottomLine) gsap.set(mobileBottomLine, { scaleX: 0 });
+            if (mobileSocialLine) gsap.set(mobileSocialLine, { scaleX: 0 });
+            if (mobileSocialBottomLine)
+              gsap.set(mobileSocialBottomLine, { scaleX: 0 });
 
             gsap.set(menuLinksWrapper, { x: 0 });
             currentX = 0;
@@ -428,21 +527,38 @@ export default function Navbar() {
   return (
     <div className="relative isolate w-screen min-h-screen  text-[#2056F7] overflow-x-hidden">
       {/* NAVBAR */}
-      <nav className="absolute top-0 left-0 w-screen pt-4 px-4 flex justify-between mix-blend-difference z-[1000] will-change-[transform,opacity] [transform:translateZ(0)]">
+      <nav className="absolute top-0 left-0 w-screen pt-4 px-4 flex items-center justify-center md:justify-between mix-blend-difference z-[1000] will-change-[transform,opacity] [transform:translateZ(0)]">
+        <div className="hidden"></div>
         <div
-          className="nav-toggle p-4 cursor-pointer tracking-wider select-none font-heading uppercase text-sm"
+          className="nav-toggle relative p-4 cursor-pointer tracking-wider select-none font-heading uppercase text-sm text-center md:text-left md:static md:left-auto md:translate-x-0"
           ref={navToggleRef}
         >
           Menu
         </div>
-        <div className="p-4 cursor-pointer font-heading  tracking-wider select-none uppercase text-sm"></div>
+        <div className="hidden md:block p-4 cursor-pointer font-heading tracking-wider select-none uppercase text-sm"></div>
       </nav>
 
       {/* MENU OVERLAY */}
       <div
-        className="menu-overlay fixed top-0 left-0 w-screen h-[100svh] overflow-hidden md:overflow-hidden overscroll-contain [touch-action:pan-y] will-change-[clip-path] [transform:translateZ(0)] bg-[#1e1e1e] text-[#fefff8] z-40 pt-26 md:pt-16 pb-0 md:pb-0 [clip-path:polygon(0%_100%,_100%_100%,_100%_100%,_0%_100%)]"
+        className="menu-overlay fixed top-0 left-0 w-screen h-[100svh] overflow-hidden md:overflow-hidden overscroll-contain [touch-action:pan-y] will-change-[clip-path] [transform:translateZ(0)] bg-[#1e1e1e] text-[#fefff8] z-40 pt-16 md:pt-16 pb-0 md:pb-0 [clip-path:polygon(0%_100%,_100%_100%,_100%_100%,_0%_100%)]"
         ref={menuOverlayRef}
       >
+        {/* MOBILE TOP DECOR */}
+        <div className="md:hidden flex flex-col items-center gap-4 pt-12 pb-6 text-center">
+          <div className="w-full px-6">
+            <div ref={mobileTopLineRef} className="border-t border-white/15" />
+          </div>
+          <div className="font-heading text-3xl tracking-[0.3em] uppercase">
+            FH
+          </div>
+          <div className="w-full px-6">
+            <div
+              ref={mobileBottomLineRef}
+              className="border-t border-white/15"
+            />
+          </div>
+        </div>
+
         {/* ... menu content sama persis seperti sebelumnya ... */}
         <div
           className="menu-content hidden md:flex md:absolute md:top-[30%] lg:top-1/2 md:-translate-y-1/2 w-full px-8 pt-8 md:p-10 lg:p-8 justify-between items-start md:items-center md:mb-0"
@@ -492,7 +608,7 @@ export default function Navbar() {
           />
         </div>
         <div
-          className=" menu-links-wrapper relative md:absolute md:left-0 md:bottom-0 w-full lg:w-max px-8 md:p-6 lg:p-5 flex gap-2 lg:gap-8 flex-col lg:flex-row z-20 mt-0 md:mt-0 mb-0 md:mb-6 lg:mb-0 min-h-[200px] md:min-h-[150px] lg:min-h-0"
+          className=" menu-links-wrapper relative md:absolute md:left-0 md:bottom-0 w-full lg:w-max px-8 md:p-6 lg:p-5 flex gap-2 lg:gap-8 flex-col lg:flex-row items-center md:items-start text-center md:text-left z-20 mt-0 md:mt-0 mb-0 md:mb-6 lg:mb-0 min-h-[200px] md:min-h-[150px] lg:min-h-0"
           ref={menuLinksWrapperRef}
         >
           {[
@@ -505,7 +621,7 @@ export default function Navbar() {
             "Contact",
           ].map((txt) => (
             <div className="menu-link relative overflow-hidden" key={txt}>
-              <a className="relative uppercase text-light font-[Anton] text-6xl md:text-[4rem] lg:text-[6.5rem] tracking-[0] lg:tracking-[-0.02rem] inline-block overflow-hidden leading-none">
+              <a className="relative uppercase text-light font-[Anton] text-2xl md:text-[4rem] lg:text-[6.5rem] tracking-[0.12em] md:tracking-[0] lg:tracking-[-0.02rem] inline-block overflow-hidden leading-none">
                 <span>{txt}</span>
                 <span className="absolute top-0 left-0">{txt}</span>
               </a>
@@ -515,6 +631,27 @@ export default function Navbar() {
             className="link-highlighter absolute bottom-0 left-0 w-[250px] h-[0.5rem] bg-[#fca311] z-10 hidden lg:block"
             ref={linkHighlighterRef}
           ></div>
+        </div>
+
+        {/* MOBILE SOCIAL LINKS */}
+        <div className="md:hidden flex flex-col items-center gap-3 py-10 text-xs uppercase tracking-[0.3em] text-white/70">
+          <div className="w-full px-6">
+            <div
+              ref={mobileSocialLineRef}
+              className="border-t border-white/15"
+            />
+          </div>
+          <div className="flex flex-col items-center gap-2">
+            <span>Instagram</span>
+            <span>LinkedIn</span>
+            <span>GitHub</span>
+          </div>
+          <div className="w-full px-6">
+            <div
+              ref={mobileSocialBottomLineRef}
+              className="border-t border-white/15"
+            />
+          </div>
         </div>
       </div>
 
