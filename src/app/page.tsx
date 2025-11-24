@@ -12,12 +12,14 @@ import Contact from "@/sections/Contact";
 import { useEffect, useState } from "react";
 import { FaArrowUp } from "react-icons/fa6";
 import { useProgress } from "@react-three/drei";
+// Import tipe Lenis dari 'lenis/index' atau 'lenis'
+import Lenis from "lenis";
 
-// Menggunakan 'any' untuk LenisInstance
-type LenisInstance = any;
+// Mengganti 'any' dengan tipe Lenis yang diimpor
+type LenisInstance = Lenis | null | undefined;
 
 function HomeContent() {
-  const [showBackToTop, setShowBackToTop] = useState(false);
+  const [showBackToTop, setShowBackToTop] = useState(false); // useLenis() mengembalikan Lenis | null, jadi casting 'as LenisInstance' sudah aman // atau langsung biarkan useLenis() mengembalikan tipenya. // Tapi karena LenisInstance sudah didefinisikan, kita pertahankan:
   const lenis = useLenis() as LenisInstance;
 
   useEffect(() => {
@@ -77,10 +79,8 @@ function HomeContent() {
           <div id="home">
             <Navbar lenis={lenis} />
           </div>
-
           <ServiceSummary />
         </div>
-
         <Services />
         <About />
         <Projects />
@@ -88,7 +88,6 @@ function HomeContent() {
         <Certifications />
         <Contact />
       </div>
-
       {/* BACK TO TOP BUTTON */}
       <button
         onClick={scrollToTop}

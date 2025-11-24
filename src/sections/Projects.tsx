@@ -8,13 +8,25 @@ import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
+// Definisikan tipe untuk GSAP/ScrollTrigger yang digunakan di sini
+type GSAPTween = gsap.core.Tween;
+type GSAPTimeline = gsap.core.Timeline;
+type GSAPAnimation = GSAPTween | GSAPTimeline;
+
+// Definisikan tipe untuk ScrollTrigger Tween yang menyimpan properti tambahan
+interface MobileScrollTween extends GSAPTween {
+  animationTriggers?: ScrollTrigger[];
+  hostSection?: HTMLElement;
+}
+
 export default function Projects() {
   const [currentIndex, setCurrentIndex] = useState<number | null>(null);
 
   // FIX 1: Definisikan ref array dengan tipe yang benar
   const overlayRefs = useRef<(HTMLDivElement | null)[]>([]);
 
-  // FIX 2: previewRef harus HTMLDivElement | null
+  // FIX 2: previewRef harus HTMLDivElement | null (namun di code sudah ada default null)
+  // Berdasarkan penggunaan, previewRef memang akan berisi HTMLDivElement.
   const previewRef = useRef<HTMLDivElement>(null);
 
   // Mobile horizontal scroll refs
@@ -35,7 +47,7 @@ export default function Projects() {
 
     gsap.registerPlugin(ScrollTrigger);
 
-    const setupMobileScroll = () => {
+    const setupMobileScroll = (): MobileScrollTween | null => {
       if (window.innerWidth >= 768) {
         // Desktop: cleanup jika ada ScrollTrigger mobile yang masih aktif
         ScrollTrigger.getAll().forEach((st) => {
@@ -84,12 +96,12 @@ export default function Projects() {
       );
 
       const hostSection = container.closest("section");
-      if (hostSection) {
+      if (hostSection instanceof HTMLElement) {
         hostSection.dataset.prevMinHeight = hostSection.style.minHeight;
         hostSection.style.minHeight = `${viewportHeight + endDistance}px`;
       }
 
-      const scrollTween = gsap.to(wrapper, {
+      const scrollTween: GSAPTween = gsap.to(wrapper, {
         x: -scrollDistance,
         ease: "none",
         scrollTrigger: {
@@ -167,32 +179,33 @@ export default function Projects() {
         animationTriggers.push(trigger);
       });
 
-      // Store animation triggers untuk cleanup
-      (scrollTween as any).animationTriggers = animationTriggers;
-
-      (scrollTween as any).hostSection = hostSection;
-
-      return scrollTween;
+      // FIX 171-195: Store animation triggers dan hostSection dengan tipe kustom
+      const customScrollTween = scrollTween as MobileScrollTween;
+      customScrollTween.animationTriggers = animationTriggers;
+      if (hostSection instanceof HTMLElement) {
+        customScrollTween.hostSection = hostSection;
+      }
+      return customScrollTween;
     };
 
     // Setup initial setelah DOM ready
-    let scrollTween: ReturnType<typeof setupMobileScroll> = null;
+    let scrollTween: MobileScrollTween | null = null;
 
     // Setup setelah DOM ready dan images loaded
     const setupAfterReady = () => {
       // Cleanup existing
       if (scrollTween) {
-        const hostSection = (scrollTween as any).hostSection as
-          | HTMLElement
-          | undefined;
+        // FIX 242: Ganti (scrollTween as any)
+        const hostSection = scrollTween.hostSection;
         if (hostSection) {
           hostSection.style.minHeight = hostSection.dataset.prevMinHeight ?? "";
           delete hostSection.dataset.prevMinHeight;
         }
         scrollTween.kill();
         // Cleanup animation triggers
-        if ((scrollTween as any).animationTriggers) {
-          ((scrollTween as any).animationTriggers as ScrollTrigger[]).forEach(
+        // FIX 250, 251: Ganti (scrollTween as any)
+        if (scrollTween.animationTriggers) {
+          (scrollTween.animationTriggers as ScrollTrigger[]).forEach(
             (trigger) => trigger.kill()
           );
         }
@@ -239,16 +252,15 @@ export default function Projects() {
           }
         });
         if (scrollTween) {
-          const hostSection = (scrollTween as any).hostSection as
-            | HTMLElement
-            | undefined;
+          // FIX 271, 280, 281: Ganti (scrollTween as any)
+          const hostSection = scrollTween.hostSection;
           if (hostSection) {
             hostSection.style.minHeight =
               hostSection.dataset.prevMinHeight ?? "";
             delete hostSection.dataset.prevMinHeight;
           }
-          if ((scrollTween as any).animationTriggers) {
-            ((scrollTween as any).animationTriggers as ScrollTrigger[]).forEach(
+          if (scrollTween.animationTriggers) {
+            (scrollTween.animationTriggers as ScrollTrigger[]).forEach(
               (trigger) => trigger.kill()
             );
           }
@@ -268,17 +280,15 @@ export default function Projects() {
       window.removeEventListener("resize", handleResize);
       window.removeEventListener("load", loadHandler);
       if (scrollTween) {
-        const hostSection = (scrollTween as any).hostSection as
-          | HTMLElement
-          | undefined;
+        const hostSection = scrollTween.hostSection;
         if (hostSection) {
           hostSection.style.minHeight = hostSection.dataset.prevMinHeight ?? "";
           delete hostSection.dataset.prevMinHeight;
         }
         scrollTween.kill();
         // Cleanup animation triggers
-        if ((scrollTween as any).animationTriggers) {
-          ((scrollTween as any).animationTriggers as ScrollTrigger[]).forEach(
+        if (scrollTween.animationTriggers) {
+          (scrollTween.animationTriggers as ScrollTrigger[]).forEach(
             (trigger) => trigger.kill()
           );
         }
@@ -292,7 +302,8 @@ export default function Projects() {
         }
       });
     };
-  }, [projects.length]);
+    // FIX 295: Hapus projects.length dari dependency array
+  }, []);
 
   // FIX 3: Desktop animations
   useGSAP(() => {
@@ -320,6 +331,7 @@ export default function Projects() {
         ease: "back.out",
         scrollTrigger: {
           trigger: "#project-desktop",
+          start: "top 90%",
         },
       });
     }
@@ -594,7 +606,7 @@ export default function Projects() {
               </div>
             </div>
 
-            {/* Mobile Preview */}
+            {/* Mobile Preview (di desktop hidden) */}
             <div className="relative flex items-center justify-center px-10 md:hidden h-[200px] sm:h-[400px]">
               <Image
                 src={project.bgImage}

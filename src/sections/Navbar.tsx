@@ -8,9 +8,12 @@ import Image from "next/image";
 // Sesuaikan path ini jika lokasi file constants Anda berbeda
 import { socials } from "../../constant";
 import Link from "next/link";
+// Import tipe Lenis dari 'lenis'
+import Lenis from "lenis";
 
 interface NavbarProps {
-  lenis: any;
+  // Mengganti 'any' dengan tipe Lenis | null | undefined
+  lenis: Lenis | null | undefined;
 }
 
 export default function Navbar({ lenis }: NavbarProps) {
@@ -25,14 +28,12 @@ export default function Navbar({ lenis }: NavbarProps) {
   const mobileBottomLineRef = useRef<HTMLDivElement | null>(null);
   const mobileSocialLineRef = useRef<HTMLDivElement | null>(null);
   const mobileSocialBottomLineRef = useRef<HTMLDivElement | null>(null);
-  const heroContentRef = useRef<HTMLDivElement>(null);
+  const heroContentRef = useRef<HTMLDivElement>(null); // States
 
-  // States
   const isMenuOpen = useRef(false);
   const isMenuAnimating = useRef(false);
-  const pendingScrollTarget = useRef<HTMLElement | null>(null);
+  const pendingScrollTarget = useRef<HTMLElement | null>(null); // Parallax States (Tidak berubah)
 
-  // Parallax States (Tidak berubah)
   const targetX = useRef(0);
   const currentX = useRef(0);
   const targetHighlighterX = useRef(0);
@@ -49,9 +50,8 @@ export default function Navbar({ lenis }: NavbarProps) {
       // BUKA MENU
       if (lenis) {
         lenis.stop();
-      }
+      } // Animasi BUKA
 
-      // Animasi BUKA
       if (heroContentRef.current) {
         gsap.to(heroContentRef.current, {
           y: "-40%",
@@ -77,9 +77,8 @@ export default function Navbar({ lenis }: NavbarProps) {
         opacity: 1,
         duration: 1.5,
         ease: "expo.out",
-      });
+      }); // 🚀 FIX YPERCENT: Animasi gambar dari yPercent:10 ke yPercent:0 (posisi tengah)
 
-      // 🚀 FIX YPERCENT: Animasi gambar dari yPercent:10 ke yPercent:0 (posisi tengah)
       gsap.to(menuImageRef.current, {
         scale: 1,
         opacity: 1,
@@ -128,9 +127,8 @@ export default function Navbar({ lenis }: NavbarProps) {
           duration: 1.25,
           ease: "expo.out",
         });
-      }
+      } // Animasi TUTUP
 
-      // Animasi TUTUP
       if (window.innerWidth < 768) {
         gsap.to(
           [
@@ -152,9 +150,8 @@ export default function Navbar({ lenis }: NavbarProps) {
         opacity: 0.25,
         duration: 1.25,
         ease: "expo.out",
-      });
+      }); // 🚀 FIX YPERCENT: Animasi gambar ke yPercent:10 (keluar ke bawah) saat menutup
 
-      // 🚀 FIX YPERCENT: Animasi gambar ke yPercent:10 (keluar ke bawah) saat menutup
       gsap.to(menuImageRef.current, {
         yPercent: 10,
         opacity: 0.5,
@@ -176,9 +173,8 @@ export default function Navbar({ lenis }: NavbarProps) {
             { y: "150%" }
           );
           gsap.set(linkHighlighterRef.current, { y: "150%" });
-          gsap.set(menuContentRef.current, { y: "50%", opacity: 0.25 });
+          gsap.set(menuContentRef.current, { y: "50%", opacity: 0.25 }); // 🚀 FIX YPERCENT KRITIS: Reset posisi gambar ke yPercent: 10 (posisi awal tersembunyi)
 
-          // 🚀 FIX YPERCENT KRITIS: Reset posisi gambar ke yPercent: 10 (posisi awal tersembunyi)
           gsap.set(menuImageRef.current, {
             scale: 0.5,
             opacity: 0.25,
@@ -197,9 +193,8 @@ export default function Navbar({ lenis }: NavbarProps) {
           });
 
           isMenuOpen.current = false;
-          isMenuAnimating.current = false;
+          isMenuAnimating.current = false; // Lenis Start dan Scroll
 
-          // Lenis Start dan Scroll
           if (lenis) {
             lenis.start();
           }
@@ -215,32 +210,28 @@ export default function Navbar({ lenis }: NavbarProps) {
         },
       });
     }
-  }, [lenis]);
+  }, [lenis]); // ----------------------------------------------------------- // 1. useEffect untuk SETUP Awal (hanya berjalan SEKALI) // -----------------------------------------------------------
 
-  // -----------------------------------------------------------
-  // 1. useEffect untuk SETUP Awal (hanya berjalan SEKALI)
-  // -----------------------------------------------------------
   useEffect(() => {
     gsap.registerPlugin(SplitText);
 
     const navToggle = navToggleRef.current!;
-    const menuLinksWrapper = menuLinksWrapperRef.current!;
-    const menuLinks = menuLinksWrapper.querySelectorAll(".menu-link a");
+    // FIX: Mengubah nama variabel dari menuLinksWrapper menjadi menuLinksWrapperSetup
+    const menuLinksWrapperSetup = menuLinksWrapperRef.current!;
+    const menuLinks = menuLinksWrapperSetup.querySelectorAll(".menu-link a"); // Initial Split Text
 
-    // Initial Split Text
     menuLinks.forEach((link) => {
       const spans = link.querySelectorAll("span");
       spans.forEach((span, idx) => {
-        const split = new SplitText(span, { type: "chars" });
+        // SplitText constructor bisa menerima HTMLElement.
+        const split = new SplitText(span, { type: "chars" }); // Menggunakan 'as HTMLElement' di sini agar aman
         split.chars.forEach((c) => (c as HTMLElement).classList.add("char"));
         if (idx === 1) gsap.set(split.chars, { y: "110%" });
       });
-    });
+    }); // Initial GSAP Set States
 
-    // Initial GSAP Set States
-    gsap.set(menuContentRef.current, { y: "50%", opacity: 0.25 });
+    gsap.set(menuContentRef.current, { y: "50%", opacity: 0.25 }); // 🚀 FIX YPERCENT: Set posisi Y awal gambar ke yPercent: 10
 
-    // 🚀 FIX YPERCENT: Set posisi Y awal gambar ke yPercent: 10
     gsap.set(menuImageRef.current, { scale: 0.5, opacity: 0.25, yPercent: 10 });
 
     gsap.set(menuLinks, { y: "150%" });
@@ -254,14 +245,13 @@ export default function Navbar({ lenis }: NavbarProps) {
       if (el) gsap.set(el, { scaleX: 0, transformOrigin: "center" });
     });
 
-    const firstLink = menuLinksWrapper.querySelector(".menu-link");
+    const firstLink = menuLinksWrapperSetup.querySelector(".menu-link");
     if (firstLink) {
       const span = firstLink.querySelector("a span") as HTMLElement;
       if (span)
         linkHighlighterRef.current!.style.width = span.offsetWidth + "px";
-    }
+    } // --- EVENT LISTENERS (Kode Parallax/Hover/Click tidak berubah) ---
 
-    // --- EVENT LISTENERS (Kode Parallax/Hover/Click tidak berubah) ---
     const navToggleHandler = (e: Event) => {
       e.preventDefault();
       e.stopPropagation();
@@ -269,7 +259,7 @@ export default function Navbar({ lenis }: NavbarProps) {
     };
     navToggle.addEventListener("click", navToggleHandler);
 
-    const linkContainers = menuLinksWrapper.querySelectorAll(".menu-link");
+    const linkContainers = menuLinksWrapperSetup.querySelectorAll(".menu-link");
     const clickHandlers: Array<() => void> = [];
 
     linkContainers.forEach((container) => {
@@ -301,9 +291,13 @@ export default function Navbar({ lenis }: NavbarProps) {
       };
       container.addEventListener("click", handler);
       clickHandlers.push(() => container.removeEventListener("click", handler));
-    });
+    }); // FIX: Mengganti Array<any> menjadi Array<{ link: Element; onEnter: () => void; onLeave: () => void }>
 
-    const hoverHandlers: Array<any> = [];
+    const hoverHandlers: Array<{
+      link: Element;
+      onEnter: () => void;
+      onLeave: () => void;
+    }> = [];
     linkContainers.forEach((link) => {
       const onEnter = () => {
         if (window.innerWidth < 1000) return;
@@ -321,7 +315,7 @@ export default function Navbar({ lenis }: NavbarProps) {
           ease: "expo.inOut",
         });
         const rect = (link as HTMLElement).getBoundingClientRect();
-        const wrapperRect = menuLinksWrapper.getBoundingClientRect();
+        const wrapperRect = menuLinksWrapperSetup.getBoundingClientRect();
         targetHighlighterX.current = rect.left - wrapperRect.left;
         targetHighlighterWidth.current =
           (link.querySelector("a span") as HTMLElement)?.offsetWidth ||
@@ -343,13 +337,13 @@ export default function Navbar({ lenis }: NavbarProps) {
           stagger: 0.03,
           ease: "expo.inOut",
         });
-        const first = menuLinksWrapper.querySelector(
+        const first = menuLinksWrapperSetup.querySelector(
           ".menu-link"
         ) as HTMLElement;
         const span = first.querySelector("a span") as HTMLElement;
         targetHighlighterX.current =
           first.getBoundingClientRect().left -
-          menuLinksWrapper.getBoundingClientRect().left;
+          menuLinksWrapperSetup.getBoundingClientRect().left;
         targetHighlighterWidth.current = span.offsetWidth;
       };
 
@@ -362,7 +356,7 @@ export default function Navbar({ lenis }: NavbarProps) {
       if (window.innerWidth < 1000) return;
       const mouseX = e.clientX;
       const vw = window.innerWidth;
-      const wrapperWidth = menuLinksWrapper.offsetWidth;
+      const wrapperWidth = menuLinksWrapperSetup.offsetWidth;
       const maxMove = vw - wrapperWidth;
       const sensitivity = vw * 0.5;
       const start = (vw - sensitivity) / 2;
@@ -372,17 +366,17 @@ export default function Navbar({ lenis }: NavbarProps) {
       );
       targetX.current = percentage * maxMove;
     };
-    menuOverlayRef.current!.addEventListener("mousemove", handleMouseMove);
+    menuOverlayRef.current?.addEventListener("mousemove", handleMouseMove);
 
     const handleMouseLeave = () => {
       targetX.current = 0;
     };
-    menuLinksWrapperRef.current!.addEventListener(
+    // FIX: Menggunakan optional chaining.
+    menuLinksWrapperRef.current?.addEventListener(
       "mouseleave",
       handleMouseLeave
-    );
+    ); // Request Animation Frame (RAF)
 
-    // Request Animation Frame (RAF)
     let raf = 0;
     const animate = () => {
       currentX.current += (targetX.current - currentX.current) * lerpFactor;
@@ -400,28 +394,27 @@ export default function Navbar({ lenis }: NavbarProps) {
 
       raf = requestAnimationFrame(animate);
     };
-    raf = requestAnimationFrame(animate);
+    raf = requestAnimationFrame(animate); // CLEANUP // FIX: Menyalin nilai ref ke variabel di dalam scope effect untuk digunakan di cleanup
 
-    // CLEANUP
+    const menuOverlay = menuOverlayRef.current;
+    const menuLinksWrapperCleanup = menuLinksWrapperRef.current; // Menggunakan nama berbeda
+
     return () => {
       cancelAnimationFrame(raf);
       navToggle.removeEventListener("click", navToggleHandler);
       clickHandlers.forEach((rm) => rm());
-      hoverHandlers.forEach(({ link, onEnter, onLeave }: any) => {
+      hoverHandlers.forEach(({ link, onEnter, onLeave }) => {
         link.removeEventListener("mouseenter", onEnter);
         link.removeEventListener("mouseleave", onLeave);
       });
-      menuOverlayRef.current!.removeEventListener("mousemove", handleMouseMove);
-      menuLinksWrapperRef.current!.removeEventListener(
+      menuOverlay?.removeEventListener("mousemove", handleMouseMove);
+      menuLinksWrapperCleanup?.removeEventListener(
         "mouseleave",
         handleMouseLeave
       );
     };
-  }, [toggleMenu]);
+  }, [toggleMenu]); // ----------------------------------------------------------- // 2. useEffect untuk Lenis Control (hanya untuk trigger) // -----------------------------------------------------------
 
-  // -----------------------------------------------------------
-  // 2. useEffect untuk Lenis Control (hanya untuk trigger)
-  // -----------------------------------------------------------
   useEffect(() => {}, [lenis, toggleMenu]);
 
   return (
@@ -434,6 +427,7 @@ export default function Navbar({ lenis }: NavbarProps) {
         >
           Menu
         </div>
+
         <Link
           href="https://drive.google.com/file/d/1yoI2g5zc4UBT6R2nrkRuIc1A9PlNJknA/view?usp=drive_link"
           rel="noopener noreferrer"
@@ -454,9 +448,11 @@ export default function Navbar({ lenis }: NavbarProps) {
           <div className="w-full px-6">
             <div ref={mobileTopLineRef} className="border-t border-white/15" />
           </div>
+
           <div className="font-heading text-3xl tracking-[0.3em] uppercase">
             FH
           </div>
+
           <div className="w-full px-6">
             <div
               ref={mobileBottomLineRef}
@@ -464,26 +460,22 @@ export default function Navbar({ lenis }: NavbarProps) {
             />
           </div>
         </div>
-
         {/* Desktop Content */}
         <div
           ref={menuContentRef}
           className="menu-content hidden md:flex md:absolute md:top-[30%] lg:top-1/2 md:-translate-y-1/2 w-full px-8 pt-8 md:p-10 lg:p-8 justify-between"
         >
           <div className="text-left font-heading text-[0.8rem] uppercase leading-none space-y-1">
-            <p>Razhaaf</p>
-            <p>Shoreline Drive</p>
+            <p>Razhaaf</p> <p>Shoreline Drive</p>
             <p>Surabaya</p>
-            <br />
-            <p>Edition</p>
+            <br /> <p>Edition</p>
             <p>Vol. 03</p>
-            <br />
-            <p>Contact</p>
+            <br /> <p>Contact</p>
             <p>firazfulvianhafiz05@gmail.com</p>
-            <br />
-            <p>Direct</p>
+            <br /> <p>Direct</p>
             <p>+62 823-3267-6848</p>
           </div>
+
           <div className="text-right font-heading text-[0.8rem] uppercase leading-none space-y-1">
             <Link
               href="https://www.instagram.com/razhaaf"
@@ -507,17 +499,13 @@ export default function Navbar({ lenis }: NavbarProps) {
               <p>Github</p>
             </Link>
             <br />
-            <br />
-            <p>Credits</p>
-            <p>Imprint</p>
-            <p>Ref. 00492X</p>
+            <br /> <p>Credits</p>
+            <p>Imprint</p> <p>Ref. 00492X</p>
           </div>
         </div>
 
         <div
-          ref={menuImageRef}
-          // 🚀 FIX CSS: Kembalikan -translate-y-1/2 agar CSS menempatkan gambar di tengah.
-          // GSAP yPercent akan menambahkan offset di atas posisi ini.
+          ref={menuImageRef} // 🚀 FIX CSS: Kembalikan -translate-y-1/2 agar CSS menempatkan gambar di tengah. // GSAP yPercent akan menambahkan offset di atas posisi ini.
           className="menu-img absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200px] hidden lg:block"
         >
           <Image
@@ -553,12 +541,12 @@ export default function Navbar({ lenis }: NavbarProps) {
               </a>
             </div>
           ))}
+
           <div
             ref={linkHighlighterRef}
             className="link-highlighter absolute bottom-0 left-0 h-[0.5rem] bg-[#fca311] hidden lg:block"
           ></div>
         </div>
-
         {/* Mobile Social */}
         <div className="md:hidden flex flex-col items-center gap-3 py-10 text-xs uppercase tracking-[0.3em] text-white/70 ">
           <div className="w-full px-6">
@@ -582,6 +570,7 @@ export default function Navbar({ lenis }: NavbarProps) {
               </a>
             ))}
           </div>
+
           <div className="w-full px-6">
             <div
               ref={mobileSocialBottomLineRef}
@@ -590,7 +579,6 @@ export default function Navbar({ lenis }: NavbarProps) {
           </div>
         </div>
       </div>
-
       {/* HERO DIBUNGKUS REF */}
       <div ref={heroContentRef}>
         <Hero />
