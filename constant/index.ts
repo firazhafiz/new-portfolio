@@ -125,7 +125,7 @@ export const projects = [
       { id: 1, name: "Next.js" },
       { id: 2, name: "React" },
       { id: 3, name: "Laravel as BE" },
-      { id: 3, name: "Express.js" },
+      { id: 4, name: "Express.js" },
     ],
   },
   {
