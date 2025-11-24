@@ -47,13 +47,13 @@ export default function About() {
         subtitle=""
         title="About"
         text="⟢⟢⟢"
-        textColor="text-white"
+        textColor="text-white/75"
         titleColor="text-[#FFE093]"
       />
       <div className="flex flex-col items-center justify-between gap-16 px-10 pb-34 text-xl font-light tracking-wide lg:flex-row md:text-2xl lg:text-3xl text-white/80">
         <Image
           ref={imgRef}
-          src="/images/bahlil.jpg"
+          src="/images/firaz-linkedin.jpg"
           alt="programmer"
           className="w-md rounded-3xl"
           width={375}

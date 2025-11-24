@@ -213,3 +213,157 @@ export const projects = [
     ],
   },
 ];
+
+export type ExperienceItem = {
+  id: number;
+  year: number;
+  title: string;
+  description: string[];
+  image: string;
+};
+
+export const experiences: ExperienceItem[] = [
+  {
+    id: 1,
+    year: 2025,
+    title: "Cohort of Asah by Dicoding",
+    description: [
+      "Began learning React, Backend, and AI fundamentals",
+      "Created projects to apply learned concepts",
+      "Explored React and modern frontend frameworks",
+    ],
+    image: "/assets/asah.png",
+  },
+  {
+    id: 2,
+    year: 2025,
+    title: "Co-Director Creative Media of Google DGOC Unesa",
+    description: [
+      "Directed and produced video content for events",
+      "Collaborated with teams on large-scale projects",
+      "Expanded expertise in cloud computing and AI",
+    ],
+    image: "/assets/gdgoc.png",
+  },
+  {
+    id: 3,
+    year: 2024,
+    title: "Hai.Volunteer Internship Batch 6.0",
+    description: [
+      "Volunteered as a photographer and videographer",
+      "Worked as graphic designer for the event",
+      "Make some contents for event media partnership",
+    ],
+    image: "/assets/haivo.png",
+  },
+  {
+    id: 4,
+    year: 2023,
+    title: "Director of Catatan Akhir Sekolah 74 SMAN 1 Madiun",
+    description: [
+      "Directed and produced a documentary film",
+      "Worked as a script writer and gaffer",
+      "Collaborated with teams on the film production",
+    ],
+    image: "/assets/cas.JPG",
+  },
+];
+
+export type CertificationItem = {
+  image: string;
+  title: string;
+  author: string;
+  credentialUrl: string;
+};
+
+export const certifications: CertificationItem[] = [
+  {
+    image: "/images/es2.jpg",
+    title:
+      "Event Series 2 Building Smarter Website: AI Powered Solutions with Google Cloud Integration",
+    author: "Google Developer Group on Campus Unesa",
+    credentialUrl: "",
+  },
+  {
+    image: "/images/mernwpu.png",
+    title: "Mern Stack Course",
+    author: "WPU Course",
+    credentialUrl: "https://learn.wpucourse.id/certificate/TK1D1IFD",
+  },
+  {
+    image: "/images/companyvisit.jpg",
+    title:
+      "Company Visit - Exploring Technology and Work Culture in the Digital Industry",
+    author: "Google Developer Group on Campus Unesa",
+    credentialUrl: "",
+  },
+  {
+    image: "/images/pznhtmlcssjs.jpg",
+    title: "HTML, CSS, dan Javascipt : Pemula sampai Mahir",
+    author: "Progammer Zaman Now",
+    credentialUrl:
+      "https://www.udemy.com/certificate/UC-af1b562f-3085-4aba-981e-7260d40d5503/",
+  },
+  {
+    image: "/images/es3.png",
+    title:
+      "Event Series 3 - Exploring AI and Blockchain for a Smarter Digital Economy",
+    author: "Google Developer Group on Campus Unesa",
+    credentialUrl: "",
+  },
+  {
+    image: "/images/pznreact.jpg",
+    title: "React.js : Pemula sampai Mahir",
+    author: "Progammer Zaman Now",
+    credentialUrl:
+      "https://www.udemy.com/certificate/UC-4fd37fe3-f98e-4054-a7ef-90c608999a87/",
+  },
+  {
+    image: "/images/konaspi.jpg",
+    title: "Konvensi Nasional Pendidikan Indonesia 2024",
+    author: "Kece Media Unesa",
+    credentialUrl: "",
+  },
+  {
+    image: "/images/pzntypescript.jpg",
+    title: "Pemrograman TypeScript : Pemula sampai Mahir",
+    author: "Progammer Zaman Now",
+    credentialUrl:
+      "https://www.udemy.com/certificate/UC-9a07da83-6e60-4cd2-aeb6-b4a894adb681/",
+  },
+  {
+    image: "/images/dicoding-ai.jpg",
+    title: "Belajar Dasar AI",
+    author: "Dicoding Academy",
+    credentialUrl: "https://www.dicoding.com/certificates/N9ZO2D8DRPG5",
+  },
+];
+
+export default certifications;
+
+export const contactInfo = {
+  email: "firazfulvianhafiz05@gmail.com",
+  phone: "0823-3267-6848",
+  socials: [
+    {
+      icon: "linkedin",
+      href: "https://linkedin.com/in/firazhafiz",
+      label: "LinkedIn",
+    },
+    {
+      icon: "github",
+      href: "https://github.com/firazhafiz",
+      label: "GitHub",
+    },
+    {
+      icon: "instagram",
+      href: "https://instagram.com/razhaaf",
+      label: "Instagram",
+    },
+    {
+      icon: "whatsapp",
+      href: "https://wa.me/6282332676848",
+      label: "WhatsApp",
+    },
+  ],
+};

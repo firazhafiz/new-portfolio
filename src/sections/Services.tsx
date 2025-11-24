@@ -35,7 +35,7 @@ export default function Services() {
         subtitle=""
         title="Services"
         text={text}
-        textColor="text-white"
+        textColor="text-white/75"
         titleColor="text-[#FFE093]"
         withScrollTrigger={true}
       />
@@ -71,7 +71,7 @@ export default function Services() {
                     {/* Menggunakan items-end untuk membuat garis bawah (baseline) penomoran dan judul sejajar */}
                     <h3 className="flex items-end">
                       {/* Penomoran: text-lg dipertahankan */}
-                      <span className="mr-8 text-lg text-white/30 w-12 flex-shrink-0">
+                      <span className="mr-8 text-lg text-white/30 w-12 shrink-0">
                         0{itemIndex + 1}.
                       </span>
 
@@ -83,7 +83,7 @@ export default function Services() {
 
                     {/* Deskripsi Item: Tambahkan mt-2 di sini untuk menciptakan gap antara Judul dan Deskripsi */}
                     {item.description && (
-                      <p className="text-sm sm:text-base text-white/60 pl-[5rem] mt-4">
+                      <p className="text-sm sm:text-base text-white/60 pl-20 mt-4">
                         {item.description}
                       </p>
                     )}

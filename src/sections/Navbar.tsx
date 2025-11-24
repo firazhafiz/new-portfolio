@@ -1,12 +1,20 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useCallback } from "react";
 import { gsap } from "gsap";
 import { SplitText } from "gsap/all";
 import Hero from "./Hero";
 import Image from "next/image";
+// Sesuaikan path ini jika lokasi file constants Anda berbeda
+import { socials } from "../../constant";
+import Link from "next/link";
 
-export default function Navbar() {
+interface NavbarProps {
+  lenis: any;
+}
+
+export default function Navbar({ lenis }: NavbarProps) {
+  // Refs
   const navToggleRef = useRef<HTMLDivElement | null>(null);
   const menuOverlayRef = useRef<HTMLDivElement | null>(null);
   const menuContentRef = useRef<HTMLDivElement | null>(null);
@@ -17,425 +25,332 @@ export default function Navbar() {
   const mobileBottomLineRef = useRef<HTMLDivElement | null>(null);
   const mobileSocialLineRef = useRef<HTMLDivElement | null>(null);
   const mobileSocialBottomLineRef = useRef<HTMLDivElement | null>(null);
+  const heroContentRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    gsap.registerPlugin(SplitText);
+  // States
+  const isMenuOpen = useRef(false);
+  const isMenuAnimating = useRef(false);
+  const pendingScrollTarget = useRef<HTMLElement | null>(null);
 
-    const navToggle = navToggleRef.current!;
-    const menuOverlay = menuOverlayRef.current!;
-    const menuContent = menuContentRef.current!;
-    const menuImage = menuImageRef.current!;
-    const menuLinksWrapper = menuLinksWrapperRef.current!;
-    const linkHighlighter = linkHighlighterRef.current!;
-    const mobileTopLine = mobileTopLineRef.current;
-    const mobileBottomLine = mobileBottomLineRef.current;
-    const mobileSocialLine = mobileSocialLineRef.current;
-    const mobileSocialBottomLine = mobileSocialBottomLineRef.current;
+  // Parallax States (Tidak berubah)
+  const targetX = useRef(0);
+  const currentX = useRef(0);
+  const targetHighlighterX = useRef(0);
+  const currentHighlighterX = useRef(0);
+  const targetHighlighterWidth = useRef(0);
+  const currentHighlighterWidth = useRef(0);
+  const lerpFactor = 0.05;
 
-    // Scroll lock helpers
-    const root = document.documentElement;
-    const body = document.body;
-    let savedScrollY = 0;
-    const getScrollbarWidth = () => window.innerWidth - root.clientWidth;
-    const lockScroll = () => {
-      const sbw = getScrollbarWidth();
-      savedScrollY = window.scrollY || window.pageYOffset;
-      body.style.overflow = "hidden";
-      root.style.overflow = "hidden";
-      // Prevent layout shift
-      if (sbw > 0) body.style.paddingRight = sbw + "px";
-      // Freeze page position to avoid jumping after close
-      body.style.position = "fixed";
-      body.style.top = `-${savedScrollY}px`;
-      body.style.left = "0";
-      body.style.right = "0";
-      body.style.width = "100%";
-    };
-    const unlockScroll = () => {
-      body.style.overflow = "";
-      root.style.overflow = "";
-      body.style.paddingRight = "";
-      // Restore scroll position
-      body.style.position = "";
-      body.style.top = "";
-      body.style.left = "";
-      body.style.right = "";
-      body.style.width = "";
-      window.scrollTo(0, savedScrollY);
-    };
+  const toggleMenu = useCallback(() => {
+    if (isMenuAnimating.current) return;
+    isMenuAnimating.current = true;
 
-    let currentX = 0;
-    let targetX = 0;
-    const lerpFactor = 0.05;
+    if (!isMenuOpen.current) {
+      // BUKA MENU
+      if (lenis) {
+        lenis.stop();
+      }
 
-    let currentHighlighterX = 0;
-    let targetHighlighterX = 0;
-    let currentHighlighterWidth = 0;
-    let targetHighlighterWidth = 0;
-
-    let isMenuOpen = false;
-    let isMenuAnimating = false;
-
-    // Prepare split text and initial positions
-    const menuLinks =
-      menuLinksWrapper.querySelectorAll<HTMLAnchorElement>(".menu-link a");
-    menuLinks.forEach((link) => {
-      const spans = link.querySelectorAll("span");
-      spans.forEach((span, idx) => {
-        const split = new SplitText(span, { type: "chars" });
-        split.chars.forEach((c: Element) =>
-          (c as HTMLElement).classList.add("char")
-        );
-        if (idx === 1) gsap.set(split.chars, { y: "110%" });
-      });
-    });
-
-    gsap.set(menuContent, { y: "50%", opacity: 0.25 });
-    gsap.set(menuImage, { scale: 0.5, opacity: 0.25 });
-    gsap.set(menuLinks, { y: "150%" });
-    gsap.set(linkHighlighter, { y: "150%" });
-
-    // Set initial state for mobile divider lines (scaleX: 0)
-    if (mobileTopLine)
-      gsap.set(mobileTopLine, { scaleX: 0, transformOrigin: "center" });
-    if (mobileBottomLine)
-      gsap.set(mobileBottomLine, { scaleX: 0, transformOrigin: "center" });
-    if (mobileSocialLine)
-      gsap.set(mobileSocialLine, { scaleX: 0, transformOrigin: "center" });
-    if (mobileSocialBottomLine)
-      gsap.set(mobileSocialBottomLine, {
-        scaleX: 0,
-        transformOrigin: "center",
-      });
-
-    const defaultLinkText = menuLinksWrapper.querySelector(
-      ".menu-link:first-child a span"
-    ) as HTMLElement | null;
-    if (defaultLinkText) {
-      const linkWidth = defaultLinkText.offsetWidth;
-      (linkHighlighter as HTMLElement).style.width = linkWidth + "px";
-      currentHighlighterWidth = linkWidth;
-      targetHighlighterWidth = linkWidth;
-
-      const defaultLinkTextElement = menuLinksWrapper.querySelector(
-        ".menu-link:first-child"
-      ) as HTMLElement;
-      const linkRect = defaultLinkTextElement.getBoundingClientRect();
-      const menuWrapperRect = menuLinksWrapper.getBoundingClientRect();
-      const initialX = linkRect.left - menuWrapperRect.left;
-      currentHighlighterX = initialX;
-      targetHighlighterX = initialX;
-    }
-
-    function toggleMenu() {
-      if (isMenuAnimating) return;
-      isMenuAnimating = true;
-
-      if (!isMenuOpen) {
-        // Lock scroll immediately on open (all breakpoints)
-        lockScroll();
-
-        // ANIMASI SAAT MENU BUKA - HAPUS ANIMASI PADA HERO/CONTAINER
-        gsap.to(".hero-content", {
+      // Animasi BUKA
+      if (heroContentRef.current) {
+        gsap.to(heroContentRef.current, {
           y: "-40%",
           opacity: 0.25,
           duration: 1.25,
           ease: "expo.out",
         });
+      }
+      gsap.to(menuOverlayRef.current, {
+        clipPath: "polygon(0% 100%, 100% 100%, 100% 0%, 0% 0%)",
+        duration: 1.25,
+        ease: "expo.out",
+        onComplete: () => {
+          if (heroContentRef.current)
+            gsap.set(heroContentRef.current, { y: "40%" });
+          gsap.set(".menu-link", { overflow: "visible" });
+          isMenuOpen.current = true;
+          isMenuAnimating.current = false;
+        },
+      });
+      gsap.to(menuContentRef.current, {
+        y: "0%",
+        opacity: 1,
+        duration: 1.5,
+        ease: "expo.out",
+      });
 
-        gsap.to(menuOverlay, {
-          clipPath: "polygon(0% 100%, 100% 100%, 100% 0%, 0% 0%)",
-          duration: 1.25,
-          ease: "expo.out",
-          force3D: true,
-          immediateRender: true,
-          onComplete: () => {
-            gsap.set(".hero-content", { y: "40%" });
-            gsap.set(".menu-link", { overflow: "visible" });
-            isMenuOpen = true;
-            isMenuAnimating = false;
-          },
-        });
+      // 🚀 FIX YPERCENT: Animasi gambar dari yPercent:10 ke yPercent:0 (posisi tengah)
+      gsap.to(menuImageRef.current, {
+        scale: 1,
+        opacity: 1,
+        yPercent: 0,
+        duration: 1.5,
+        ease: "expo.out",
+      });
 
-        gsap.to(menuContent, {
-          y: "0%",
-          opacity: 1,
-          duration: 1.5,
-          ease: "expo.out",
-        });
-
-        gsap.to(menuImage, {
-          scale: 1,
-          opacity: 1,
-          duration: 1.5,
-          ease: "expo.out",
-        });
-
-        gsap.to(menuLinks, {
-          y: "0%",
-          duration: 1.25,
-          stagger: 0.1,
-          delay: 0.25,
-          ease: "expo.out",
-        });
-
-        gsap.to(linkHighlighter, {
-          y: "0%",
-          duration: 1,
-          delay: 1,
-          ease: "expo.out",
-        });
-
-        // Animate mobile divider lines (only on mobile)
-        if (window.innerWidth < 768) {
-          if (mobileTopLine) {
-            gsap.to(mobileTopLine, {
-              scaleX: 1,
-              duration: 0.8,
-              delay: 0.3,
-              ease: "expo.out",
-            });
+      gsap.to(menuLinksWrapperRef.current!.querySelectorAll(".menu-link a"), {
+        y: "0%",
+        duration: 1.25,
+        stagger: 0.1,
+        delay: 0.25,
+        ease: "expo.out",
+      });
+      gsap.to(linkHighlighterRef.current, {
+        y: "0%",
+        duration: 1,
+        delay: 1,
+        ease: "expo.out",
+      });
+      if (window.innerWidth < 768) {
+        gsap.to(
+          [
+            mobileTopLineRef.current,
+            mobileBottomLineRef.current,
+            mobileSocialLineRef.current,
+            mobileSocialBottomLineRef.current,
+          ],
+          {
+            scaleX: 1,
+            duration: 0.8,
+            stagger: 0.2,
+            delay: 0.3,
+            ease: "expo.out",
           }
-          if (mobileBottomLine) {
-            gsap.to(mobileBottomLine, {
-              scaleX: 1,
-              duration: 0.8,
-              delay: 0.5,
-              ease: "expo.out",
-            });
-          }
-          if (mobileSocialLine) {
-            gsap.to(mobileSocialLine, {
-              scaleX: 1,
-              duration: 0.8,
-              delay: 0.7,
-              ease: "expo.out",
-            });
-          }
-          if (mobileSocialBottomLine) {
-            gsap.to(mobileSocialBottomLine, {
-              scaleX: 1,
-              duration: 0.8,
-              delay: 0.9,
-              ease: "expo.out",
-            });
-          }
-        }
-      } else {
-        gsap.to(".hero-content", {
+        );
+      }
+    } else {
+      // TUTUP MENU
+
+      if (heroContentRef.current) {
+        gsap.to(heroContentRef.current, {
           y: "0%",
           opacity: 1,
           duration: 1.25,
           ease: "expo.out",
-        });
-
-        // Animate mobile divider lines out (only on mobile)
-        if (window.innerWidth < 768) {
-          if (mobileTopLine) {
-            gsap.to(mobileTopLine, {
-              scaleX: 0,
-              duration: 0.6,
-              ease: "expo.in",
-            });
-          }
-          if (mobileBottomLine) {
-            gsap.to(mobileBottomLine, {
-              scaleX: 0,
-              duration: 0.6,
-              delay: 0.1,
-              ease: "expo.in",
-            });
-          }
-          if (mobileSocialLine) {
-            gsap.to(mobileSocialLine, {
-              scaleX: 0,
-              duration: 0.6,
-              delay: 0.2,
-              ease: "expo.in",
-            });
-          }
-          if (mobileSocialBottomLine) {
-            gsap.to(mobileSocialBottomLine, {
-              scaleX: 0,
-              duration: 0.6,
-              delay: 0.3,
-              ease: "expo.in",
-            });
-          }
-        }
-
-        gsap.to(menuLinks, {
-          y: "-200%",
-          duration: 1.25,
-          ease: "expo.out",
-        });
-
-        gsap.to(menuContent, {
-          y: "-100%",
-          opacity: 0.25,
-          duration: 1.25,
-          ease: "expo.out",
-        });
-
-        gsap.to(menuImage, {
-          y: "-100%",
-          opacity: 0.5,
-          duration: 1.25,
-          ease: "expo.out",
-        });
-
-        gsap.to(menuOverlay, {
-          clipPath: "polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)",
-          duration: 1.25,
-          ease: "expo.out",
-          force3D: true,
-          immediateRender: true,
-          onComplete: () => {
-            gsap.set(menuOverlay, {
-              clipPath: "polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)",
-            });
-            gsap.set(menuLinks, { y: "150%" });
-            gsap.set(linkHighlighter, { y: "150%" });
-            gsap.set(menuContent, { y: "50%", opacity: 0.25 });
-            gsap.set(menuImage, { y: "0%", scale: 0.5, opacity: 0.25 });
-            gsap.set(".menu-link", { overflow: "hidden" });
-
-            // Reset mobile divider lines
-            if (mobileTopLine) gsap.set(mobileTopLine, { scaleX: 0 });
-            if (mobileBottomLine) gsap.set(mobileBottomLine, { scaleX: 0 });
-            if (mobileSocialLine) gsap.set(mobileSocialLine, { scaleX: 0 });
-            if (mobileSocialBottomLine)
-              gsap.set(mobileSocialBottomLine, { scaleX: 0 });
-
-            gsap.set(menuLinksWrapper, { x: 0 });
-            currentX = 0;
-            targetX = 0;
-
-            // Unlock on close (all breakpoints)
-            unlockScroll();
-
-            isMenuOpen = false;
-            isMenuAnimating = false;
-          },
         });
       }
+
+      // Animasi TUTUP
+      if (window.innerWidth < 768) {
+        gsap.to(
+          [
+            mobileTopLineRef.current,
+            mobileBottomLineRef.current,
+            mobileSocialLineRef.current,
+            mobileSocialBottomLineRef.current,
+          ],
+          { scaleX: 0, duration: 0.6, stagger: 0.1, ease: "expo.in" }
+        );
+      }
+      gsap.to(menuLinksWrapperRef.current!.querySelectorAll(".menu-link a"), {
+        y: "-200%",
+        duration: 1.25,
+        ease: "expo.out",
+      });
+      gsap.to(menuContentRef.current, {
+        y: "-100%",
+        opacity: 0.25,
+        duration: 1.25,
+        ease: "expo.out",
+      });
+
+      // 🚀 FIX YPERCENT: Animasi gambar ke yPercent:10 (keluar ke bawah) saat menutup
+      gsap.to(menuImageRef.current, {
+        yPercent: 10,
+        opacity: 0.5,
+        duration: 1.25,
+        ease: "expo.out",
+      });
+
+      gsap.to(menuOverlayRef.current, {
+        clipPath: "polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)",
+        duration: 1.25,
+        ease: "expo.out",
+        onComplete: () => {
+          // Reset states GSAP
+          gsap.set(menuOverlayRef.current, {
+            clipPath: "polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)",
+          });
+          gsap.set(
+            menuLinksWrapperRef.current!.querySelectorAll(".menu-link a"),
+            { y: "150%" }
+          );
+          gsap.set(linkHighlighterRef.current, { y: "150%" });
+          gsap.set(menuContentRef.current, { y: "50%", opacity: 0.25 });
+
+          // 🚀 FIX YPERCENT KRITIS: Reset posisi gambar ke yPercent: 10 (posisi awal tersembunyi)
+          gsap.set(menuImageRef.current, {
+            scale: 0.5,
+            opacity: 0.25,
+            yPercent: 10,
+          });
+
+          gsap.set(".menu-link", { overflow: "hidden" });
+          gsap.set(menuLinksWrapperRef.current, { x: 0 });
+          [
+            mobileTopLineRef.current,
+            mobileBottomLineRef.current,
+            mobileSocialLineRef.current,
+            mobileSocialBottomLineRef.current,
+          ].forEach((el) => {
+            if (el) gsap.set(el, { scaleX: 0 });
+          });
+
+          isMenuOpen.current = false;
+          isMenuAnimating.current = false;
+
+          // Lenis Start dan Scroll
+          if (lenis) {
+            lenis.start();
+          }
+
+          if (pendingScrollTarget.current && lenis) {
+            lenis.scrollTo(pendingScrollTarget.current, {
+              offset: 0,
+              duration: 2,
+              easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            });
+            pendingScrollTarget.current = null;
+          }
+        },
+      });
     }
-    const onToggleClick: EventListener = (e) => {
+  }, [lenis]);
+
+  // -----------------------------------------------------------
+  // 1. useEffect untuk SETUP Awal (hanya berjalan SEKALI)
+  // -----------------------------------------------------------
+  useEffect(() => {
+    gsap.registerPlugin(SplitText);
+
+    const navToggle = navToggleRef.current!;
+    const menuLinksWrapper = menuLinksWrapperRef.current!;
+    const menuLinks = menuLinksWrapper.querySelectorAll(".menu-link a");
+
+    // Initial Split Text
+    menuLinks.forEach((link) => {
+      const spans = link.querySelectorAll("span");
+      spans.forEach((span, idx) => {
+        const split = new SplitText(span, { type: "chars" });
+        split.chars.forEach((c) => (c as HTMLElement).classList.add("char"));
+        if (idx === 1) gsap.set(split.chars, { y: "110%" });
+      });
+    });
+
+    // Initial GSAP Set States
+    gsap.set(menuContentRef.current, { y: "50%", opacity: 0.25 });
+
+    // 🚀 FIX YPERCENT: Set posisi Y awal gambar ke yPercent: 10
+    gsap.set(menuImageRef.current, { scale: 0.5, opacity: 0.25, yPercent: 10 });
+
+    gsap.set(menuLinks, { y: "150%" });
+    gsap.set(linkHighlighterRef.current, { y: "150%" });
+    [
+      mobileTopLineRef.current,
+      mobileBottomLineRef.current,
+      mobileSocialLineRef.current,
+      mobileSocialBottomLineRef.current,
+    ].forEach((el) => {
+      if (el) gsap.set(el, { scaleX: 0, transformOrigin: "center" });
+    });
+
+    const firstLink = menuLinksWrapper.querySelector(".menu-link");
+    if (firstLink) {
+      const span = firstLink.querySelector("a span") as HTMLElement;
+      if (span)
+        linkHighlighterRef.current!.style.width = span.offsetWidth + "px";
+    }
+
+    // --- EVENT LISTENERS (Kode Parallax/Hover/Click tidak berubah) ---
+    const navToggleHandler = (e: Event) => {
       e.preventDefault();
+      e.stopPropagation();
       toggleMenu();
     };
-    navToggle.addEventListener("click", onToggleClick);
+    navToggle.addEventListener("click", navToggleHandler);
 
-    // Add smooth scroll functionality and hover effects to menu links
     const linkContainers = menuLinksWrapper.querySelectorAll(".menu-link");
-    const clickHandlers: Array<{
-      anchor: HTMLAnchorElement;
-      handler: (e: Event) => void;
-    }> = [];
-    const hoverHandlers: Array<{
-      link: Element;
-      onEnter: () => void;
-      onLeave: () => void;
-    }> = [];
+    const clickHandlers: Array<() => void> = [];
 
-    linkContainers.forEach((link) => {
-      // Smooth scroll functionality
-      const anchor = link.querySelector("a");
-      if (anchor) {
-        const clickHandler = (e: Event) => {
-          e.preventDefault();
-          const linkText = anchor.textContent?.trim();
-          if (!linkText) return;
-
-          // Map menu text to section IDs
-          const sectionMap: { [key: string]: string } = {
-            Home: "home",
-            About: "about",
-            Services: "services",
-            Projects: "works",
-            Experience: "experience",
-            Certificates: "certificates",
-            Contact: "contact",
-          };
-
-          const sectionId = sectionMap[linkText];
-          if (sectionId) {
-            const targetSection = document.getElementById(sectionId);
-            if (targetSection) {
-              // Close menu first
-              if (isMenuOpen) {
-                toggleMenu();
-              }
-              // Smooth scroll after menu closes
-              setTimeout(() => {
-                targetSection.scrollIntoView({
-                  behavior: "smooth",
-                  block: "start",
-                });
-              }, 1300); // Wait for menu close animation
-            }
-          }
+    linkContainers.forEach((container) => {
+      const handler = (e: Event) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const linkText = container
+          .querySelector("a span:first-child")
+          ?.textContent?.trim();
+        if (!linkText) return;
+        const sectionMap: Record<string, string> = {
+          Home: "home",
+          About: "about",
+          Services: "services",
+          Projects: "projects",
+          Experience: "experiences",
+          Certificates: "certifications",
+          Contact: "contact",
         };
-        anchor.addEventListener("click", clickHandler);
-        clickHandlers.push({ anchor, handler: clickHandler });
-      }
+        const sectionId = sectionMap[linkText];
+        const targetSection = sectionId
+          ? document.getElementById(sectionId)
+          : null;
+        if (!targetSection) return;
+        if (isMenuOpen.current) {
+          pendingScrollTarget.current = targetSection;
+          toggleMenu();
+        }
+      };
+      container.addEventListener("click", handler);
+      clickHandlers.push(() => container.removeEventListener("click", handler));
+    });
 
-      // Hover effects
+    const hoverHandlers: Array<any> = [];
+    linkContainers.forEach((link) => {
       const onEnter = () => {
         if (window.innerWidth < 1000) return;
         const spans = link.querySelectorAll("a span");
-        if (spans.length < 2) return;
-        const visibleCopy = spans[0];
-        const animatedCopy = spans[1];
-
-        const visibleChars = visibleCopy.querySelectorAll(".char");
-        gsap.to(visibleChars, {
+        gsap.to(spans[0].querySelectorAll(".char"), {
           y: "-110%",
           duration: 0.5,
           stagger: 0.03,
           ease: "expo.inOut",
         });
-
-        const animatedChars = animatedCopy.querySelectorAll(".char");
-        gsap.to(animatedChars, {
+        gsap.to(spans[1].querySelectorAll(".char"), {
           y: "0%",
           duration: 0.5,
           stagger: 0.03,
           ease: "expo.inOut",
         });
-
-        // Highlighter follow
-        const linkRect = (link as HTMLElement).getBoundingClientRect();
-        const menuWrapperRect = menuLinksWrapper.getBoundingClientRect();
-        targetHighlighterX = linkRect.left - menuWrapperRect.left;
-        const firstSpan = link.querySelector("a span") as HTMLElement | null;
-        targetHighlighterWidth = firstSpan
-          ? firstSpan.offsetWidth
-          : linkRect.width;
+        const rect = (link as HTMLElement).getBoundingClientRect();
+        const wrapperRect = menuLinksWrapper.getBoundingClientRect();
+        targetHighlighterX.current = rect.left - wrapperRect.left;
+        targetHighlighterWidth.current =
+          (link.querySelector("a span") as HTMLElement)?.offsetWidth ||
+          rect.width;
       };
 
       const onLeave = () => {
         if (window.innerWidth < 1000) return;
         const spans = link.querySelectorAll("a span");
-        if (spans.length < 2) return;
-        const visibleCopy = spans[0];
-        const animatedCopy = spans[1];
-
-        const animatedChars = animatedCopy.querySelectorAll(".char");
-        gsap.to(animatedChars, {
+        gsap.to(spans[1].querySelectorAll(".char"), {
           y: "110%",
           duration: 0.5,
           stagger: 0.03,
           ease: "expo.inOut",
         });
-
-        const visibleChars = visibleCopy.querySelectorAll(".char");
-        gsap.to(visibleChars, {
+        gsap.to(spans[0].querySelectorAll(".char"), {
           y: "0%",
           duration: 0.5,
           stagger: 0.03,
           ease: "expo.inOut",
         });
+        const first = menuLinksWrapper.querySelector(
+          ".menu-link"
+        ) as HTMLElement;
+        const span = first.querySelector("a span") as HTMLElement;
+        targetHighlighterX.current =
+          first.getBoundingClientRect().left -
+          menuLinksWrapper.getBoundingClientRect().left;
+        targetHighlighterWidth.current = span.offsetWidth;
       };
 
       link.addEventListener("mouseenter", onEnter);
@@ -443,107 +358,98 @@ export default function Navbar() {
       hoverHandlers.push({ link, onEnter, onLeave });
     });
 
-    // Parallax on overlay move
-    const menuOverlayMouseMove = (e: MouseEvent) => {
+    const handleMouseMove = (e: MouseEvent) => {
       if (window.innerWidth < 1000) return;
       const mouseX = e.clientX;
-      const viewportWidth = window.innerWidth;
-      const menuLinksWrapperWidth = menuLinksWrapper.offsetWidth;
-
-      const maxMoveLeft = 0;
-      const maxMoveRight = viewportWidth - menuLinksWrapperWidth;
-
-      const sensitivityRange = viewportWidth * 0.5;
-      const startX = (viewportWidth - sensitivityRange) / 2;
-      const endX = startX + sensitivityRange;
-
-      let mousePercentage: number;
-      if (mouseX <= startX) mousePercentage = 0;
-      else if (mouseX >= endX) mousePercentage = 1;
-      else mousePercentage = (mouseX - startX) / sensitivityRange;
-
-      targetX = maxMoveLeft + mousePercentage * (maxMoveRight - maxMoveLeft);
+      const vw = window.innerWidth;
+      const wrapperWidth = menuLinksWrapper.offsetWidth;
+      const maxMove = vw - wrapperWidth;
+      const sensitivity = vw * 0.5;
+      const start = (vw - sensitivity) / 2;
+      const percentage = Math.max(
+        0,
+        Math.min(1, (mouseX - start) / sensitivity)
+      );
+      targetX.current = percentage * maxMove;
     };
-    menuOverlay.addEventListener("mousemove", menuOverlayMouseMove);
+    menuOverlayRef.current!.addEventListener("mousemove", handleMouseMove);
 
-    const menuLinksWrapperMouseLeave = () => {
-      const defaultLink = menuLinksWrapper.querySelector(
-        ".menu-link:first-child"
-      ) as HTMLElement;
-      const defaultSpan = defaultLink.querySelector("a span") as HTMLElement;
-      const linkRect = defaultLink.getBoundingClientRect();
-      const menuWrapperRect = menuLinksWrapper.getBoundingClientRect();
-      targetHighlighterX = linkRect.left - menuWrapperRect.left;
-      targetHighlighterWidth = defaultSpan.offsetWidth;
+    const handleMouseLeave = () => {
+      targetX.current = 0;
     };
-    menuLinksWrapper.addEventListener("mouseleave", menuLinksWrapperMouseLeave);
+    menuLinksWrapperRef.current!.addEventListener(
+      "mouseleave",
+      handleMouseLeave
+    );
 
-    // RAF animate loop
-    let rafId = 0;
+    // Request Animation Frame (RAF)
+    let raf = 0;
     const animate = () => {
-      currentX += (targetX - currentX) * lerpFactor;
-      currentHighlighterX +=
-        (targetHighlighterX - currentHighlighterX) * lerpFactor;
-      currentHighlighterWidth +=
-        (targetHighlighterWidth - currentHighlighterWidth) * lerpFactor;
+      currentX.current += (targetX.current - currentX.current) * lerpFactor;
+      currentHighlighterX.current +=
+        (targetHighlighterX.current - currentHighlighterX.current) * lerpFactor;
+      currentHighlighterWidth.current +=
+        (targetHighlighterWidth.current - currentHighlighterWidth.current) *
+        lerpFactor;
 
-      gsap.to(menuLinksWrapper, {
-        x: currentX,
-        duration: 0.3,
-        ease: "power4.out",
-      });
-      gsap.to(linkHighlighter, {
-        x: currentHighlighterX,
-        width: currentHighlighterWidth,
-        duration: 0.3,
-        ease: "power4.out",
+      gsap.set(menuLinksWrapperRef.current, { x: currentX.current });
+      gsap.set(linkHighlighterRef.current, {
+        x: currentHighlighterX.current,
+        width: currentHighlighterWidth.current,
       });
 
-      rafId = requestAnimationFrame(animate);
+      raf = requestAnimationFrame(animate);
     };
-    rafId = requestAnimationFrame(animate);
+    raf = requestAnimationFrame(animate);
 
+    // CLEANUP
     return () => {
-      cancelAnimationFrame(rafId);
-      navToggle.removeEventListener("click", onToggleClick);
-      // Cleanup click handlers
-      clickHandlers.forEach(({ anchor, handler }) => {
-        anchor.removeEventListener("click", handler);
-      });
-      // Cleanup hover handlers
-      hoverHandlers.forEach(({ link, onEnter, onLeave }) => {
+      cancelAnimationFrame(raf);
+      navToggle.removeEventListener("click", navToggleHandler);
+      clickHandlers.forEach((rm) => rm());
+      hoverHandlers.forEach(({ link, onEnter, onLeave }: any) => {
         link.removeEventListener("mouseenter", onEnter);
-        if (onLeave) link.removeEventListener("mouseleave", onLeave);
+        link.removeEventListener("mouseleave", onLeave);
       });
-      // Cleanup parallax and wrapper listeners
-      menuOverlay.removeEventListener("mousemove", menuOverlayMouseMove);
-      menuLinksWrapper.removeEventListener(
+      menuOverlayRef.current!.removeEventListener("mousemove", handleMouseMove);
+      menuLinksWrapperRef.current!.removeEventListener(
         "mouseleave",
-        menuLinksWrapperMouseLeave
+        handleMouseLeave
       );
     };
-  }, []);
+  }, [toggleMenu]);
+
+  // -----------------------------------------------------------
+  // 2. useEffect untuk Lenis Control (hanya untuk trigger)
+  // -----------------------------------------------------------
+  useEffect(() => {}, [lenis, toggleMenu]);
 
   return (
-    <div className="relative isolate w-screen min-h-screen  text-[#2056F7] overflow-x-hidden">
+    <div className="relative isolate w-screen h-screen text-[#2056F7] overflow-x-hidden">
       {/* NAVBAR */}
-      <nav className="absolute top-0 left-0 w-screen pt-4 px-4 flex items-center justify-center md:justify-between mix-blend-difference z-[1000] will-change-[transform,opacity] [transform:translateZ(0)]">
-        <div className="hidden"></div>
+      <nav className="absolute top-0 left-0 w-screen pt-4 px-4 flex justify-between mix-blend-difference z-1000">
         <div
-          className="nav-toggle relative p-4 cursor-pointer tracking-wider select-none font-heading uppercase text-sm text-center md:text-left md:static md:left-auto md:translate-x-0"
           ref={navToggleRef}
+          className="nav-toggle relative p-4 cursor-pointer tracking-wider select-none font-heading uppercase text-sm"
         >
           Menu
         </div>
-        <div className="hidden md:block p-4 cursor-pointer font-heading tracking-wider select-none uppercase text-sm"></div>
+        <Link
+          href="https://drive.google.com/file/d/1yoI2g5zc4UBT6R2nrkRuIc1A9PlNJknA/view?usp=drive_link"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <button className="pr-6 pt-4 tracking-wider cursor-pointer select-none font-heading uppercase text-sm">
+            Download Cv
+          </button>
+        </Link>
       </nav>
 
-      {/* MENU OVERLAY */}
       <div
-        className="menu-overlay fixed top-0 left-0 w-screen h-[100svh] overflow-hidden md:overflow-hidden overscroll-contain [touch-action:pan-y] will-change-[clip-path] [transform:translateZ(0)] bg-[#1e1e1e] text-[#fefff8] z-40 pt-16 md:pt-16 pb-0 md:pb-0 [clip-path:polygon(0%_100%,_100%_100%,_100%_100%,_0%_100%)]"
         ref={menuOverlayRef}
+        className="menu-overlay fixed top-0 left-0 w-screen h-[100svh] bg-[#1e1e1e] text-[#fefff8] z-40 pt-16 [clip-path:polygon(0%_100%,_100%_100%,_100%_100%,_0%_100%)]"
       >
-        {/* MOBILE TOP DECOR */}
+        {/* Mobile Decor */}
         <div className="md:hidden flex flex-col items-center gap-4 pt-12 pb-6 text-center">
           <div className="w-full px-6">
             <div ref={mobileTopLineRef} className="border-t border-white/15" />
@@ -559,57 +465,74 @@ export default function Navbar() {
           </div>
         </div>
 
-        {/* ... menu content sama persis seperti sebelumnya ... */}
+        {/* Desktop Content */}
         <div
-          className="menu-content hidden md:flex md:absolute md:top-[30%] lg:top-1/2 md:-translate-y-1/2 w-full px-8 pt-8 md:p-10 lg:p-8 justify-between items-start md:items-center md:mb-0"
           ref={menuContentRef}
+          className="menu-content hidden md:flex md:absolute md:top-[30%] lg:top-1/2 md:-translate-y-1/2 w-full px-8 pt-8 md:p-10 lg:p-8 justify-between"
         >
-          <div className="text-left font-heading">
-            <p className="uppercase text-[0.8rem] leading-none">Codegrid</p>
-            <p className="uppercase text-[0.8rem] leading-none">
-              Shoreline Drive
-            </p>
-            <p className="uppercase text-[0.8rem] leading-none">Oslo</p>
+          <div className="text-left font-heading text-[0.8rem] uppercase leading-none space-y-1">
+            <p>Razhaaf</p>
+            <p>Shoreline Drive</p>
+            <p>Surabaya</p>
             <br />
-            <p className="uppercase text-[0.8rem] leading-none">Edition</p>
-            <p className="uppercase text-[0.8rem] leading-none">Vol. 03</p>
+            <p>Edition</p>
+            <p>Vol. 03</p>
             <br />
-            <p className="uppercase text-[0.8rem] leading-none">Contact</p>
-            <p className="uppercase text-[0.8rem] leading-none">
-              hello@codegrid.org
-            </p>
+            <p>Contact</p>
+            <p>firazfulvianhafiz05@gmail.com</p>
             <br />
-            <p className="uppercase text-[0.8rem] leading-none">Direct</p>
-            <p className="uppercase text-[0.8rem] leading-none">
-              +47 900 00 000
-            </p>
+            <p>Direct</p>
+            <p>+62 823-3267-6848</p>
           </div>
-          <div className="text-right font-heading">
-            <p className="uppercase text-[0.8rem] leading-none">Instagram</p>
-            <p className="uppercase text-[0.8rem] leading-none">LinkedIn</p>
-            <p className="uppercase text-[0.8rem] leading-none">GitHub</p>
+          <div className="text-right font-heading text-[0.8rem] uppercase leading-none space-y-1">
+            <Link
+              href="https://www.instagram.com/razhaaf"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              <p>Instagram</p>
+            </Link>
+            <Link
+              href="https://www.linkedin.com/in/firazhafiz/"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              <p>LinkedIn</p>
+            </Link>
+            <Link
+              href="https://github.com/firazhafiz/"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              <p>Github</p>
+            </Link>
             <br />
             <br />
-            <p className="uppercase text-[0.8rem] leading-none">Credits</p>
-            <p className="uppercase text-[0.8rem] leading-none">Imprint</p>
-            <p className="uppercase text-[0.8rem] leading-none">Ref. 00492X</p>
+            <p>Credits</p>
+            <p>Imprint</p>
+            <p>Ref. 00492X</p>
           </div>
         </div>
+
         <div
-          className="menu-img absolute top-[45%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200px] hidden lg:block"
           ref={menuImageRef}
+          // 🚀 FIX CSS: Kembalikan -translate-y-1/2 agar CSS menempatkan gambar di tengah.
+          // GSAP yPercent akan menambahkan offset di atas posisi ini.
+          className="menu-img absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200px] hidden lg:block"
         >
           <Image
             src="/assets/header-profile.jpg"
-            alt="menu-img"
+            alt="profile"
             width={600}
             height={600}
             className="rounded-lg"
+            priority
           />
         </div>
+
         <div
-          className=" menu-links-wrapper relative md:absolute md:left-0 md:bottom-0 w-full lg:w-max px-8 md:p-6 lg:p-5 flex gap-2 lg:gap-8 flex-col lg:flex-row items-center md:items-start text-center md:text-left z-20 mt-0 md:mt-0 mb-0 md:mb-6 lg:mb-0 min-h-[200px] md:min-h-[150px] lg:min-h-0"
           ref={menuLinksWrapperRef}
+          className="menu-links-wrapper relative md:absolute md:left-0 md:bottom-0 w-full lg:w-max px-8 md:p-6 lg:p-5 flex gap-2 lg:gap-8 flex-col lg:flex-row items-center md:items-start text-center md:text-left z-20 mb-6 lg:mb-0 min-h-[200px] md:min-h-[150px] lg:min-h-0"
         >
           {[
             "Home",
@@ -620,31 +543,44 @@ export default function Navbar() {
             "Certificates",
             "Contact",
           ].map((txt) => (
-            <div className="menu-link relative overflow-hidden" key={txt}>
-              <a className="relative uppercase text-light font-[Anton] text-2xl md:text-[4rem] lg:text-[6.5rem] tracking-[0.12em] md:tracking-[0] lg:tracking-[-0.02rem] inline-block overflow-hidden leading-none">
+            <div
+              className="menu-link relative overflow-hidden cursor-pointer"
+              key={txt}
+            >
+              <a className="relative uppercase font-[Anton] text-2xl md:text-[4rem] lg:text-[6.5rem] tracking-[0.12em] md:tracking-[0] lg:tracking-[-0.02rem] inline-block overflow-hidden leading-none">
                 <span>{txt}</span>
                 <span className="absolute top-0 left-0">{txt}</span>
               </a>
             </div>
           ))}
           <div
-            className="link-highlighter absolute bottom-0 left-0 w-[250px] h-[0.5rem] bg-[#fca311] z-10 hidden lg:block"
             ref={linkHighlighterRef}
+            className="link-highlighter absolute bottom-0 left-0 h-[0.5rem] bg-[#fca311] hidden lg:block"
           ></div>
         </div>
 
-        {/* MOBILE SOCIAL LINKS */}
-        <div className="md:hidden flex flex-col items-center gap-3 py-10 text-xs uppercase tracking-[0.3em] text-white/70">
+        {/* Mobile Social */}
+        <div className="md:hidden flex flex-col items-center gap-3 py-10 text-xs uppercase tracking-[0.3em] text-white/70 ">
           <div className="w-full px-6">
             <div
               ref={mobileSocialLineRef}
               className="border-t border-white/15"
             />
           </div>
+          {/* ✅ INTEGRASI SOSIAL MEDIA */}
           <div className="flex flex-col items-center gap-2">
-            <span>Instagram</span>
-            <span>LinkedIn</span>
-            <span>GitHub</span>
+            {socials.map((item) => (
+              <a
+                key={item.name}
+                href={item.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-white transition-colors flex items-center gap-1"
+              >
+                {/* <item.icon className="inline-block w-3 h-3" /> */}
+                <span>{item.name}</span>
+              </a>
+            ))}
           </div>
           <div className="w-full px-6">
             <div
@@ -655,8 +591,10 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* HERO DI LUAR CONTAINER */}
-      <Hero />
+      {/* HERO DIBUNGKUS REF */}
+      <div ref={heroContentRef}>
+        <Hero />
+      </div>
     </div>
   );
 }
