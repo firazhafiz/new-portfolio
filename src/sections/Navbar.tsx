@@ -429,7 +429,7 @@ export default function Navbar({ lenis }: NavbarProps) {
         </div>
 
         <Link
-          href="https://drive.google.com/file/d/1yoI2g5zc4UBT6R2nrkRuIc1A9PlNJknA/view?usp=drive_link"
+          href="https://drive.google.com/file/d/1Vu0TdEBXE51IM_Pf0MvWmcpOdOoIif7x/view?usp=drive_link"
           rel="noopener noreferrer"
           target="_blank"
         >

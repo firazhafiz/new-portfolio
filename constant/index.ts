@@ -103,6 +103,7 @@ export const projects = [
     description:
       "Landing page website for an event management platform at Surabaya State University.",
     preview: "https://nesavent.vercel.app/",
+    github: "https://github.com/firazhafiz/landingpage-nesavent",
     image: "/assets/nesavent.png",
     bgImage: "/images/event.jpg", // Placeholder
     frameworks: [
@@ -117,11 +118,13 @@ export const projects = [
     description:
       "A smart waste management system designed to optimize waste collection and monitoring through intelligent technology.",
     preview: "https://angkutin-omega.vercel.app/",
+    github: "https://github.com/firazhafiz/fe-angkutin",
     image: "/assets/angkutin.png",
     bgImage: "/images/trash.jpg", // Placeholder
     frameworks: [
       { id: 1, name: "Next.js" },
       { id: 2, name: "React" },
+      { id: 3, name: "Laravel as BE" },
       { id: 3, name: "Express.js" },
     ],
   },
@@ -131,6 +134,7 @@ export const projects = [
     description:
       "A hypertension screening website that allows users to perform self-assessments through interactive tests for early detection and management.",
     preview: "https://sadari4life.vercel.app/",
+    github: "https://github.com/firazhafiz/fe-sadari",
     image: "/assets/sadari.png",
     bgImage: "/images/hospital.jpg", // Placeholder
     frameworks: [
