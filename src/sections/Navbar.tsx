@@ -441,7 +441,7 @@ export default function Navbar({ lenis }: NavbarProps) {
 
       <div
         ref={menuOverlayRef}
-        className="menu-overlay fixed top-0 left-0 w-screen h-[100svh] bg-[#1e1e1e] text-[#fefff8] z-40 pt-16 [clip-path:polygon(0%_100%,_100%_100%,_100%_100%,_0%_100%)]"
+        className="menu-overlay min-h-screen fixed top-0 left-0 w-screen h-[100svh] bg-[#1e1e1e] text-[#fefff8] z-40 pt-16 [clip-path:polygon(0%_100%,_100%_100%,_100%_100%,_0%_100%)]"
       >
         {/* Mobile Decor */}
         <div className="md:hidden flex flex-col items-center gap-4 pt-12 pb-6 text-center">

@@ -6,7 +6,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 import AnimatedHeaderSection from "@/components/AnimatedHeaderSection";
-import { experiences } from "../../constant";
+import { experiences } from "../../constant"; // Pastikan path ini benar!
 
 export default function Experiences() {
   const sectionRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -16,7 +16,31 @@ export default function Experiences() {
 
   const text = `A Journey Through Time and Growth.`;
 
+  // 🖼️ LOGIC: Prefetching Gambar
   useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    // Prefetch/Preload semua gambar pengalaman (Experiences)
+    experiences.forEach((experience, index) => {
+      // Gunakan <link rel="preload"> untuk 2 gambar pertama (penting untuk LCP/visual awal)
+      // Gunakan <link rel="prefetch"> untuk gambar sisanya
+      const link = document.createElement("link");
+      link.rel = index < 2 ? "preload" : "prefetch";
+      link.as = "image";
+      link.href = experience.image;
+
+      // Jika preload, tambahkan media query (hanya relevan jika diakses di desktop/tablet)
+      if (link.rel === "preload") {
+        link.media = "(min-width: 768px)";
+      }
+
+      document.head.appendChild(link);
+    });
+  }, []);
+
+  // ⚙️ LOGIC: Animasi GSAP ScrollTrigger
+  useEffect(() => {
+    // Nonaktifkan animasi GSAP untuk layar mobile atau saat SSR
     if (typeof window === "undefined" || window.innerWidth < 768) return;
 
     gsap.registerPlugin(ScrollTrigger);
@@ -77,7 +101,7 @@ export default function Experiences() {
   return (
     <section
       id="experiences"
-      className="sm:pt-0 pt-55 pb-0 min-h-screen bg-gray-50"
+      className="sm:pt-0 pt-70 pb-0 min-h-screen bg-white"
     >
       <AnimatedHeaderSection
         subtitle=""
@@ -87,7 +111,7 @@ export default function Experiences() {
         titleColor="text-[#2056F7]"
       />
 
-      {/* Desktop */}
+      {/* Desktop Layout (md:flex) */}
       <div className="hidden md:flex flex-col gap-24 px-10 lg:px-20 pb-24">
         {experiences.map((experience, index) => (
           <div
@@ -97,6 +121,7 @@ export default function Experiences() {
             }}
             className="grid grid-cols-[160px_minmax(0,1fr)] gap-16 items-center"
           >
+            {/* Tahun */}
             <div>
               <div
                 ref={(el) => {
@@ -108,6 +133,7 @@ export default function Experiences() {
               </div>
             </div>
 
+            {/* Gambar & Card */}
             <div className="relative flex justify-center">
               <div
                 ref={(el) => {
@@ -115,17 +141,20 @@ export default function Experiences() {
                 }}
                 className="relative w-full max-w-[640px] h-[60vh] min-h-[420px] max-h-[560px] overflow-hidden rounded-[40px] shadow-2xl border border-black/5"
               >
+                {/* Image Next.js dengan Priority & Loading yang Optimal */}
                 <Image
                   src={experience.image}
                   alt={experience.title}
                   fill
                   sizes="(min-width: 768px) 65vw, 0px"
                   className="object-cover"
-                  priority={index < 2}
-                  quality={100}
+                  priority={index < 2} // Priority hanya untuk 2 gambar pertama
+                  loading={index < 2 ? "eager" : "lazy"}
+                  quality={80} // Optimal quality
                 />
               </div>
 
+              {/* Card Experience */}
               <div
                 ref={(el) => {
                   if (el) cardRefs.current[index] = el;
@@ -146,20 +175,24 @@ export default function Experiences() {
         ))}
       </div>
 
-      {/* Mobile */}
+      {/* Mobile Layout (md:hidden) */}
       <div className="md:hidden px-6 pb-10 space-y-12">
-        {experiences.map((experience) => (
+        {experiences.map((experience, index) => (
           <div key={experience.id} className="space-y-4">
             <div className="text-5xl font-bold text-black-100 font-heading">
               {experience.year}
             </div>
             <div className="relative h-70 rounded-3xl overflow-hidden shadow-xl">
+              {/* Image Next.js dengan Priority & Loading yang Optimal (Mobile) */}
               <Image
                 src={experience.image}
                 alt={experience.title}
                 fill
                 sizes="100vw"
                 className="object-cover"
+                priority={index < 2} // Priority hanya untuk 2 gambar pertama
+                loading={index < 2 ? "eager" : "lazy"}
+                quality={80}
               />
             </div>
             <div className="space-y-3">

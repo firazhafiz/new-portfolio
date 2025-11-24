@@ -448,7 +448,7 @@ export default function Projects() {
   }, []);
 
   return (
-    <section className="flex flex-col bg-gray-50 min-h-screen" id="projects">
+    <section className="flex flex-col  min-h-screen" id="projects">
       <AnimatedHeaderSection
         subtitle=""
         title="Projects"
@@ -697,7 +697,7 @@ export default function Projects() {
       {/* Mobile Layout - Horizontal Scroll */}
       <div
         ref={mobileContainerRef}
-        className="md:hidden"
+        className="md:hidden "
         style={{
           height: "100vh",
           overflow: "hidden",
@@ -706,7 +706,7 @@ export default function Projects() {
       >
         <div
           ref={mobileWrapperRef}
-          className="flex h-full"
+          className="flex h-full -mt-12 "
           style={{ willChange: "transform" }}
         >
           {projects.map((project, index) => (

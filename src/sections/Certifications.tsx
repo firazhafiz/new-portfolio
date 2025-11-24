@@ -40,11 +40,7 @@ export default function Certifications() {
   return (
     <>
       {/* SECTION DENGAN ANIMATED HEADER */}
-      <section
-        ref={sectionRef}
-        id="certifications"
-        className="pb-32 bg-gray-50"
-      >
+      <section ref={sectionRef} id="certifications" className="pb-32 bg-white">
         <div className="">
           {/* Animated Header */}
           <AnimatedHeaderSection
