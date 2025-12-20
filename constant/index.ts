@@ -83,6 +83,21 @@ export const servicesData = [
 export const projects = [
   {
     id: 1,
+    name: "Predictive Maintenance Copilot",
+    description:
+      "An AI powered predictive maintenance web application that leverages machine learning to forecast equipment failures, optimize maintenance schedules, and reduce downtime for industrial operations.",
+    preview: "https://pm-copilot.vercel.app/",
+    image: "/assets/pmcopilot.png",
+    bgImage: "/images/maintenance.jpg", // Placeholder
+    frameworks: [
+      { id: 1, name: "React" },
+      { id: 2, name: "Gemini API" },
+      { id: 3, name: "Express.js" },
+      { id: 4, name: "Prometheus TSDB" },
+    ],
+  },
+  {
+    id: 2,
     name: "Diary Food",
     description:
       "A website used as inspiration for finding various local and international recipes for food and drinks.",
@@ -98,7 +113,7 @@ export const projects = [
     ],
   },
   {
-    id: 2,
+    id: 3,
     name: "Nesavent",
     description:
       "Landing page website for an event management platform at Surabaya State University.",
@@ -113,7 +128,7 @@ export const projects = [
     ],
   },
   {
-    id: 3,
+    id: 4,
     name: "Angkutin",
     description:
       "A smart waste management system designed to optimize waste collection and monitoring through intelligent technology.",
@@ -129,7 +144,7 @@ export const projects = [
     ],
   },
   {
-    id: 4,
+    id: 5,
     name: "Sadari 4Life",
     description:
       "A hypertension screening website that allows users to perform self-assessments through interactive tests for early detection and management.",
@@ -145,7 +160,7 @@ export const projects = [
     ],
   },
   {
-    id: 5,
+    id: 6,
     name: "Catatan Akhir Sekolah 74 SMAN 1 Madiun",
     description:
       "A documentary film capturing the journey of the Class of 74 at SMAN 1 Madiun and preserving their final moments of high school years.",
@@ -159,7 +174,7 @@ export const projects = [
     ],
   },
   {
-    id: 6,
+    id: 7,
     name: "BANGKIT - Cinematography SMA Awards",
     description:
       "A prestigious high school cinematography awards event celebrating outstanding filmmaking in the Indonesian education community.",
@@ -172,7 +187,7 @@ export const projects = [
     ],
   },
   {
-    id: 7,
+    id: 8,
     name: "Teaser PKKMB FT Unesa 2024",
     description:
       "A promotional teaser video for the Freshman Orientation Program (PKKMB) at the Faculty of Engineering, State University of Surabaya.",
@@ -187,7 +202,7 @@ export const projects = [
     ],
   },
   {
-    id: 8,
+    id: 9,
     name: "Aftermovie PKKMB FT Unesa 2024",
     description:
       "A cinematic aftermovie capturing the highlights and memorable moments from the Freshman Orientation Program (PKKMB) at the Faculty of Engineering, State University of Surabaya, celebrating the beginning of new students' academic journey.",
@@ -202,7 +217,7 @@ export const projects = [
     ],
   },
   {
-    id: 9,
+    id: 10,
     name: "Aftermovie Google CNE Surabaya 2025",
     description:
       "Documenting a comprehensive tech workshop series on cloud computing, artificial intelligence, and data analytics held in Surabaya, featuring hands-on learning experiences and expert insights from industry leaders.",
