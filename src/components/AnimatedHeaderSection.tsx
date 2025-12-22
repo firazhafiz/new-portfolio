@@ -70,7 +70,7 @@ export default function AnimatedHeaderSection({
         </div>
       </div>
       <div className={`relative px-10 ${textColor}`}>
-        <div className="absolute inset-x-0 border-t-1"></div>
+        <div className="absolute inset-x-0 border-t"></div>
         <div className="py-12 sm:py-18 text-end">
           <AnimatedTextLines
             className={`font-light tracking-widest font-sans sm:text-lg text-md uppercase value-text-responsive ${textColor}`}
