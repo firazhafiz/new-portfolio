@@ -297,10 +297,10 @@ export type CertificationItem = {
 
 export const certifications: CertificationItem[] = [
   {
-    image: "/images/es2.jpg",
+    image: "/images/gdgoc.jpg",
     title:
-      "Event Series 2 Building Smarter Website: AI Powered Solutions with Google Cloud Integration",
-    author: "Google Developer Group on Campus Unesa",
+      "Core Team Google Developer Group on Campus State University of Surabaya",
+    author: "GDGOC Unesa",
     credentialUrl: "",
   },
   {
@@ -317,11 +317,11 @@ export const certifications: CertificationItem[] = [
     credentialUrl: "",
   },
   {
-    image: "/images/pznhtmlcssjs.jpg",
-    title: "HTML, CSS, dan Javascipt : Pemula sampai Mahir",
-    author: "Progammer Zaman Now",
-    credentialUrl:
-      "https://www.udemy.com/certificate/UC-af1b562f-3085-4aba-981e-7260d40d5503/",
+    image: "/images/es2.jpg",
+    title:
+      "Event Series 2 Building Smarter Website: AI Powered Solutions with Google Cloud Integration",
+    author: "Google Developer Group on Campus Unesa",
+    credentialUrl: "",
   },
   {
     image: "/images/es3.png",
