@@ -331,17 +331,17 @@ export const certifications: CertificationItem[] = [
     credentialUrl: "",
   },
   {
+    image: "/images/konaspi.jpg",
+    title: "Konvensi Nasional Pendidikan Indonesia 2024",
+    author: "Kece Media Unesa",
+    credentialUrl: "",
+  },
+  {
     image: "/images/pznreact.jpg",
     title: "React.js : Pemula sampai Mahir",
     author: "Progammer Zaman Now",
     credentialUrl:
       "https://www.udemy.com/certificate/UC-4fd37fe3-f98e-4054-a7ef-90c608999a87/",
-  },
-  {
-    image: "/images/konaspi.jpg",
-    title: "Konvensi Nasional Pendidikan Indonesia 2024",
-    author: "Kece Media Unesa",
-    credentialUrl: "",
   },
   {
     image: "/images/pzntypescript.jpg",
