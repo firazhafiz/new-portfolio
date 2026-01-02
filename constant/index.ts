@@ -98,6 +98,21 @@ export const projects = [
   },
   {
     id: 2,
+    name: "BankDash.",
+    description:
+      "Dashboard for bank for user to manage their accounts and transactions.",
+    preview: "https://bankdash-indol.vercel.app/",
+    github: "https://github.com/firazhafiz/bankdash",
+    image: "/assets/bankdash.png",
+    bgImage: "/images/bank-digital.jpg", // Placeholder
+    frameworks: [
+      { id: 1, name: "React" },
+      { id: 2, name: "Tailwind CSS" },
+      { id: 3, name: "Shadcn UI" },
+    ],
+  },
+  {
+    id: 3,
     name: "Diary Food",
     description:
       "A website used as inspiration for finding various local and international recipes for food and drinks.",
@@ -113,7 +128,7 @@ export const projects = [
     ],
   },
   {
-    id: 3,
+    id: 4,
     name: "Nesavent",
     description:
       "Landing page website for an event management platform at Surabaya State University.",
@@ -128,7 +143,7 @@ export const projects = [
     ],
   },
   {
-    id: 4,
+    id: 5,
     name: "Angkutin",
     description:
       "A smart waste management system designed to optimize waste collection and monitoring through intelligent technology.",
@@ -144,7 +159,7 @@ export const projects = [
     ],
   },
   {
-    id: 5,
+    id: 6,
     name: "Sadari 4Life",
     description:
       "A hypertension screening website that allows users to perform self-assessments through interactive tests for early detection and management.",
@@ -160,7 +175,7 @@ export const projects = [
     ],
   },
   {
-    id: 6,
+    id: 7,
     name: "Catatan Akhir Sekolah 74 SMAN 1 Madiun",
     description:
       "A documentary film capturing the journey of the Class of 74 at SMAN 1 Madiun and preserving their final moments of high school years.",
@@ -174,7 +189,7 @@ export const projects = [
     ],
   },
   {
-    id: 7,
+    id: 8,
     name: "BANGKIT - Cinematography SMA Awards",
     description:
       "A prestigious high school cinematography awards event celebrating outstanding filmmaking in the Indonesian education community.",
@@ -187,7 +202,7 @@ export const projects = [
     ],
   },
   {
-    id: 8,
+    id: 9,
     name: "Teaser PKKMB FT Unesa 2024",
     description:
       "A promotional teaser video for the Freshman Orientation Program (PKKMB) at the Faculty of Engineering, State University of Surabaya.",
@@ -202,7 +217,7 @@ export const projects = [
     ],
   },
   {
-    id: 9,
+    id: 10,
     name: "Aftermovie PKKMB FT Unesa 2024",
     description:
       "A cinematic aftermovie capturing the highlights and memorable moments from the Freshman Orientation Program (PKKMB) at the Faculty of Engineering, State University of Surabaya, celebrating the beginning of new students' academic journey.",
@@ -217,7 +232,7 @@ export const projects = [
     ],
   },
   {
-    id: 10,
+    id: 11,
     name: "Aftermovie Google CNE Surabaya 2025",
     description:
       "Documenting a comprehensive tech workshop series on cloud computing, artificial intelligence, and data analytics held in Surabaya, featuring hands-on learning experiences and expert insights from industry leaders.",
