@@ -57,9 +57,11 @@ export default function Experiences() {
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: section,
-          start: "top 70%",
+          start: "top 85%", // Trigger earlier/smoother on mobile
           end: "bottom 50%",
-          scrub: true,
+          scrub: window.innerWidth < 768 ? false : true, // Disable scrub on mobile
+          toggleActions:
+            window.innerWidth < 768 ? "play none none reverse" : undefined, // Simple play on mobile
         },
       });
 
@@ -101,7 +103,7 @@ export default function Experiences() {
   return (
     <section
       id="experiences"
-      className="sm:pt-0 pt-70 pb-0 min-h-screen bg-white"
+      className="sm:pt-0 pt-0 pb-0 min-h-screen bg-white"
     >
       <AnimatedHeaderSection
         subtitle=""

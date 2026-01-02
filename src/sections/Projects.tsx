@@ -29,280 +29,34 @@ export default function Projects() {
   // Berdasarkan penggunaan, previewRef memang akan berisi HTMLDivElement.
   const previewRef = useRef<HTMLDivElement>(null);
 
-  // Mobile horizontal scroll refs
-  const mobileContainerRef = useRef<HTMLDivElement>(null);
-  const mobileWrapperRef = useRef<HTMLDivElement>(null);
-  const mobileProjectRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const mobileImageRefs = useRef<(HTMLDivElement | null)[]>([]);
-
   const mouse = useRef({ x: 0, y: 0 });
   const moveX = useRef<((value: number) => void) | null>(null);
   const moveY = useRef<((value: number) => void) | null>(null);
 
   const text = `Seamlessly Transforming Ideas into Reality.`;
 
-  // Mobile horizontal scroll dengan ScrollTrigger
-  useEffect(() => {
-    if (typeof window === "undefined") return;
+  // Simple vertical animation for mobile
+  useGSAP(() => {
+    if (window.innerWidth >= 768) return;
 
-    gsap.registerPlugin(ScrollTrigger);
-
-    const setupMobileScroll = (): MobileScrollTween | null => {
-      if (window.innerWidth >= 768) {
-        // Desktop: cleanup jika ada ScrollTrigger mobile yang masih aktif
-        ScrollTrigger.getAll().forEach((st) => {
-          if (st.vars.id === "mobile-horizontal-scroll") {
-            st.kill();
-          }
-        });
-        return null;
-      }
-
-      // Mobile: setup horizontal scroll
-      if (!mobileContainerRef.current || !mobileWrapperRef.current) return null;
-
-      const container = mobileContainerRef.current;
-      const wrapper = mobileWrapperRef.current;
-
-      // Hitung dimensi
-      const viewportWidth = window.innerWidth;
-      const viewportHeight = window.innerHeight;
-      const projectWidth = viewportWidth;
-      const totalWidth = projectWidth * projects.length;
-      // Scroll distance: geser wrapper dari 0 ke -(totalWidth - viewportWidth)
-      const scrollDistance = Math.max(0, totalWidth - viewportWidth);
-
-      // Set container dan wrapper dimensions
-      gsap.set(container, {
-        height: viewportHeight,
-        overflow: "hidden",
-        position: "relative",
-        backgroundColor: "#ffffff",
-      });
-      // Wrapper width harus tepat = jumlah project * viewport width
-      gsap.set(wrapper, {
-        width: `${totalWidth}px`,
-        x: 0,
-        display: "flex",
-        position: "relative",
-        height: "100%",
-      });
-
-      // Setup horizontal scroll dengan pin
-      // Panjang scroll disetarakan dengan jarak geser horizontal
-      const endDistance = Math.max(
-        scrollDistance,
-        viewportHeight * Math.max(0, projects.length - 1)
-      );
-
-      const hostSection = container.closest("section");
-      if (hostSection instanceof HTMLElement) {
-        hostSection.dataset.prevMinHeight = hostSection.style.minHeight;
-        hostSection.style.minHeight = `${viewportHeight + endDistance}px`;
-      }
-
-      const scrollTween: GSAPTween = gsap.to(wrapper, {
-        x: -scrollDistance,
-        ease: "none",
-        scrollTrigger: {
-          id: "mobile-horizontal-scroll",
-          trigger: container,
-          pin: true,
-          scrub: 1,
-          start: "top top",
-          end: `+=${endDistance}`,
-          invalidateOnRefresh: true,
-          anticipatePin: 1,
-          markers: false, // Set true untuk debugging
-        },
-      });
-
-      // Setup animasi untuk setiap project saat scroll
-      const animationTriggers: ScrollTrigger[] = [];
-      const totalProjects = projects.length;
-      const step = totalProjects > 1 ? 1 / (totalProjects - 1) : 1;
-
-      mobileProjectRefs.current.forEach((projectEl, index) => {
-        if (!projectEl) return;
-
-        const imageEl = mobileImageRefs.current[index];
-        if (!imageEl) return;
-
-        // Set initial state untuk gambar (kecuali project pertama)
-        if (index > 0) {
-          gsap.set(imageEl, { opacity: 0, scale: 0.95 });
-        }
-
-        // Range progress untuk tiap project
-        const projectStartProgress = Math.max(0, (index - 1) * step);
-        const projectEndProgress = Math.min(1, index * step);
-
-        // Animasi gambar dengan fade + scale yang smooth
-        const trigger = ScrollTrigger.create({
-          id: `mobile-project-animation-${index}`,
-          trigger: container,
-          start: "top top",
-          end: `+=${endDistance}`,
-          scrub: 0.8,
-          onUpdate: (self) => {
-            const progress = self.progress;
-            // Trigger animasi saat project masuk viewport
-            if (index === 0) {
-              // Project pertama langsung visible
-              gsap.set(imageEl, { opacity: 1, scale: 1 });
-            } else if (
-              progress >= projectStartProgress &&
-              progress <= projectEndProgress
-            ) {
-              const localProgress =
-                (progress - projectStartProgress) /
-                (projectEndProgress - projectStartProgress);
-              // Smooth fade in dan scale
-              const opacity = Math.min(1, localProgress * 1.2);
-              const scale = 0.95 + localProgress * 0.05;
-
-              gsap.to(imageEl, {
-                opacity: opacity,
-                scale: scale,
-                duration: 0.1,
-                ease: "none",
-              });
-            } else if (progress < projectStartProgress) {
-              // Reset jika belum masuk
-              gsap.set(imageEl, { opacity: 0, scale: 0.95 });
-            } else {
-              // Pastikan fully visible jika sudah lewat
-              gsap.set(imageEl, { opacity: 1, scale: 1 });
-            }
+    const mobileCards = document.querySelectorAll(".mobile-project-card");
+    mobileCards.forEach((card) => {
+      gsap.fromTo(
+        card,
+        { opacity: 0, y: 30 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.6,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: card,
+            start: "top 95%",
+            toggleActions: "play none none reverse",
           },
-        });
-        animationTriggers.push(trigger);
-      });
-
-      // FIX 171-195: Store animation triggers dan hostSection dengan tipe kustom
-      const customScrollTween = scrollTween as MobileScrollTween;
-      customScrollTween.animationTriggers = animationTriggers;
-      if (hostSection instanceof HTMLElement) {
-        customScrollTween.hostSection = hostSection;
-      }
-      return customScrollTween;
-    };
-
-    // Setup initial setelah DOM ready
-    let scrollTween: MobileScrollTween | null = null;
-
-    // Setup setelah DOM ready dan images loaded
-    const setupAfterReady = () => {
-      // Cleanup existing
-      if (scrollTween) {
-        // FIX 242: Ganti (scrollTween as any)
-        const hostSection = scrollTween.hostSection;
-        if (hostSection) {
-          hostSection.style.minHeight = hostSection.dataset.prevMinHeight ?? "";
-          delete hostSection.dataset.prevMinHeight;
         }
-        scrollTween.kill();
-        // Cleanup animation triggers
-        // FIX 250, 251: Ganti (scrollTween as any)
-        if (scrollTween.animationTriggers) {
-          (scrollTween.animationTriggers as ScrollTrigger[]).forEach(
-            (trigger) => trigger.kill()
-          );
-        }
-      }
-      ScrollTrigger.getAll().forEach((st) => {
-        if (
-          st.vars.id === "mobile-horizontal-scroll" ||
-          st.vars.id?.toString().startsWith("mobile-project-animation")
-        ) {
-          st.kill();
-        }
-      });
-
-      scrollTween = setupMobileScroll();
-      if (scrollTween) {
-        // Refresh setelah setup
-        setTimeout(() => {
-          ScrollTrigger.refresh();
-        }, 100);
-      }
-    };
-
-    const timeoutId = setTimeout(setupAfterReady, 800);
-
-    // Juga setup saat window load
-    const loadHandler = setupAfterReady;
-    if (document.readyState === "complete") {
-      setupAfterReady();
-    } else {
-      window.addEventListener("load", loadHandler, { once: true });
-    }
-
-    // Re-setup saat resize
-    let resizeTimer: NodeJS.Timeout;
-    const handleResize = () => {
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(() => {
-        ScrollTrigger.getAll().forEach((st) => {
-          if (
-            st.vars.id === "mobile-horizontal-scroll" ||
-            st.vars.id?.toString().startsWith("mobile-project-animation")
-          ) {
-            st.kill();
-          }
-        });
-        if (scrollTween) {
-          // FIX 271, 280, 281: Ganti (scrollTween as any)
-          const hostSection = scrollTween.hostSection;
-          if (hostSection) {
-            hostSection.style.minHeight =
-              hostSection.dataset.prevMinHeight ?? "";
-            delete hostSection.dataset.prevMinHeight;
-          }
-          if (scrollTween.animationTriggers) {
-            (scrollTween.animationTriggers as ScrollTrigger[]).forEach(
-              (trigger) => trigger.kill()
-            );
-          }
-        }
-        scrollTween = setupMobileScroll();
-        if (scrollTween) {
-          ScrollTrigger.refresh();
-        }
-      }, 250);
-    };
-
-    window.addEventListener("resize", handleResize);
-
-    return () => {
-      clearTimeout(timeoutId);
-      clearTimeout(resizeTimer);
-      window.removeEventListener("resize", handleResize);
-      window.removeEventListener("load", loadHandler);
-      if (scrollTween) {
-        const hostSection = scrollTween.hostSection;
-        if (hostSection) {
-          hostSection.style.minHeight = hostSection.dataset.prevMinHeight ?? "";
-          delete hostSection.dataset.prevMinHeight;
-        }
-        scrollTween.kill();
-        // Cleanup animation triggers
-        if (scrollTween.animationTriggers) {
-          (scrollTween.animationTriggers as ScrollTrigger[]).forEach(
-            (trigger) => trigger.kill()
-          );
-        }
-      }
-      ScrollTrigger.getAll().forEach((st) => {
-        if (
-          st.vars.id === "mobile-horizontal-scroll" ||
-          st.vars.id?.toString().startsWith("mobile-project-animation")
-        ) {
-          st.kill();
-        }
-      });
-    };
-    // FIX 295: Hapus projects.length dari dependency array
+      );
+    });
   }, []);
 
   // FIX 3: Desktop animations
@@ -694,152 +448,79 @@ export default function Projects() {
         </div>
       </div>
 
-      {/* Mobile Layout - Horizontal Scroll */}
-      <div
-        ref={mobileContainerRef}
-        className="md:hidden "
-        style={{
-          height: "100vh",
-          overflow: "hidden",
-          position: "relative",
-        }}
-      >
-        <div
-          ref={mobileWrapperRef}
-          className="flex h-full -mt-12 "
-          style={{ willChange: "transform" }}
-        >
-          {projects.map((project, index) => (
-            <div
-              key={`mobile-${project.id}`}
-              ref={(el) => {
-                if (el) mobileProjectRefs.current[index] = el;
-              }}
-              className="relative flex flex-col shrink-0 justify-center items-center"
-              style={{
-                width: "100vw",
-                maxWidth: "100vw",
-                height: "100vh",
-                minHeight: "100vh",
-                flexShrink: 0,
-              }}
-            >
-              <div className="flex flex-col w-full px-8 sm:px-12 max-w-xl mx-auto justify-center gap-y-5">
-                {/* Title + Description - Fixed height untuk konsistensi */}
-                <div
-                  className="flex flex-col items-center text-center"
-                  style={{ height: "140px", minHeight: "140px" }}
-                >
-                  {/* Title dengan fixed height untuk 1-2 baris */}
-                  <div
-                    className="flex items-center gap-2 mb-3 justify-center flex-wrap"
-                    style={{
-                      height: "64px",
-                      minHeight: "64px",
-                      maxHeight: "64px",
-                    }}
-                  >
-                    <h2 className="text-2xl sm:text-[28px] font-sans font-bold leading-tight text-black-100 text-center line-clamp-2 flex-1 min-w-0">
-                      {project.name}
-                    </h2>
-                    <Icon
-                      icon="uim:arrow-up-right"
-                      className="size-4 sm:size-5 text-black-100 shrink-0"
-                    />
-                  </div>
-                  {/* Description dengan fixed height - selalu ada untuk konsistensi */}
-                  <div style={{ height: "72px", minHeight: "72px" }}>
-                    {project.description && (
-                      <p className="text-xs sm:text-sm font-sans font-light leading-relaxed text-black-100/70 max-w-[95%] line-clamp-3">
-                        {project.description}
-                      </p>
-                    )}
-                  </div>
-                </div>
+      {/* Mobile Layout - Vertical List */}
+      <div className="md:hidden flex flex-col gap-12 px-6 pb-10 mt-8">
+        {projects.map((project, index) => (
+          <div
+            key={`mobile-${project.id}`}
+            className="mobile-project-card flex flex-col gap-5"
+          >
+            {/* Project Image - 16:9 Aspect Ratio & HD */}
+            <div className="relative w-full aspect-video rounded-2xl overflow-hidden shadow-lg border border-black-100/10">
+              <Image
+                src={project.image}
+                alt={project.name}
+                fill
+                sizes="(max-width: 768px) 100vw, 800px"
+                quality={100}
+                className="object-cover"
+                priority={index < 3}
+                onError={handleImgError}
+              />
+            </div>
 
-                {/* Divider */}
-                <div
-                  className="w-full border-t border-black-100/30"
-                  style={{ height: "1px" }}
-                />
-
-                {/* Frameworks row - Center dengan fixed height */}
-                <div
-                  className="flex items-center justify-center"
-                  style={{ minHeight: "40px" }}
-                >
-                  <div className="flex flex-wrap text-[10px] sm:text-xs font-sans font-light leading-loose uppercase gap-x-3 sm:gap-x-5 justify-center">
-                    {project.frameworks.map((framework) => (
-                      <p key={framework.id} className="text-black-100/80">
-                        {framework.name}
-                      </p>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Mobile Preview - Fixed height untuk konsistensi */}
-                <div
-                  ref={(el) => {
-                    if (el) mobileImageRefs.current[index] = el;
-                  }}
-                  className="relative flex items-center justify-center"
-                  style={{ height: "320px", minHeight: "320px" }}
-                >
-                  <Image
-                    src={project.bgImage}
-                    alt={project.name}
-                    width={600}
-                    height={400}
-                    sizes="(max-width: 767px) 100vw, 0px"
-                    priority={index < 2}
-                    className="object-cover w-full h-full rounded-xl brightness-50"
-                    onError={handleImgError}
-                  />
-                  <Image
-                    src={project.image}
-                    alt={project.name}
-                    width={800}
-                    height={500}
-                    sizes="(max-width: 767px) 75vw, 0px"
-                    priority={index < 2}
-                    className="absolute object-contain w-4/5 h-auto max-h-[85%] rounded-md"
-                    style={{ maxWidth: "85%" }}
-                    onError={handleImgError}
-                  />
-                </div>
-
-                {/* Buttons - Center dengan fixed height dan proporsi - selalu ada untuk konsistensi */}
-                <div
-                  className="flex gap-3 justify-center items-center"
-                  style={{ height: "44px", minHeight: "44px" }}
-                >
-                  {project.preview ? (
+            {/* Content */}
+            <div className="flex flex-col gap-3">
+              <div className="flex justify-between items-start gap-4">
+                <h2 className="text-2xl font-bold font-sans text-black-100 leading-tight">
+                  {project.name}
+                </h2>
+                <div className="flex gap-2 shrink-0 pt-1">
+                  {project.preview && (
                     <a
                       href={project.preview}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="px-6 py-2.5 rounded-full bg-[#2056F7] text-white text-xs font-bold hover:bg-[#1a45d6] transition-colors whitespace-nowrap flex items-center justify-center"
-                      style={{ height: "40px", minHeight: "40px" }}
+                      className="p-2 bg-[#2056F7] text-white rounded-full hover:bg-black-100 transition-colors"
+                      aria-label="Preview"
                     >
-                      Preview
+                      <Icon icon="mdi:eye" className="w-4 h-4" />
                     </a>
-                  ) : null}
-                  {project.github ? (
+                  )}
+                  {project.github && (
                     <a
                       href={project.github}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="px-6 py-2.5 rounded-full bg-[#2056F7] text-white text-xs font-bold hover:bg-[#1a45d6] transition-colors whitespace-nowrap flex items-center justify-center"
-                      style={{ height: "40px", minHeight: "40px" }}
+                      className="p-2 bg-black-100 text-white rounded-full hover:bg-[#2056F7] transition-colors"
+                      aria-label="Github"
                     >
-                      Github
+                      <Icon icon="mdi:github" className="w-4 h-4" />
                     </a>
-                  ) : null}
+                  )}
                 </div>
               </div>
+
+              {project.description && (
+                <p className="text-sm font-light text-black-100/70 leading-relaxed line-clamp-3">
+                  {project.description}
+                </p>
+              )}
+
+              {/* Frameworks */}
+              <div className="flex flex-wrap gap-2 mt-1">
+                {project.frameworks.map((fw) => (
+                  <span
+                    key={fw.id}
+                    className="text-[10px] uppercase tracking-wider font-medium text-black-100/60 bg-black-100/5 px-2 py-1 rounded-md"
+                  >
+                    {fw.name}
+                  </span>
+                ))}
+              </div>
             </div>
-          ))}
-        </div>
+          </div>
+        ))}
       </div>
     </section>
   );

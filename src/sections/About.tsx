@@ -15,17 +15,19 @@ export default function About() {
 
   const imgRef = useRef<HTMLImageElement>(null);
   useGSAP(() => {
-    gsap.to("#about", {
-      scale: 0.95,
-      scrollTrigger: {
-        trigger: "#about",
-        start: "bottom 90%",
-        end: "bottom 10%",
-        scrub: true,
-        markers: false,
-      },
-      ease: "power1.inOut",
-    });
+    if (window.innerWidth >= 768) {
+      gsap.to("#about", {
+        scale: 0.95,
+        scrollTrigger: {
+          trigger: "#about",
+          start: "bottom 90%",
+          end: "bottom 10%",
+          scrub: true,
+          markers: false,
+        },
+        ease: "power1.inOut",
+      });
+    }
 
     gsap.set(imgRef.current, {
       clipPath: "polygon(0 100%, 100% 100%, 100% 100%, 0% 100%)",

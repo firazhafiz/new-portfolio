@@ -58,7 +58,7 @@ export default function Certifications() {
                 key={index}
                 className="cert-card group bg-gray-100 rounded-2xl shadow-md hover:shadow-xl transition-all duration-400 flex flex-col overflow-hidden
                  mx-auto                           /* center di mobile */
-                 w-full max-w-sm sm:max-w-none     /* batas lebar maksimal di mobile */
+                 w-full max-w-md sm:max-w-none     /* batas lebar maksimal di mobile */
                  h-full"
               >
                 {/* Gambar – tinggi lebih pendek di mobile */}
