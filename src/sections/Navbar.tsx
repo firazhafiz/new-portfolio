@@ -506,7 +506,7 @@ export default function Navbar({ lenis }: NavbarProps) {
 
         <div
           ref={menuImageRef} // 🚀 FIX CSS: Kembalikan -translate-y-1/2 agar CSS menempatkan gambar di tengah. // GSAP yPercent akan menambahkan offset di atas posisi ini.
-          className="menu-img absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200px] hidden lg:block"
+          className="menu-img absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-2/3 w-[200px] hidden lg:block"
         >
           <Image
             src="/assets/header-profile.jpg"
