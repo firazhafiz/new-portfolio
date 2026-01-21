@@ -312,6 +312,12 @@ export type CertificationItem = {
 
 export const certifications: CertificationItem[] = [
   {
+    image: "/images/asah.jpg",
+    title: "Cohort of Asah 2025 React Backend & AI",
+    author: "Dicoding Academy",
+    credentialUrl: "",
+  },
+  {
     image: "/images/gdgoc.jpg",
     title:
       "Core Team Google Developer Group on Campus State University of Surabaya",
@@ -370,6 +376,18 @@ export const certifications: CertificationItem[] = [
     title: "Belajar Dasar AI",
     author: "Dicoding Academy",
     credentialUrl: "https://www.dicoding.com/certificates/N9ZO2D8DRPG5",
+  },
+  {
+    image: "/images/pemateri.png",
+    title: "Pemateri Youth Public Innovation Research",
+    author: "YPIR Unesa",
+    credentialUrl: "",
+  },
+  {
+    image: "/images/fundamental-be.jpg",
+    title: "Belajar Fundamental Back-End dengan JavaScript",
+    author: "Dicoding Academy",
+    credentialUrl: "https://www.dicoding.com/certificates/KEXL2WMVWZG2",
   },
 ];
 
