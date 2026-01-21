@@ -385,7 +385,7 @@ export const certifications: CertificationItem[] = [
   },
   {
     image: "/images/fundamental-be.jpg",
-    title: "Belajar Fundamental Back-End dengan JavaScript",
+    title: "Belajar Fundamental Backend dengan JavaScript",
     author: "Dicoding Academy",
     credentialUrl: "https://www.dicoding.com/certificates/KEXL2WMVWZG2",
   },
