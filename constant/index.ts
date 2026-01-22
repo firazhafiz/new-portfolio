@@ -128,9 +128,9 @@ export const projects = [
   },
   {
     id: 4,
-    name: "Berkat Jaya Mobil",
+    name: "Berkat Sejahtera Mobil",
     description:
-      "Car Showroom Website for Berkat Jaya Mobil to sell or buy cars.",
+      "Car Showroom Website for Berkat Sejahtera Mobil to sell or buy cars.",
     preview: "https://berkatsejahteramobil.netlify.app/",
     github: "https://github.com/firazhafiz/berkat-sejahtera-mobil",
     image: "/assets/berkatjaya.png",
