@@ -28,7 +28,7 @@ export default function Contact() {
             trigger: sectionRef.current,
             start: "top 70%",
           },
-        }
+        },
       );
     }, sectionRef);
 
@@ -136,7 +136,7 @@ export default function Contact() {
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="transition font-bold text-navy hover:text-[#FFE093] duration-300"
+                  className="transition font-bold text-gray-100 hover:text-[#FFE093] duration-300"
                 >
                   {social.label}
                 </a>
