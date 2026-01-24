@@ -5,6 +5,7 @@ import { Planet } from "@/components/Planet";
 import { Environment, Float, Lightformer } from "@react-three/drei";
 import { useMediaQuery } from "react-responsive";
 import AnimatedHeaderSection from "@/components/AnimatedHeaderSection";
+import { Suspense } from "react";
 
 interface HeroProps {
   startAnimation?: boolean;
@@ -33,10 +34,12 @@ export default function Hero({ startAnimation = true }: HeroProps) {
         >
           <ambientLight intensity={0.5} />
           <Float speed={0.5}>
-            <Planet
-              scale={isMobile ? 0.7 : 1}
-              startAnimation={startAnimation}
-            />
+            <Suspense fallback={null}>
+              <Planet
+                scale={isMobile ? 0.7 : 1}
+                startAnimation={startAnimation}
+              />
+            </Suspense>
           </Float>
           <Environment resolution={256}>
             <group rotation={[-Math.PI / 3, 4, 1]}>

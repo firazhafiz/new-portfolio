@@ -79,7 +79,7 @@ export function Planet({ startAnimation = true, ...props }: PlanetProps) {
         "<",
       );
     }
-  }, []);
+  }, [startAnimation]);
 
   return (
     <group ref={shapeContainer} {...props} dispose={null}>

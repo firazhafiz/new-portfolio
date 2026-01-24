@@ -25,18 +25,23 @@ function HomeContent() {
   // Preloader Logic
   const { progress } = useProgress();
   const [isReady, setIsReady] = useState(false);
+  const [planetReady, setPlanetReady] = useState(false);
 
   return (
     <>
       {!isReady && (
-        <Preloader progress={progress} onComplete={() => setIsReady(true)} />
+        <Preloader
+          progress={progress}
+          onComplete={() => setIsReady(true)}
+          onHalfway={() => setPlanetReady(true)}
+        />
       )}
       {/* SCROLL PROGRESS BAR */}
       {isReady && <ScrollProgress />}
       <div className="transition-opacity duration-1000 opacity-100">
         <div className="overflow-hidden bg-gray-50">
           <div id="home">
-            <Navbar lenis={lenis} />
+            <Navbar lenis={lenis} startAnimation={planetReady} />
           </div>
           <ServiceSummary />
         </div>

@@ -227,3 +227,24 @@ body {
     background-position: 200% 0;
   }
 }
+
+/* --- 6. Performance Optimizations: will-change hints --- */
+/* These hints tell the browser which properties will animate, allowing GPU optimization */
+.scroll-progress-fill {
+  will-change: width;
+}
+
+.char-flip-inner {
+  will-change: transform;
+}
+
+/* GSAP animated elements */
+[data-gsap-animated],
+[id^="title-service"] {
+  will-change: transform;
+}
+
+/* Back to top button */
+.fixed.bottom-8.right-8 {
+  will-change: transform, opacity;
+}

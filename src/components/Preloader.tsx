@@ -7,6 +7,7 @@ import { gsap } from "gsap";
 interface PreloaderProps {
   progress: number;
   onComplete: () => void;
+  onHalfway?: () => void;
 }
 
 const images = [
@@ -15,7 +16,11 @@ const images = [
   "/preloader/preloader3.png",
 ];
 
-export default function Preloader({ progress, onComplete }: PreloaderProps) {
+export default function Preloader({
+  progress,
+  onComplete,
+  onHalfway,
+}: PreloaderProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const progressLineRef = useRef<HTMLDivElement>(null);
@@ -55,6 +60,13 @@ export default function Preloader({ progress, onComplete }: PreloaderProps) {
     };
   }, []);
 
+  // 1b. Trigger onHalfway at 50%
+  useEffect(() => {
+    if (displayedProgress >= 50 && onHalfway) {
+      onHalfway();
+    }
+  }, [displayedProgress, onHalfway]);
+
   // 2. Scroll Locking & Image Flip Interval
   useEffect(() => {
     // FORCE HIDE SCROLLBAR & PREVENT SCROLL
@@ -82,18 +94,34 @@ export default function Preloader({ progress, onComplete }: PreloaderProps) {
   // 4. Text Flip Animation
   useEffect(() => {
     if (!textRef.current) return;
-    const tl = gsap.timeline({ repeat: -1, repeatDelay: 2 });
-    tl.to(".char-flip-inner", {
-      y: "-100%",
-      duration: 0.8,
-      stagger: 0.05,
-      ease: "power2.inOut",
+
+    // Select all individual letters
+    const letters = textRef.current.querySelectorAll(".char-flip-inner");
+
+    // Individual loop for each character (Continuous Wave)
+    letters.forEach((char, i) => {
+      // Use fromTo to ensure proper reset without depending on previous state
+      gsap.fromTo(
+        char,
+        { yPercent: 0 },
+        {
+          yPercent: -100,
+          duration: 0.6,
+          ease: "power3.inOut",
+          repeat: -1,
+          repeatDelay: 0.5, // Shorter delay per char for continuous flow
+          delay: i * 0.05, // Stagger start
+        },
+      );
     });
   }, []);
 
   // 5. Exit Animation
   useEffect(() => {
     if (hasLoaded && containerRef.current) {
+      // Kill all ongoing animations first to prevent conflicts
+      gsap.killTweensOf(".char-flip-inner");
+
       const tl = gsap.timeline({
         onComplete: () => {
           // RESTORE SCROLL
@@ -107,25 +135,32 @@ export default function Preloader({ progress, onComplete }: PreloaderProps) {
       if (progressLineRef.current) {
         tl.to(progressLineRef.current, {
           width: 0,
-          duration: 0.4,
+          duration: 0.3,
           ease: "power2.in",
+          force3D: true,
         });
       }
 
-      // Hide content
+      // Fade content (removed y transform to prevent layout thrashing)
       if (contentRef.current) {
         tl.to(
           contentRef.current,
-          { y: -50, opacity: 0, duration: 0.5, ease: "power2.in" },
-          "-=0.2",
+          {
+            opacity: 0,
+            duration: 0.4,
+            ease: "power2.in",
+            force3D: true,
+          },
+          "-=0.15",
         );
       }
 
-      // Curtain slide up
+      // Curtain slide up (faster, smoother)
       tl.to(containerRef.current, {
         yPercent: -100,
-        duration: 0.8,
-        ease: "power2.inOut",
+        duration: 0.6,
+        ease: "power3.inOut",
+        force3D: true,
       });
     }
   }, [hasLoaded, onComplete]);
@@ -137,7 +172,7 @@ export default function Preloader({ progress, onComplete }: PreloaderProps) {
         key={i}
         className={`inline-block relative overflow-hidden h-[1.1em] ${char === " " ? "w-4 sm:w-6" : ""}`}
       >
-        <div className="char-flip-inner transition-transform will-change-transform">
+        <div className="char-flip-inner will-change-transform">
           {/* Primary Character */}
           <span
             className={`block ${isOutline ? "text-transparent [-webkit-text-stroke:1px_#fefff8] opacity-80" : "text-[#fefff8]"}`}
@@ -198,24 +233,37 @@ export default function Preloader({ progress, onComplete }: PreloaderProps) {
         {/* PERFORMANCE UPDATE: Using translate instead of clip-path for better performance */}
         <div className="relative w-[280px] h-[280px] sm:w-[320px] sm:h-[320px] md:w-[360px] md:h-[360px] z-10 overflow-hidden rounded-xl">
           {images.map((src, i) => {
-            const isCurrent = i === currentImageIndex;
-            // Logic:
-            // If current: z-index 10, translate-y-0.
-            // If next: z-index 1, translate-y-full (waiting at bottom)
-            // Wait, standard slide up loop needs "Previous" to stay put while "Current" slides UP over it.
-            // But if Current is sliding up, Previous must be behind it.
-            // Since we cycle, 'Current' acts as the entering image.
+            // Stack & Cover Logic:
+            // Active: Z-20, Translate 0 (Visible)
+            // Prev: Z-10, Translate 0 (Waiting to be covered)
+            // Next: Z-0, Translate 100% (Waiting at bottom)
+
+            const isActive = i === currentImageIndex;
+            const isPrev =
+              i === (currentImageIndex - 1 + images.length) % images.length;
+
+            let zIndex = 0;
+            let transform = "translate3d(0, 100%, 0)"; // Default: at bottom
+            let transition = "0s"; // Instant reset
+
+            if (isActive) {
+              zIndex = 20;
+              transform = "translate3d(0, 0%, 0)"; // Slide Up
+              transition = "transform 0.8s cubic-bezier(0.77, 0, 0.175, 1)";
+            } else if (isPrev) {
+              zIndex = 10;
+              transform = "translate3d(0, 0%, 0)"; // Stay put (covered)
+              transition = "transform 0s"; // No movement
+            }
 
             return (
               <div
                 key={src}
-                className="absolute inset-0 w-full h-full transition-transform duration-700 ease-[cubic-bezier(0.77,0,0.175,1)] will-change-transform"
+                className="absolute inset-0 w-full h-full will-change-transform"
                 style={{
-                  zIndex: isCurrent ? 10 : 0,
-                  transform: isCurrent
-                    ? "translate3d(0, 0%, 0)"
-                    : "translate3d(0, 100%, 0)",
-                  transitionDelay: isCurrent ? "0s" : "0.7s", // Wait until covered before resetting
+                  zIndex,
+                  transform,
+                  transition,
                 }}
               >
                 <Image

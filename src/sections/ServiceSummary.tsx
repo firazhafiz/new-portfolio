@@ -8,55 +8,29 @@ gsap.registerPlugin(ScrollTrigger);
 
 export default function ServiceSummary() {
   useGSAP(() => {
-    // Tetapkan posisi awal yang menyebar dengan jarak lebih kecil
-    gsap.set("#title-service-1", { xPercent: -15 }); // Mulai dari kiri, lebih dekat
-    gsap.set("#title-service-2", { xPercent: 15 }); // Mulai dari kanan, lebih dekat
-    gsap.set("#title-service-3", { xPercent: -25 }); // Mulai dari kiri, sedikit lebih jauh
-    gsap.set("#title-service-4", { xPercent: 25 }); // Mulai dari kanan, sedikit lebih jauh
+    // Batch animations for better performance
+    const titles = [
+      { id: "#title-service-1", xPercent: -15 },
+      { id: "#title-service-2", xPercent: 15 },
+      { id: "#title-service-3", xPercent: -25 },
+      { id: "#title-service-4", xPercent: 25 },
+    ];
 
-    // Animasi ke posisi ngumpul (xPercent: 0) dengan easing halus
-    gsap.to("#title-service-1", {
-      xPercent: 0,
-      scrollTrigger: {
-        trigger: "#title-service-1",
-        scrub: 0.5,
-        start: "top 80%",
-        end: "bottom 20%",
-      },
-      ease: "power3.out",
-    });
+    titles.forEach(({ id, xPercent }) => {
+      // Set initial position
+      gsap.set(id, { xPercent });
 
-    gsap.to("#title-service-2", {
-      xPercent: 0,
-      scrollTrigger: {
-        trigger: "#title-service-2",
-        scrub: 0.5,
-        start: "top 80%",
-        end: "bottom 20%",
-      },
-      ease: "power3.out",
-    });
-
-    gsap.to("#title-service-3", {
-      xPercent: 0,
-      scrollTrigger: {
-        trigger: "#title-service-3",
-        scrub: 0.5,
-        start: "top 80%",
-        end: "bottom 20%",
-      },
-      ease: "power3.out",
-    });
-
-    gsap.to("#title-service-4", {
-      xPercent: 0,
-      scrollTrigger: {
-        trigger: "#title-service-4",
-        scrub: 0.5,
-        start: "top 80%",
-        end: "bottom 20%",
-      },
-      ease: "power3.out",
+      // Animate to center with ScrollTrigger
+      gsap.to(id, {
+        xPercent: 0,
+        scrollTrigger: {
+          trigger: id,
+          scrub: 0.5,
+          start: "top 80%",
+          end: "bottom 20%",
+        },
+        ease: "power3.out",
+      });
     });
   });
 
