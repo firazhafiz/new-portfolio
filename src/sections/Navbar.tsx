@@ -14,9 +14,10 @@ import Lenis from "lenis";
 interface NavbarProps {
   // Mengganti 'any' dengan tipe Lenis | null | undefined
   lenis: Lenis | null | undefined;
+  startAnimation?: boolean;
 }
 
-export default function Navbar({ lenis }: NavbarProps) {
+export default function Navbar({ lenis, startAnimation = true }: NavbarProps) {
   // Refs
   const navToggleRef = useRef<HTMLDivElement | null>(null);
   const menuOverlayRef = useRef<HTMLDivElement | null>(null);
@@ -28,7 +29,11 @@ export default function Navbar({ lenis }: NavbarProps) {
   const mobileBottomLineRef = useRef<HTMLDivElement | null>(null);
   const mobileSocialLineRef = useRef<HTMLDivElement | null>(null);
   const mobileSocialBottomLineRef = useRef<HTMLDivElement | null>(null);
-  const heroContentRef = useRef<HTMLDivElement>(null); // States
+  const heroContentRef = useRef<HTMLDivElement>(null);
+  const menuTextRef = useRef<HTMLDivElement | null>(null);
+  const downloadCvRef = useRef<HTMLButtonElement | null>(null);
+
+  // States
 
   const isMenuOpen = useRef(false);
   const isMenuAnimating = useRef(false);
@@ -50,8 +55,28 @@ export default function Navbar({ lenis }: NavbarProps) {
       // BUKA MENU
       if (lenis) {
         lenis.stop();
-      } // Animasi BUKA
+      }
 
+      // Hide scrollbar and prevent scrolling
+      document.body.style.overflow = "hidden";
+
+      // Animate navbar text colors to white
+      if (menuTextRef.current) {
+        gsap.to(menuTextRef.current, {
+          color: "#ffffff",
+          duration: 0.5,
+          ease: "power2.out",
+        });
+      }
+      if (downloadCvRef.current) {
+        gsap.to(downloadCvRef.current, {
+          color: "#ffffff",
+          duration: 0.5,
+          ease: "power2.out",
+        });
+      }
+
+      // Animasi BUKA
       if (heroContentRef.current) {
         gsap.to(heroContentRef.current, {
           y: "-40%",
@@ -114,11 +139,27 @@ export default function Navbar({ lenis }: NavbarProps) {
             stagger: 0.2,
             delay: 0.3,
             ease: "expo.out",
-          }
+          },
         );
       }
     } else {
       // TUTUP MENU
+
+      // Animate navbar text colors back to navy
+      if (menuTextRef.current) {
+        gsap.to(menuTextRef.current, {
+          color: "#2056F7",
+          duration: 0.5,
+          ease: "power2.out",
+        });
+      }
+      if (downloadCvRef.current) {
+        gsap.to(downloadCvRef.current, {
+          color: "#2056F7",
+          duration: 0.5,
+          ease: "power2.out",
+        });
+      }
 
       if (heroContentRef.current) {
         gsap.to(heroContentRef.current, {
@@ -126,6 +167,14 @@ export default function Navbar({ lenis }: NavbarProps) {
           opacity: 1,
           duration: 1.25,
           ease: "expo.out",
+          overwrite: true,
+          onComplete: () => {
+            if (heroContentRef.current) {
+              gsap.set(heroContentRef.current, {
+                clearProps: "transform,opacity",
+              });
+            }
+          },
         });
       } // Animasi TUTUP
 
@@ -137,7 +186,7 @@ export default function Navbar({ lenis }: NavbarProps) {
             mobileSocialLineRef.current,
             mobileSocialBottomLineRef.current,
           ],
-          { scaleX: 0, duration: 0.6, stagger: 0.1, ease: "expo.in" }
+          { scaleX: 0, duration: 0.6, stagger: 0.1, ease: "expo.in" },
         );
       }
       gsap.to(menuLinksWrapperRef.current!.querySelectorAll(".menu-link a"), {
@@ -170,7 +219,7 @@ export default function Navbar({ lenis }: NavbarProps) {
           });
           gsap.set(
             menuLinksWrapperRef.current!.querySelectorAll(".menu-link a"),
-            { y: "150%" }
+            { y: "150%" },
           );
           gsap.set(linkHighlighterRef.current, { y: "150%" });
           gsap.set(menuContentRef.current, { y: "50%", opacity: 0.25 }); // 🚀 FIX YPERCENT KRITIS: Reset posisi gambar ke yPercent: 10 (posisi awal tersembunyi)
@@ -193,8 +242,12 @@ export default function Navbar({ lenis }: NavbarProps) {
           });
 
           isMenuOpen.current = false;
-          isMenuAnimating.current = false; // Lenis Start dan Scroll
+          isMenuAnimating.current = false;
 
+          // Restore scrollbar and scrolling
+          document.body.style.overflow = "";
+
+          // Lenis Start dan Scroll
           if (lenis) {
             lenis.start();
           }
@@ -338,7 +391,7 @@ export default function Navbar({ lenis }: NavbarProps) {
           ease: "expo.inOut",
         });
         const first = menuLinksWrapperSetup.querySelector(
-          ".menu-link"
+          ".menu-link",
         ) as HTMLElement;
         const span = first.querySelector("a span") as HTMLElement;
         targetHighlighterX.current =
@@ -362,7 +415,7 @@ export default function Navbar({ lenis }: NavbarProps) {
       const start = (vw - sensitivity) / 2;
       const percentage = Math.max(
         0,
-        Math.min(1, (mouseX - start) / sensitivity)
+        Math.min(1, (mouseX - start) / sensitivity),
       );
       targetX.current = percentage * maxMove;
     };
@@ -374,7 +427,7 @@ export default function Navbar({ lenis }: NavbarProps) {
     // FIX: Menggunakan optional chaining.
     menuLinksWrapperRef.current?.addEventListener(
       "mouseleave",
-      handleMouseLeave
+      handleMouseLeave,
     ); // Request Animation Frame (RAF)
 
     let raf = 0;
@@ -410,7 +463,7 @@ export default function Navbar({ lenis }: NavbarProps) {
       menuOverlay?.removeEventListener("mousemove", handleMouseMove);
       menuLinksWrapperCleanup?.removeEventListener(
         "mouseleave",
-        handleMouseLeave
+        handleMouseLeave,
       );
     };
   }, [toggleMenu]); // ----------------------------------------------------------- // 2. useEffect untuk Lenis Control (hanya untuk trigger) // -----------------------------------------------------------
@@ -420,10 +473,13 @@ export default function Navbar({ lenis }: NavbarProps) {
   return (
     <div className="relative isolate w-screen h-screen text-[#2056F7] overflow-x-hidden">
       {/* NAVBAR */}
-      <nav className="absolute top-0 left-0 w-screen pt-4 px-4 flex justify-between mix-blend-difference z-1000">
+      <nav className="absolute top-0 left-0 w-screen pt-4 px-4 flex justify-between z-[1000]">
         <div
-          ref={navToggleRef}
-          className="nav-toggle relative p-4 cursor-pointer tracking-wider select-none font-heading uppercase text-sm"
+          ref={(el) => {
+            navToggleRef.current = el;
+            menuTextRef.current = el;
+          }}
+          className="nav-toggle relative p-4 cursor-pointer tracking-wider select-none font-heading uppercase text-sm text-[#2056F7]"
         >
           Menu
         </div>
@@ -433,7 +489,10 @@ export default function Navbar({ lenis }: NavbarProps) {
           rel="noopener noreferrer"
           target="_blank"
         >
-          <button className="pr-6 pt-4 tracking-wider cursor-pointer select-none font-heading uppercase text-sm">
+          <button
+            ref={downloadCvRef}
+            className="pr-6 pt-4 tracking-wider cursor-pointer select-none font-heading uppercase text-sm text-[#2056F7]"
+          >
             Download Cv
           </button>
         </Link>
@@ -581,7 +640,7 @@ export default function Navbar({ lenis }: NavbarProps) {
       </div>
       {/* HERO DIBUNGKUS REF */}
       <div ref={heroContentRef}>
-        <Hero />
+        <Hero startAnimation={startAnimation} />
       </div>
     </div>
   );

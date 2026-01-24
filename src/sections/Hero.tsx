@@ -6,7 +6,11 @@ import { Environment, Float, Lightformer } from "@react-three/drei";
 import { useMediaQuery } from "react-responsive";
 import AnimatedHeaderSection from "@/components/AnimatedHeaderSection";
 
-export default function Hero() {
+interface HeroProps {
+  startAnimation?: boolean;
+}
+
+export default function Hero({ startAnimation = true }: HeroProps) {
   const isMobile = useMediaQuery({ maxWidth: 853 });
   const text = `Creativity beyond the screen.`;
 
@@ -29,7 +33,10 @@ export default function Hero() {
         >
           <ambientLight intensity={0.5} />
           <Float speed={0.5}>
-            <Planet scale={isMobile ? 0.7 : 1} />
+            <Planet
+              scale={isMobile ? 0.7 : 1}
+              startAnimation={startAnimation}
+            />
           </Float>
           <Environment resolution={256}>
             <group rotation={[-Math.PI / 3, 4, 1]}>

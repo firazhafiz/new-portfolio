@@ -5,7 +5,9 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 
 // Define props type (optional, adjust as needed)
-type PlanetProps = Record<string, unknown>;
+type PlanetProps = {
+  startAnimation?: boolean;
+} & Record<string, unknown>;
 
 // Define type for nodes and materials from useGLTF
 type GLTFResult = {
@@ -20,24 +22,34 @@ type GLTFResult = {
   };
 };
 
-export function Planet({ ...props }: PlanetProps) {
+export function Planet({ startAnimation = true, ...props }: PlanetProps) {
   const shapeContainer = useRef<THREE.Group>(null);
   const spheresContainer = useRef<THREE.Group>(null);
   const ringContainer = useRef<THREE.Mesh>(null);
   const { nodes, materials } = useGLTF(
-    "/models/Planet.glb"
+    "/models/Planet.glb",
   ) as unknown as GLTFResult;
 
   useGSAP(() => {
     const tl = gsap.timeline();
 
-    // Pengecekan eksplisit sebelum animasi
+    // Initial state (Hidden at top) if not started
     if (shapeContainer.current && shapeContainer.current.position) {
-      tl.from(shapeContainer.current.position, {
-        y: 5, // Kurangi dari 5 ke 3 untuk mengurangi pergerakan ke bawah
-        duration: 3,
-        ease: "circ.out",
-      });
+      if (!startAnimation) {
+        gsap.set(shapeContainer.current.position, { y: 6 }); // Set high up initially
+      }
+    }
+
+    if (startAnimation) {
+      // Pengecekan eksplisit sebelum animasi
+      if (shapeContainer.current && shapeContainer.current.position) {
+        // Animate from 6 to 0 (drop down)
+        tl.to(shapeContainer.current.position, {
+          y: 0, // Drop to center
+          duration: 3,
+          ease: "circ.out",
+        });
+      }
     }
 
     if (spheresContainer.current && spheresContainer.current.rotation) {
@@ -50,7 +62,7 @@ export function Planet({ ...props }: PlanetProps) {
           duration: 10,
           ease: "power1.inOut",
         },
-        "-=25%"
+        "-=25%",
       );
     }
 
@@ -64,7 +76,7 @@ export function Planet({ ...props }: PlanetProps) {
           duration: 10,
           ease: "power1.inOut",
         },
-        "<"
+        "<",
       );
     }
   }, []);

@@ -41,7 +41,8 @@ body {
 /* Amiamie Regular */
 @font-face {
   font-family: "Amiamie";
-  src: url("/fonts/otf/Amiamie-Regular.otf") format("opentype"),
+  src:
+    url("/fonts/otf/Amiamie-Regular.otf") format("opentype"),
     url("/fonts/ttf/Amiamie-Regular.ttf") format("truetype");
   font-weight: 400;
   font-style: normal;
@@ -51,7 +52,8 @@ body {
 /* Amiamie Regular Italic */
 @font-face {
   font-family: "Amiamie";
-  src: url("/fonts/otf/Amiamie-Italic.otf") format("opentype"),
+  src:
+    url("/fonts/otf/Amiamie-Italic.otf") format("opentype"),
     url("/fonts/ttf/Amiamie-Italic.ttf") format("truetype");
   font-weight: 400;
   font-style: italic;
@@ -61,7 +63,8 @@ body {
 /* Amiamie Light */
 @font-face {
   font-family: "Amiamie";
-  src: url("/fonts/otf/Amiamie-Light.otf") format("opentype"),
+  src:
+    url("/fonts/otf/Amiamie-Light.otf") format("opentype"),
     url("/fonts/ttf/Amiamie-Light.ttf") format("truetype");
   font-weight: 300;
   font-style: normal;
@@ -71,7 +74,8 @@ body {
 /* Amiamie Light Italic */
 @font-face {
   font-family: "Amiamie";
-  src: url("/fonts/otf/Amiamie-LightItalic.otf") format("opentype"),
+  src:
+    url("/fonts/otf/Amiamie-LightItalic.otf") format("opentype"),
     url("/fonts/ttf/Amiamie-LightItalic.ttf") format("truetype");
   font-weight: 300;
   font-style: italic;
@@ -81,7 +85,8 @@ body {
 /* Amiamie Black */
 @font-face {
   font-family: "Amiamie";
-  src: url("/fonts/otf/Amiamie-Black.otf") format("opentype"),
+  src:
+    url("/fonts/otf/Amiamie-Black.otf") format("opentype"),
     url("/fonts/ttf/Amiamie-Black.ttf") format("truetype");
   font-weight: 900;
   font-style: normal;
@@ -91,7 +96,8 @@ body {
 /* Amiamie Black Italic */
 @font-face {
   font-family: "Amiamie";
-  src: url("/fonts/otf/Amiamie-BlackItalic.otf") format("opentype"),
+  src:
+    url("/fonts/otf/Amiamie-BlackItalic.otf") format("opentype"),
     url("/fonts/ttf/Amiamie-BlackItalic.ttf") format("truetype");
   font-weight: 900;
   font-style: italic;
@@ -101,7 +107,8 @@ body {
 /* Amiamie-Round Regular */
 @font-face {
   font-family: "Amiamie-Round";
-  src: url("/fonts/otf/Amiamie-RegularRound.otf") format("opentype"),
+  src:
+    url("/fonts/otf/Amiamie-RegularRound.otf") format("opentype"),
     url("/fonts/ttf/Amiamie-RegularRound.ttf") format("truetype");
   font-weight: 400;
   font-style: normal;
@@ -111,7 +118,8 @@ body {
 /* Amiamie-Round Black */
 @font-face {
   font-family: "Amiamie-Round";
-  src: url("/fonts/otf/Amiamie-BlackRound.otf") format("opentype"),
+  src:
+    url("/fonts/otf/Amiamie-BlackRound.otf") format("opentype"),
     url("/fonts/ttf/Amiamie-BlackRound.ttf") format("truetype");
   font-weight: 900;
   font-style: normal;
@@ -121,7 +129,8 @@ body {
 /* Amiamie-Round Black Italic */
 @font-face {
   font-family: "Amiamie-Round";
-  src: url("/fonts/otf/Amiamie-BlackItalicRound.otf") format("opentype"),
+  src:
+    url("/fonts/otf/Amiamie-BlackItalicRound.otf") format("opentype"),
     url("/fonts/ttf/Amiamie-BlackItalicRound.ttf") format("truetype");
   font-weight: 900;
   font-style: italic;
@@ -138,5 +147,83 @@ body {
   }
   100% {
     transform: translateX(-50%);
+  }
+}
+
+/* --- 5. Modern Custom Scrollbar Styling --- */
+/* For WebKit browsers (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: linear-gradient(180deg, #e5e5e0 0%, #f0f0eb 100%);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #2056f7 0%, #1a45d6 50%, #143db8 100%);
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  transition: all 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #fca311 0%, #e59400 50%, #cc8400 100%);
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-thumb:active {
+  background: linear-gradient(180deg, #fca311 0%, #cc8400 100%);
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* For Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #2056f7 #e5e5e0;
+}
+
+/* Scroll Progress Bar Container */
+.scroll-progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(
+    90deg,
+    rgba(32, 86, 247, 0.1) 0%,
+    rgba(32, 86, 247, 0.05) 100%
+  );
+  z-index: 9999;
+  pointer-events: none;
+}
+
+.scroll-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #2056f7 0%, #fca311 50%, #2056f7 100%);
+  background-size: 200% 100%;
+  animation: shimmer 2s linear infinite;
+  border-radius: 0 2px 2px 0;
+  box-shadow:
+    0 0 10px rgba(32, 86, 247, 0.5),
+    0 0 20px rgba(252, 163, 17, 0.3);
+  transition: width 0.1s ease-out;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
   }
 }
