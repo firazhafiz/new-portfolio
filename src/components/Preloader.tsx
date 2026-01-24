@@ -10,11 +10,9 @@ interface PreloaderProps {
 }
 
 const images = [
-  "/images/firaz-linkedin.jpg",
-  "/images/event.jpg",
-  "/images/bank-digital.jpg",
-  "/images/aftermovie-ft.JPG",
-  "/images/cas.JPG",
+  "/preloader/preloader1.png",
+  "/preloader/preloader2.jpeg",
+  "/preloader/preloader3.png",
 ];
 
 export default function Preloader({ progress, onComplete }: PreloaderProps) {
@@ -25,8 +23,39 @@ export default function Preloader({ progress, onComplete }: PreloaderProps) {
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [hasLoaded, setHasLoaded] = useState(false);
+  const [minTimeElapsed, setMinTimeElapsed] = useState(false);
+  const [visualProgress, setVisualProgress] = useState(false);
+  const [displayedProgress, setDisplayedProgress] = useState(0);
 
-  // 1. Scroll Locking & Image Flip Interval
+  // 1. Minimum Time Logic (5000ms) & Visual Progress
+  useEffect(() => {
+    // Trigger visual progress bar animation
+    const widthTimer = setTimeout(() => setVisualProgress(true), 100);
+
+    // Animate percentage text (0 -> 100 over 4500ms)
+    // 4500ms / 100 steps = 45ms per step
+    const progressInterval = setInterval(() => {
+      setDisplayedProgress((prev) => {
+        if (prev >= 100) {
+          clearInterval(progressInterval);
+          return 100;
+        }
+        return prev + 1;
+      });
+    }, 45);
+
+    const timer = setTimeout(() => {
+      setMinTimeElapsed(true);
+    }, 5000); // Enforce 5s minimum preloader time
+
+    return () => {
+      clearTimeout(timer);
+      clearInterval(progressInterval);
+      clearTimeout(widthTimer);
+    };
+  }, []);
+
+  // 2. Scroll Locking & Image Flip Interval
   useEffect(() => {
     // FORCE HIDE SCROLLBAR & PREVENT SCROLL
     document.body.style.overflow = "hidden";
@@ -42,24 +71,18 @@ export default function Preloader({ progress, onComplete }: PreloaderProps) {
     };
   }, []);
 
-  // 2. Load Completion Logic
+  // 3. Load Completion Logic
   useEffect(() => {
-    if (progress === 100 && !hasLoaded) {
-      const timer = setTimeout(() => setHasLoaded(true), 800);
-      return () => clearTimeout(timer);
+    // Wait for BOTH progress 100% AND minimum 5s time
+    if (progress === 100 && minTimeElapsed && !hasLoaded) {
+      setHasLoaded(true);
     }
-  }, [progress, hasLoaded]);
+  }, [progress, minTimeElapsed, hasLoaded]);
 
-  // 3. Text Flip Animation
+  // 4. Text Flip Animation
   useEffect(() => {
     if (!textRef.current) return;
-
-    // Select all individual letters
-    const letters = textRef.current.querySelectorAll(".char-flip");
-
-    // Simple flip loop
     const tl = gsap.timeline({ repeat: -1, repeatDelay: 2 });
-
     tl.to(".char-flip-inner", {
       y: "-100%",
       duration: 0.8,
@@ -68,7 +91,7 @@ export default function Preloader({ progress, onComplete }: PreloaderProps) {
     });
   }, []);
 
-  // 4. Exit Animation
+  // 5. Exit Animation
   useEffect(() => {
     if (hasLoaded && containerRef.current) {
       const tl = gsap.timeline({
@@ -142,9 +165,10 @@ export default function Preloader({ progress, onComplete }: PreloaderProps) {
         <div className="w-full h-full bg-white/10 overflow-hidden">
           <div
             ref={progressLineRef}
-            className="h-full transition-all duration-100 ease-linear"
+            className="h-full transition-all ease-linear"
             style={{
-              width: `${progress}%`,
+              width: visualProgress ? "100%" : "0%",
+              transitionDuration: hasLoaded ? "0ms" : "4500ms", // Disable transition on exit to prevent "snap back"
               background:
                 "linear-gradient(90deg, #2056f7 0%, #fca311 50%, #2056f7 100%)",
               backgroundSize: "200% 100%",
@@ -171,38 +195,49 @@ export default function Preloader({ progress, onComplete }: PreloaderProps) {
         className="relative flex flex-col items-center justify-center w-full h-full pb-10"
       >
         {/* Central Image Flip Container */}
-        {/* Added z-10 to stay BEHIND the text overlap area */}
-        <div className="relative w-[280px] h-[350px] sm:w-[320px] sm:h-[400px] md:w-[360px] md:h-[480px] z-10">
+        {/* PERFORMANCE UPDATE: Using translate instead of clip-path for better performance */}
+        <div className="relative w-[280px] h-[280px] sm:w-[320px] sm:h-[320px] md:w-[360px] md:h-[360px] z-10 overflow-hidden rounded-xl">
           {images.map((src, i) => {
             const isCurrent = i === currentImageIndex;
+            // Logic:
+            // If current: z-index 10, translate-y-0.
+            // If next: z-index 1, translate-y-full (waiting at bottom)
+            // Wait, standard slide up loop needs "Previous" to stay put while "Current" slides UP over it.
+            // But if Current is sliding up, Previous must be behind it.
+            // Since we cycle, 'Current' acts as the entering image.
+
             return (
               <div
                 key={src}
-                className="absolute inset-0 w-full h-full transition-all duration-700 ease-[cubic-bezier(0.77,0,0.175,1)]"
+                className="absolute inset-0 w-full h-full transition-transform duration-700 ease-[cubic-bezier(0.77,0,0.175,1)] will-change-transform"
                 style={{
-                  zIndex: isCurrent ? 10 : 1,
-                  clipPath: isCurrent ? "inset(0% 0 0 0)" : "inset(100% 0 0 0)",
+                  zIndex: isCurrent ? 10 : 0,
+                  transform: isCurrent
+                    ? "translate3d(0, 0%, 0)"
+                    : "translate3d(0, 100%, 0)",
+                  transitionDelay: isCurrent ? "0s" : "0.7s", // Wait until covered before resetting
                 }}
               >
                 <Image
                   src={src}
                   alt="preloader-flip"
                   fill
-                  className="object-cover rounded-xl"
+                  className="object-cover"
                   priority
+                  sizes="(max-width: 768px) 100vw, 400px" // Optimization
+                  quality={75} // Reduced to 75 to handle 10MB+ assets without lag
                 />
               </div>
             );
           })}
         </div>
 
-        {/* Overlapping Text Content (Positioned BELOW image with negative margin) */}
+        {/* Overlapping Text Content */}
         <div
           ref={textRef}
           className="z-20 w-full text-center mix-blend-difference pointer-events-none -mt-16 sm:-mt-20 px-4"
         >
           <h1 className="font-heading text-5xl sm:text-7xl md:text-8xl uppercase leading-none tracking-tighter flex flex-wrap justify-center gap-x-3 sm:gap-x-4">
-            {/* Using flex-wrap to ensure it stays somewhat responsive but aims for single line */}
             <span className="flex">{splitText("Firaz")}</span>
             <span className="flex">{splitText("Fulvian", true)}</span>
             <span className="flex">{splitText("Hafiz")}</span>
@@ -218,7 +253,7 @@ export default function Preloader({ progress, onComplete }: PreloaderProps) {
 
         {/* Loading Percent */}
         <div className="absolute bottom-10 text-center z-20 mix-blend-difference font-heading">
-          {Math.floor(progress)}%
+          {displayedProgress}%
         </div>
       </div>
     </div>
