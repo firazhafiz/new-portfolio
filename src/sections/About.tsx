@@ -15,7 +15,7 @@ export default function About() {
 
   const imgRef = useRef<HTMLImageElement>(null);
   useGSAP(() => {
-    if (window.innerWidth >= 768) {
+    if (window.innerWidth >= 560) {
       gsap.to("#about", {
         scale: 0.95,
         scrollTrigger: {

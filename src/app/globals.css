@@ -19,15 +19,11 @@
   --color-gold: #fffce1;
   --color-navy: #2056f7;
 
-  /* POPPINS = Font utama (gantikan default sans) */
   --font-sans: var(--font-poppins), sans-serif;
   --font-body: var(--font-poppins), sans-serif;
 
   /* ANTON = Hanya untuk heading */
   --font-heading: var(--font-anton), sans-serif;
-
-  /* AMIAMIE TIDAK DIJADIKAN DEFAULT */
-  /* Tapi tetap bisa dipakai via class: font-amiamie */
 }
 
 /* --- 3. Gaya Dasar Body --- */
@@ -236,6 +232,10 @@ body {
 
 .char-flip-inner {
   will-change: transform;
+}
+
+.menu-overlay {
+  will-change: clip-path;
 }
 
 /* GSAP animated elements */

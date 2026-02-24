@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import Image from "next/image";
 import { gsap } from "gsap";
+import { useGSAP } from "@gsap/react";
 
 interface PreloaderProps {
   progress: number;
@@ -29,95 +30,112 @@ export default function Preloader({
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [hasLoaded, setHasLoaded] = useState(false);
   const [minTimeElapsed, setMinTimeElapsed] = useState(false);
-  const [visualProgress, setVisualProgress] = useState(false);
   const [displayedProgress, setDisplayedProgress] = useState(0);
 
-  // 1. Minimum Time Logic (5000ms) & Visual Progress
-  useEffect(() => {
-    // Trigger visual progress bar animation
-    const widthTimer = setTimeout(() => setVisualProgress(true), 100);
+  // 1. Minimum Time & Visual Progress (Synced via GSAP)
+  useGSAP(
+    () => {
+      // Enforce 5s minimum preloader time
+      const timer = setTimeout(() => {
+        setMinTimeElapsed(true);
+      }, 5000);
 
-    // Animate percentage text (0 -> 100 over 4500ms)
-    // 4500ms / 100 steps = 45ms per step
-    const progressInterval = setInterval(() => {
-      setDisplayedProgress((prev) => {
-        if (prev >= 100) {
-          clearInterval(progressInterval);
-          return 100;
-        }
-        return prev + 1;
+      // Visual Progress Bar & Percentage sync
+      // We animate a dummy object to keep displayedProgress in sync with the bar
+      const progressObj = { value: 0 };
+      gsap.to(progressObj, {
+        value: 100,
+        duration: 4.5,
+        delay: 0.1,
+        ease: "none",
+        onUpdate: () => {
+          setDisplayedProgress(Math.floor(progressObj.value));
+          if (progressLineRef.current) {
+            gsap.set(progressLineRef.current, {
+              width: progressObj.value + "%",
+            });
+          }
+        },
       });
-    }, 45);
 
-    const timer = setTimeout(() => {
-      setMinTimeElapsed(true);
-    }, 5000); // Enforce 5s minimum preloader time
-
-    return () => {
-      clearTimeout(timer);
-      clearInterval(progressInterval);
-      clearTimeout(widthTimer);
-    };
-  }, []);
+      return () => clearTimeout(timer);
+    },
+    { scope: containerRef },
+  );
 
   // 1b. Trigger onHalfway at 50%
-  useEffect(() => {
-    if (displayedProgress >= 50 && onHalfway) {
-      onHalfway();
-    }
-  }, [displayedProgress, onHalfway]);
+  useGSAP(
+    () => {
+      if (displayedProgress >= 50 && onHalfway) {
+        onHalfway();
+      }
+    },
+    { dependencies: [displayedProgress, onHalfway], scope: containerRef },
+  );
 
   // 2. Scroll Locking & Image Flip Interval
-  useEffect(() => {
-    // FORCE HIDE SCROLLBAR & PREVENT SCROLL
-    document.body.style.overflow = "hidden";
-    document.documentElement.style.overflow = "hidden";
+  useGSAP(
+    () => {
+      // FORCE HIDE SCROLLBAR & PREVENT SCROLL
+      document.body.style.overflow = "hidden";
+      document.documentElement.style.overflow = "hidden";
 
-    // Flip interval
-    const interval = setInterval(() => {
-      setCurrentImageIndex((prev) => (prev + 1) % images.length);
-    }, 800);
+      // Flip interval
+      const interval = setInterval(() => {
+        setCurrentImageIndex((prev) => (prev + 1) % images.length);
+      }, 800);
 
-    return () => {
-      clearInterval(interval);
-    };
-  }, []);
+      return () => {
+        clearInterval(interval);
+      };
+    },
+    { scope: containerRef },
+  );
 
   // 3. Load Completion Logic
-  useEffect(() => {
-    // Wait for BOTH progress 100% AND minimum 5s time
-    if (progress === 100 && minTimeElapsed && !hasLoaded) {
-      setHasLoaded(true);
-    }
-  }, [progress, minTimeElapsed, hasLoaded]);
+  useGSAP(
+    () => {
+      // Wait for BOTH progress 100% AND minimum 5s time
+      if (progress === 100 && minTimeElapsed && !hasLoaded) {
+        setHasLoaded(true);
+      }
+    },
+    {
+      dependencies: [progress, minTimeElapsed, hasLoaded],
+      scope: containerRef,
+    },
+  );
 
   // 4. Text Flip Animation
-  useEffect(() => {
-    if (!textRef.current) return;
+  useGSAP(
+    () => {
+      // Select all individual letters
+      const letters = textRef.current?.querySelectorAll(".char-flip-inner");
+      if (!letters) return;
 
-    // Select all individual letters
-    const letters = textRef.current.querySelectorAll(".char-flip-inner");
-
-    // Individual loop for each character (Continuous Wave)
-    letters.forEach((char, i) => {
-      // Use fromTo to ensure proper reset without depending on previous state
-      gsap.fromTo(
-        char,
-        { yPercent: 0 },
-        {
-          yPercent: -100,
-          duration: 0.6,
-          ease: "power3.inOut",
-          repeat: -1,
-          repeatDelay: 0.5, // Shorter delay per char for continuous flow
-          delay: i * 0.05, // Stagger start
-        },
-      );
-    });
-  }, []);
+      // Individual loop for each character (Continuous Wave)
+      letters.forEach((char, i) => {
+        // Use fromTo to ensure proper reset without depending on previous state
+        gsap.fromTo(
+          char,
+          { yPercent: 0 },
+          {
+            yPercent: -100,
+            duration: 0.6,
+            ease: "power3.inOut",
+            repeat: -1,
+            repeatDelay: 0.5, // Shorter delay per char for continuous flow
+            delay: i * 0.05, // Stagger start
+            force3D: true,
+          },
+        );
+      });
+    },
+    { scope: containerRef },
+  );
 
   // 5. Exit Animation
-  useEffect(() => {
+  useGSAP(() => {
     if (hasLoaded && containerRef.current) {
       // Kill all ongoing animations first to prevent conflicts
       gsap.killTweensOf(".char-flip-inner");
@@ -193,17 +211,17 @@ export default function Preloader({
   return (
     <div
       ref={containerRef}
-      className="fixed inset-0 z-[9999] bg-[#000000] text-[#fefff8] flex flex-col items-center justify-center overflow-hidden"
+      className="fixed inset-0 z-9999 bg-black text-[#fefff8] flex flex-col items-center justify-center overflow-hidden"
     >
       {/* Top Progress Bar */}
       <div className="absolute top-0 left-0 w-full h-[4px] z-50">
         <div className="w-full h-full bg-white/10 overflow-hidden">
           <div
             ref={progressLineRef}
-            className="h-full transition-all ease-linear"
+            className="h-full"
             style={{
-              width: visualProgress ? "100%" : "0%",
-              transitionDuration: hasLoaded ? "0ms" : "4500ms", // Disable transition on exit to prevent "snap back"
+              width: "0%",
+              // No longer need transitionDuration here as GSAP drives width
               background:
                 "linear-gradient(90deg, #2056f7 0%, #fca311 50%, #2056f7 100%)",
               backgroundSize: "200% 100%",
