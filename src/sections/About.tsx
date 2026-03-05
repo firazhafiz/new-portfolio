@@ -63,7 +63,7 @@ export default function About() {
         textColor="text-white/75"
         titleColor="text-[#FFE093]"
       />
-      <div className="flex flex-col items-center justify-between gap-12 lg:gap-16 px-6 md:px-10 pb-24 md:pb-34 text-xl font-light tracking-wide lg:flex-row md:text-2xl lg:text-3xl text-white/80">
+      <div className="flex flex-col items-center justify-evenly gap-12 lg:gap-16 px-6 md:px-10 pb-24 md:pb-34 text-xl font-light tracking-wide lg:flex-row md:text-2xl lg:text-3xl text-white/80">
         <div className="relative w-full max-w-md lg:w-md will-change-transform">
           <Image
             ref={imgRef}

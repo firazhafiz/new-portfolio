@@ -205,10 +205,10 @@ export default function Preloader({
         );
       }
 
-      // Curtain slide up (faster, smoother)
+      // Curtain slide up (refined timing)
       tl.to(containerRef.current, {
         yPercent: -100,
-        duration: 0.6,
+        duration: 0.8,
         ease: "power3.inOut",
         force3D: true,
       });

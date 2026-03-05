@@ -30,18 +30,16 @@ function HomeContent() {
   return (
     <>
       {!isReady && (
-        <Preloader
-          progress={progress}
-          onComplete={() => setIsReady(true)}
-          onHalfway={() => setPlanetReady(true)}
-        />
+        <Preloader progress={progress} onComplete={() => setIsReady(true)} />
       )}
       {/* SCROLL PROGRESS BAR */}
       {isReady && <ScrollProgress />}
-      <div className="transition-opacity duration-1000 opacity-100">
+      <div
+        className={`transition-opacity duration-1000 ${isReady ? "opacity-100" : "opacity-0"}`}
+      >
         <div className="overflow-hidden bg-gray-50">
           <div id="home">
-            <Navbar lenis={lenis} startAnimation={planetReady} />
+            <Navbar lenis={lenis} startAnimation={isReady} />
           </div>
           <ServiceSummary />
         </div>

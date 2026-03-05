@@ -88,35 +88,32 @@ export default function Navbar({ lenis, startAnimation = true }: NavbarProps) {
         gsap.to(heroContentRef.current, {
           y: isMobile ? "0%" : "-40%", // NO SLIDING ON MOBILE (Expensive for 3D)
           opacity: 0.25,
-          duration: 1.25,
-          ease: "expo.out",
+          duration: 0.8, // FASTER
+          ease: "power3.out",
           force3D: true,
+          pointerEvents: "none", // Prevent interactions during menu open
         });
       }
+
+      const isMobile = window.innerWidth < 768;
       gsap.to(menuOverlayRef.current, {
-        clipPath:
-          window.innerWidth < 768
-            ? "none"
-            : "polygon(0% 100%, 100% 100%, 100% 0%, 0% 0%)",
-        yPercent: window.innerWidth < 768 ? 0 : 0,
-        duration: 1.25,
-        ease: "expo.out",
+        clipPath: isMobile
+          ? "none"
+          : "polygon(0% 100%, 100% 100%, 100% 0%, 0% 0%)",
+        yPercent: isMobile ? 0 : 0,
+        duration: 0.8, // FASTER
+        ease: "power3.out",
         force3D: true,
         onStart: () => {
-          if (window.innerWidth < 768) {
+          if (isMobile) {
             gsap.set(menuOverlayRef.current, {
               clipPath: "none",
               yPercent: -100,
             });
-            gsap.to(menuOverlayRef.current, {
-              yPercent: 0,
-              duration: 1.25,
-              ease: "expo.out",
-            });
           }
         },
         onComplete: () => {
-          if (heroContentRef.current && window.innerWidth >= 768)
+          if (heroContentRef.current && !isMobile)
             gsap.set(heroContentRef.current, { y: "40%" });
           gsap.set(".menu-link", { overflow: "visible" });
           isMenuOpen.current = true;
@@ -188,14 +185,15 @@ export default function Navbar({ lenis, startAnimation = true }: NavbarProps) {
         gsap.to(heroContentRef.current, {
           y: "0%",
           opacity: 1,
-          duration: 1.25,
-          ease: "expo.out",
+          duration: 0.8, // FASTER
+          ease: "power3.out",
           overwrite: true,
           force3D: true,
+          pointerEvents: "auto", // Restore interactions
           onComplete: () => {
             if (heroContentRef.current) {
               gsap.set(heroContentRef.current, {
-                clearProps: "transform,opacity",
+                clearProps: "transform,opacity,pointer-events",
               });
             }
           },
@@ -278,7 +276,7 @@ export default function Navbar({ lenis, startAnimation = true }: NavbarProps) {
           if (pendingScrollTarget.current && lenis) {
             lenis.scrollTo(pendingScrollTarget.current, {
               offset: 0,
-              duration: 2,
+              duration: 1.5,
               easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
             });
             pendingScrollTarget.current = null;
@@ -286,7 +284,21 @@ export default function Navbar({ lenis, startAnimation = true }: NavbarProps) {
         },
       });
     }
-  }, [lenis]); // ----------------------------------------------------------- // 1. useEffect untuk SETUP Awal (hanya berjalan SEKALI) // -----------------------------------------------------------
+  }, [lenis]);
+
+  const handleMenuLinkClick = useCallback(
+    (sectionId: string) => {
+      const targetSection = document.getElementById(sectionId);
+      if (!targetSection) return;
+
+      if (isMenuOpen.current) {
+        pendingScrollTarget.current = targetSection;
+        toggleMenu();
+      }
+    },
+    [toggleMenu],
+  );
+  // ----------------------------------------------------------- // 1. useEffect untuk SETUP Awal (hanya berjalan SEKALI) // -----------------------------------------------------------
 
   // 1. Initial Setup (Selector Caching & SplitText)
   useGSAP(
@@ -353,29 +365,7 @@ export default function Navbar({ lenis, startAnimation = true }: NavbarProps) {
       };
       navToggle.addEventListener("click", navToggleHandler);
 
-      const clickHandlers: Array<() => void> = [];
-      menuLinkContainersRef.current.forEach((container) => {
-        const handler = (e: Event) => {
-          e.preventDefault();
-          e.stopPropagation();
-          const target = e.currentTarget as HTMLElement;
-          const sectionId = target.dataset.section;
-          const targetSection = sectionId
-            ? document.getElementById(sectionId)
-            : null;
-
-          if (!targetSection) return;
-          if (isMenuOpen.current) {
-            pendingScrollTarget.current = targetSection;
-            toggleMenu();
-          }
-        };
-        container.addEventListener("click", handler);
-        clickHandlers.push(() =>
-          container.removeEventListener("click", handler),
-        );
-      });
-      // FIX: Mengganti Array<any> menjadi Array<{ link: Element; onEnter: () => void; onLeave: () => void }>
+      // Removed manual click handlers for menu links, switching to React onClick
 
       const hoverHandlers: Array<{
         link: Element;
@@ -492,7 +482,6 @@ export default function Navbar({ lenis, startAnimation = true }: NavbarProps) {
       return () => {
         cancelAnimationFrame(raf);
         navToggle.removeEventListener("click", navToggleHandler);
-        clickHandlers.forEach((rm) => rm());
         hoverHandlers.forEach(({ link, onEnter, onLeave }) => {
           link.removeEventListener("mouseenter", onEnter);
           link.removeEventListener("mouseleave", onLeave);
@@ -634,11 +623,15 @@ export default function Navbar({ lenis, startAnimation = true }: NavbarProps) {
             { name: "Experience", id: "experiences" },
             { name: "Certificates", id: "certifications" },
             { name: "Contact", id: "contact" },
-          ].map((link) => (
+          ].map((link, idx) => (
             <div
+              ref={(el) => {
+                if (el) menuLinkContainersRef.current[idx] = el;
+              }}
               className="menu-link relative overflow-hidden cursor-pointer"
               key={link.id}
               data-section={link.id}
+              onClick={() => handleMenuLinkClick(link.id)}
             >
               <a className="relative uppercase font-[Anton] text-2xl md:text-[4rem] lg:text-[6.5rem] tracking-[0.12em] md:tracking-[0] lg:tracking-[-0.02rem] inline-block overflow-hidden leading-none">
                 <span>{link.name}</span>

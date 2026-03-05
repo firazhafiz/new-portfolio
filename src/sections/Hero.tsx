@@ -29,7 +29,8 @@ export default function Hero({ startAnimation = true }: HeroProps) {
       />
       <figure className="absolute inset-0 -z-50 w-screen h-screen overflow-hidden">
         <Canvas
-          shadows
+          shadows={!isMobile}
+          dpr={[1, isMobile ? 1.5 : 2]} // Prevent 4K+ rendering on small mobile screens
           camera={{ position: [0, 0, -10], fov: 17.5, near: 0.1, far: 50 }}
         >
           <ambientLight intensity={0.5} />
@@ -41,7 +42,7 @@ export default function Hero({ startAnimation = true }: HeroProps) {
               />
             </Suspense>
           </Float>
-          <Environment resolution={256}>
+          <Environment resolution={isMobile ? 128 : 256}>
             <group rotation={[-Math.PI / 3, 4, 1]}>
               <Lightformer
                 form={"circle"}

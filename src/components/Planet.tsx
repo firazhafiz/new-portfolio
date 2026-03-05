@@ -46,8 +46,8 @@ export function Planet({ startAnimation = true, ...props }: PlanetProps) {
         // Animate from 6 to 0 (drop down)
         tl.to(shapeContainer.current.position, {
           y: 0, // Drop to center
-          duration: 3,
-          ease: "circ.out",
+          duration: 2.5,
+          ease: "power2.out",
         });
       }
     }
