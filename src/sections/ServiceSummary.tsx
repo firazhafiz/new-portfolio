@@ -23,11 +23,12 @@ export default function ServiceSummary() {
       // Animate to center with ScrollTrigger
       gsap.to(id, {
         xPercent: 0,
+        force3D: true,
         scrollTrigger: {
           trigger: id,
-          scrub: 0.5,
-          start: "top 80%",
-          end: "bottom 20%",
+          scrub: 0.5, // Tighter for mobile
+          start: "top 95%",
+          end: "bottom 5%",
         },
         ease: "power3.out",
       });
@@ -36,12 +37,12 @@ export default function ServiceSummary() {
 
   return (
     <section className=" sm:text-4xl text-lg sm:mt-20  overflow-hidden font-extralight font-sans leading-snug text-center sm:mb-42 mb-25 contact-text-responsive max-w-screen">
-      <div id="title-service-1">
+      <div id="title-service-1" className="will-change-transform">
         <p className="italic">Architecture</p>
       </div>
       <div
         id="title-service-2"
-        className="flex items-center justify-center gap-3"
+        className="flex items-center justify-center gap-3 will-change-transform"
       >
         <p className="font-sans font-bold italic">Development</p>
         <div className="w-10 h-1 md:w-16 bg-[#FFE093]" />
@@ -49,7 +50,7 @@ export default function ServiceSummary() {
       </div>
       <div
         id="title-service-3"
-        className="flex items-center justify-center gap-3"
+        className="flex items-center justify-center gap-3 will-change-transform"
       >
         <p>APIs</p>
         <div className="w-10 h-1 md:w-32 bg-[#FFE093]" />
@@ -57,7 +58,7 @@ export default function ServiceSummary() {
         <div className="w-10 h-1 md:w-16 bg-[#FFE093]" />
         <p>Precision</p>
       </div>
-      <div id="title-service-4">
+      <div id="title-service-4" className="will-change-transform">
         <p>Cinematography</p>
       </div>
     </section>

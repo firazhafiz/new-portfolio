@@ -16,20 +16,23 @@ export default function Services() {
       if (!el) return;
 
       gsap.from(el, {
-        y: 200,
+        y: 100,
+        opacity: 0,
         scrollTrigger: {
           trigger: el,
-          start: "top 80%",
+          start: "top 90%",
+          toggleActions: "play none none reverse",
         },
-        duration: 1,
-        ease: "circ.out",
+        duration: 0.8,
+        ease: "power2.out",
+        force3D: true,
       });
     });
   });
   return (
     <section
       id="services"
-      className="min-h-screen bg-gray-900 sm:rounded-t-[64px] rounded-t-4xl"
+      className="min-h-screen bg-gray-900 sm:rounded-t-[64px] rounded-t-3xl"
     >
       <AnimatedHeaderSection
         subtitle=""

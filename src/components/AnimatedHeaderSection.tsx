@@ -29,31 +29,34 @@ export default function AnimatedHeaderSection({
           }
         : undefined,
     });
+    const isMobile = window.innerWidth < 768;
     tl.from(contextRef.current, {
-      y: "50vh",
+      y: isMobile ? 50 : "50vh", // Reduced for mobile
       duration: 1,
-      ease: "circ.out",
+      ease: "power2.out",
+      force3D: true,
     });
     tl.from(
       headerRef.current,
       {
         opacity: 0,
-        y: "200",
+        y: isMobile ? 30 : 200, // Reduced for mobile
         duration: 1,
-        ease: "circ.out",
+        ease: "power2.out",
+        force3D: true,
       },
-      "<=0.2"
+      "<=0.2",
     );
   }, []);
   return (
     <div ref={contextRef}>
       <div
         style={{ clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)" }}
-        className=""
+        className="will-change-[clip-path]"
       >
         <div
           ref={headerRef}
-          className="flex flex-col justify-center gap-12 pt-12 sm:gap-16"
+          className="flex flex-col justify-center gap-12 pt-12 sm:gap-16 will-change-transform"
         >
           <p
             className={`text-sm font-light font-sans tracking-[0.5rem] uppercase px-10 ${textColor}`}

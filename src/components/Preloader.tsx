@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import Image from "next/image";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
@@ -29,51 +29,97 @@ export default function Preloader({
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [hasLoaded, setHasLoaded] = useState(false);
-  const [minTimeElapsed, setMinTimeElapsed] = useState(false);
+  const [isWindowLoaded, setIsWindowLoaded] = useState(false);
   const [displayedProgress, setDisplayedProgress] = useState(0);
 
-  // 1. Minimum Time & Visual Progress (Synced via GSAP)
+  // 1. Listen for window load
+  useEffect(() => {
+    if (document.readyState === "complete") {
+      setIsWindowLoaded(true);
+    } else {
+      const handleLoad = () => setIsWindowLoaded(true);
+      window.addEventListener("load", handleLoad);
+      return () => window.removeEventListener("load", handleLoad);
+    }
+  }, []);
+
+  // 2. Sophisticated Progression
   useGSAP(
     () => {
-      // Enforce 5s minimum preloader time
-      const timer = setTimeout(() => {
-        setMinTimeElapsed(true);
-      }, 5000);
-
-      // Visual Progress Bar & Percentage sync
-      // We animate a dummy object to keep displayedProgress in sync with the bar
       const progressObj = { value: 0 };
-      gsap.to(progressObj, {
-        value: 100,
-        duration: 4.5,
-        delay: 0.1,
-        ease: "none",
+
+      // Initial fast progress to 85%
+      const tl = gsap.timeline({
         onUpdate: () => {
-          setDisplayedProgress(Math.floor(progressObj.value));
+          const val = Math.floor(progressObj.value);
+          setDisplayedProgress(val);
           if (progressLineRef.current) {
-            gsap.set(progressLineRef.current, {
-              width: progressObj.value + "%",
-            });
+            gsap.set(progressLineRef.current, { width: val + "%" });
           }
         },
       });
 
-      return () => clearTimeout(timer);
+      tl.to(progressObj, {
+        value: 85,
+        duration: 3,
+        ease: "power2.out",
+      });
+
+      // Conditional completion
+      const checkAndComplete = () => {
+        // If 3D assets (progress) and Window are both ready
+        if (progress >= 100 && isWindowLoaded) {
+          gsap.to(progressObj, {
+            value: 100,
+            duration: 0.8,
+            ease: "power4.out",
+            onUpdate: () => {
+              const val = Math.floor(progressObj.value);
+              setDisplayedProgress(val);
+              if (progressLineRef.current) {
+                gsap.set(progressLineRef.current, { width: val + "%" });
+              }
+            },
+            onComplete: () => setHasLoaded(true),
+          });
+        } else {
+          // Slow crawl if not ready
+          gsap.to(progressObj, {
+            value: 99,
+            duration: 10,
+            ease: "none",
+            onUpdate: () => {
+              const val = Math.floor(progressObj.value);
+              setDisplayedProgress(val);
+              if (progressLineRef.current) {
+                gsap.set(progressLineRef.current, { width: val + "%" });
+              }
+            },
+          });
+        }
+      };
+
+      // Watch for readiness
+      if (progress >= 100 && isWindowLoaded) {
+        checkAndComplete();
+      }
+
+      // We use a watcher effect to jump to 100 when ready
     },
-    { scope: containerRef },
+    { dependencies: [progress, isWindowLoaded], scope: containerRef },
   );
 
-  // 1b. Trigger onHalfway at 50%
+  // 2b. Trigger onHalfway at 50%
   useGSAP(
     () => {
-      if (displayedProgress >= 50 && onHalfway) {
+      if (displayedProgress >= 92 && onHalfway) {
         onHalfway();
       }
     },
     { dependencies: [displayedProgress, onHalfway], scope: containerRef },
   );
 
-  // 2. Scroll Locking & Image Flip Interval
+  // 3. Scroll Locking & Image Flip Interval
   useGSAP(
     () => {
       // FORCE HIDE SCROLLBAR & PREVENT SCROLL
@@ -90,20 +136,6 @@ export default function Preloader({
       };
     },
     { scope: containerRef },
-  );
-
-  // 3. Load Completion Logic
-  useGSAP(
-    () => {
-      // Wait for BOTH progress 100% AND minimum 5s time
-      if (progress === 100 && minTimeElapsed && !hasLoaded) {
-        setHasLoaded(true);
-      }
-    },
-    {
-      dependencies: [progress, minTimeElapsed, hasLoaded],
-      scope: containerRef,
-    },
   );
 
   // 4. Text Flip Animation

@@ -84,11 +84,13 @@ export default function Navbar({ lenis, startAnimation = true }: NavbarProps) {
 
       // Animasi BUKA
       if (heroContentRef.current) {
+        const isMobile = window.innerWidth < 768;
         gsap.to(heroContentRef.current, {
-          y: "-40%",
+          y: isMobile ? "0%" : "-40%", // NO SLIDING ON MOBILE (Expensive for 3D)
           opacity: 0.25,
           duration: 1.25,
           ease: "expo.out",
+          force3D: true,
         });
       }
       gsap.to(menuOverlayRef.current, {
@@ -172,6 +174,7 @@ export default function Navbar({ lenis, startAnimation = true }: NavbarProps) {
           duration: 1.25,
           ease: "expo.out",
           overwrite: true,
+          force3D: true,
           onComplete: () => {
             if (heroContentRef.current) {
               gsap.set(heroContentRef.current, {
@@ -522,7 +525,7 @@ export default function Navbar({ lenis, startAnimation = true }: NavbarProps) {
 
       <div
         ref={menuOverlayRef}
-        className="menu-overlay min-h-screen fixed top-0 left-0 w-screen h-svh bg-[#1e1e1e] text-[#fefff8] z-40 pt-16 [clip-path:polygon(0%_100%,100%_100%,100%_100%,0%_100%)]"
+        className="menu-overlay min-h-screen fixed top-0 left-0 w-screen h-svh bg-[#1e1e1e] text-[#fefff8] z-40 pt-16 [clip-path:polygon(0%_100%,100%_100%,100%_100%,0%_100%)] will-change-[clip-path,transform]"
       >
         {/* Mobile Decor */}
         <div className="md:hidden flex flex-col items-center gap-4 pt-12 pb-6 text-center">

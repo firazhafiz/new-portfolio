@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useGSAP } from "@gsap/react";
 import Image from "next/image";
 import certifications from "../../constant"; // pastikan export default
 import AnimatedHeaderSection from "@/components/AnimatedHeaderSection"; // sesuaikan path
@@ -16,26 +17,30 @@ export default function Certifications() {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const sectionRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const cards = sectionRef.current?.querySelectorAll(".cert-card");
-    if (!cards) return;
+  useGSAP(
+    () => {
+      const cards = sectionRef.current?.querySelectorAll(".cert-card");
+      if (!cards) return;
 
-    gsap.fromTo(
-      cards,
-      { opacity: 0, y: 50 },
-      {
-        opacity: 1,
-        y: 0,
-        duration: 0.8,
-        stagger: 0.15,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top 80%",
+      gsap.fromTo(
+        cards,
+        { opacity: 0, y: 50 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          stagger: 0.15,
+          ease: "power3.out",
+          force3D: true,
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top 80%",
+          },
         },
-      },
-    );
-  }, []);
+      );
+    },
+    { scope: sectionRef },
+  );
 
   return (
     <>
@@ -59,7 +64,7 @@ export default function Certifications() {
                 className="cert-card group bg-gray-100 rounded-2xl border border-gray-500/40 hover:shadow-md transition-all duration-400 flex flex-col overflow-hidden
                  mx-auto                           /* center di mobile */
                  w-full max-w-md sm:max-w-none     /* batas lebar maksimal di mobile */
-                 h-full"
+                 h-full will-change-transform"
               >
                 {/* Gambar – tinggi lebih pendek di mobile */}
                 <div
@@ -71,8 +76,8 @@ export default function Certifications() {
                     alt={cert.title}
                     fill
                     className="object-cover object-top group-hover:scale-105 transition-transform duration-500 rounded-t-2xl"
-                    unoptimized
-                    priority={index < 6}
+                    priority={index < 3}
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   />
                   <div className="absolute inset-0 bg-linear-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-3">
                     <span className="text-white text-xs font-medium bg-black/60 px-2.5 py-1 rounded">
