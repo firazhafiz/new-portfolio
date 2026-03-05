@@ -94,12 +94,29 @@ export default function Navbar({ lenis, startAnimation = true }: NavbarProps) {
         });
       }
       gsap.to(menuOverlayRef.current, {
-        clipPath: "polygon(0% 100%, 100% 100%, 100% 0%, 0% 0%)",
+        clipPath:
+          window.innerWidth < 768
+            ? "none"
+            : "polygon(0% 100%, 100% 100%, 100% 0%, 0% 0%)",
+        yPercent: window.innerWidth < 768 ? 0 : 0,
         duration: 1.25,
         ease: "expo.out",
         force3D: true,
+        onStart: () => {
+          if (window.innerWidth < 768) {
+            gsap.set(menuOverlayRef.current, {
+              clipPath: "none",
+              yPercent: -100,
+            });
+            gsap.to(menuOverlayRef.current, {
+              yPercent: 0,
+              duration: 1.25,
+              ease: "expo.out",
+            });
+          }
+        },
         onComplete: () => {
-          if (heroContentRef.current)
+          if (heroContentRef.current && window.innerWidth >= 768)
             gsap.set(heroContentRef.current, { y: "40%" });
           gsap.set(".menu-link", { overflow: "visible" });
           isMenuOpen.current = true;
@@ -216,14 +233,20 @@ export default function Navbar({ lenis, startAnimation = true }: NavbarProps) {
         force3D: true,
       });
 
+      const isMobile = window.innerWidth < 768;
       gsap.to(menuOverlayRef.current, {
-        clipPath: "polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)",
+        clipPath: isMobile ? "none" : "polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)",
+        yPercent: isMobile ? -100 : 0,
         duration: 1.25,
         ease: "expo.out",
+        force3D: true,
         onComplete: () => {
           // Reset states GSAP
           gsap.set(menuOverlayRef.current, {
-            clipPath: "polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)",
+            clipPath: isMobile
+              ? "none"
+              : "polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)",
+            yPercent: isMobile ? -100 : 0,
           });
           gsap.set(menuLinkAsRef.current, { y: "150%" });
           gsap.set(linkHighlighterRef.current, { y: "150%" });
@@ -294,6 +317,14 @@ export default function Navbar({ lenis, startAnimation = true }: NavbarProps) {
       });
 
       // Initial GSAP Set States
+      const isMobile = window.innerWidth < 768;
+      gsap.set(menuOverlayRef.current, {
+        clipPath: isMobile
+          ? "none"
+          : "polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)",
+        yPercent: isMobile ? -100 : 0,
+      });
+
       gsap.set(menuContentRef.current, { y: "50%", opacity: 0.25 });
       gsap.set(menuImageRef.current, {
         scale: 0.5,
@@ -327,23 +358,12 @@ export default function Navbar({ lenis, startAnimation = true }: NavbarProps) {
         const handler = (e: Event) => {
           e.preventDefault();
           e.stopPropagation();
-          const linkText = container
-            .querySelector("a span:first-child")
-            ?.textContent?.trim();
-          if (!linkText) return;
-          const sectionMap: Record<string, string> = {
-            Home: "home",
-            About: "about",
-            Services: "services",
-            Projects: "projects",
-            Experience: "experiences",
-            Certificates: "certifications",
-            Contact: "contact",
-          };
-          const sectionId = sectionMap[linkText];
+          const target = e.currentTarget as HTMLElement;
+          const sectionId = target.dataset.section;
           const targetSection = sectionId
             ? document.getElementById(sectionId)
             : null;
+
           if (!targetSection) return;
           if (isMenuOpen.current) {
             pendingScrollTarget.current = targetSection;
@@ -607,21 +627,22 @@ export default function Navbar({ lenis, startAnimation = true }: NavbarProps) {
           className="menu-links-wrapper relative md:absolute md:left-0 md:bottom-0 w-full lg:w-max px-8 md:p-6 lg:p-5 flex gap-2 lg:gap-8 flex-col lg:flex-row items-center md:items-start text-center md:text-left z-20 mb-6 lg:mb-0 min-h-[200px] md:min-h-[150px] lg:min-h-0"
         >
           {[
-            "Home",
-            "About",
-            "Services",
-            "Projects",
-            "Experience",
-            "Certificates",
-            "Contact",
-          ].map((txt) => (
+            { name: "Home", id: "home" },
+            { name: "About", id: "about" },
+            { name: "Services", id: "services" },
+            { name: "Projects", id: "projects" },
+            { name: "Experience", id: "experiences" },
+            { name: "Certificates", id: "certifications" },
+            { name: "Contact", id: "contact" },
+          ].map((link) => (
             <div
               className="menu-link relative overflow-hidden cursor-pointer"
-              key={txt}
+              key={link.id}
+              data-section={link.id}
             >
               <a className="relative uppercase font-[Anton] text-2xl md:text-[4rem] lg:text-[6.5rem] tracking-[0.12em] md:tracking-[0] lg:tracking-[-0.02rem] inline-block overflow-hidden leading-none">
-                <span>{txt}</span>
-                <span className="absolute top-0 left-0">{txt}</span>
+                <span>{link.name}</span>
+                <span className="absolute top-0 left-0">{link.name}</span>
               </a>
             </div>
           ))}
