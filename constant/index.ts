@@ -83,11 +83,58 @@ export const servicesData = [
 export const projects = [
   {
     id: 1,
+    name: "HRIS Toshin Prima Fine Blanking",
+    description:
+      "A comprehensive Human Resource Information System designed to manage employee attendance, payroll, and data specifically for Toshin Prima Fine Blanking.",
+    preview: "https://angkutin-omega.vercel.app/",
+    github: "https://github.com/firazhafiz/fe-angkutin",
+    image: "/assets/hris-cover.png",
+    bgImage: "/images/trash.jpg", // Placeholder
+    frameworks: [
+      { id: 1, name: "React Native" },
+      { id: 2, name: "Node.js" },
+      { id: 3, name: "Supabase" },
+      { id: 4, name: "Express.js" },
+    ],
+  },
+  {
+    id: 2,
+    name: "Angkutin",
+    description:
+      "A smart waste management system designed to optimize waste collection and monitoring through intelligent technology.",
+    preview: "https://angkutin-ten.vercel.app/",
+    github: "https://github.com/firazhafiz/fe-angkutin",
+    image: "/assets/angkutin-cover.png",
+    bgImage: "/images/trash.jpg", // Placeholder
+    frameworks: [
+      { id: 1, name: "Next.js" },
+      { id: 2, name: "Nest.js" },
+      { id: 3, name: "Tensorflow" },
+      { id: 4, name: "Supabase" },
+    ],
+  },
+  {
+    id: 3,
+    name: "Travel Gundul Trans",
+    description:
+      "A specialized transportation booking and management platform for Gundul Trans, facilitating seamless travel reservations and fleet scheduling.",
+    preview: "https://pm-copilot.vercel.app/",
+    image: "/assets/gundul-cover.png",
+    bgImage: "/images/maintenance.jpg", // Placeholder
+    frameworks: [
+      { id: 1, name: "React" },
+      { id: 2, name: "Supabase" },
+      { id: 3, name: "Express.js" },
+      { id: 4, name: "Node.js" },
+    ],
+  },
+  {
+    id: 4,
     name: "Predictive Maintenance Copilot",
     description:
       "An AI powered predictive maintenance web application that leverages machine learning to forecast equipment failures, optimize maintenance schedules, and reduce downtime for industrial operations.",
     preview: "https://pm-copilot.vercel.app/",
-    image: "/assets/pmcopilot.png",
+    image: "/assets/copilot-cover.png",
     bgImage: "/images/maintenance.jpg", // Placeholder
     frameworks: [
       { id: 1, name: "React" },
@@ -97,13 +144,13 @@ export const projects = [
     ],
   },
   {
-    id: 2,
-    name: "BankDash.",
+    id: 5,
+    name: "Dcoffee Cup",
     description:
-      "Dashboard for bank for user to manage their accounts and transactions.",
-    preview: "https://bankdash-indol.vercel.app/",
+      "A point of sale and inventory management system designed for coffee shops to streamline transactions and monitor real-time stock levels.",
+    preview: "https://dcoffeecup.vercel.app/",
     github: "https://github.com/firazhafiz/bankdash",
-    image: "/assets/bankdash.png",
+    image: "/assets/dcoffee-cover.png",
     bgImage: "/images/bank-digital.jpg", // Placeholder
     frameworks: [
       { id: 1, name: "React" },
@@ -112,13 +159,44 @@ export const projects = [
     ],
   },
   {
-    id: 3,
+    id: 6,
+    name: "ShiftPlanner",
+    description:
+      "A dynamic employee scheduling dashboard that allows managers to organize work shifts, track employee hours, and optimize workforce distribution.",
+    preview: "https://bankdash-indol.vercel.app/",
+    github: "https://github.com/firazhafiz/bankdash",
+    image: "/assets/shiftplanner-cover.png",
+    bgImage: "/images/bank-digital.jpg", // Placeholder
+    frameworks: [
+      { id: 1, name: "React" },
+      { id: 2, name: "Tailwind CSS" },
+      { id: 3, name: "Shadcn UI" },
+      { id: 4, name: "Dexie.js" },
+    ],
+  },
+  {
+    id: 7,
+    name: "BankDash.",
+    description:
+      "Dashboard for bank for user to manage their accounts and transactions.",
+    preview: "https://bankdash-indol.vercel.app/",
+    github: "https://github.com/firazhafiz/bankdash",
+    image: "/assets/bankdash-cover.png",
+    bgImage: "/images/bank-digital.jpg", // Placeholder
+    frameworks: [
+      { id: 1, name: "React" },
+      { id: 2, name: "Tailwind CSS" },
+      { id: 3, name: "Shadcn UI" },
+    ],
+  },
+  {
+    id: 8,
     name: "Toko Kopi Padma",
     description:
       "Wesbite for coffee shop to manage their inventory and transactions.",
     preview: "https://kopipadma.vercel.app/",
     github: "https://github.com/firazhafiz/tokokopi-padma",
-    image: "/assets/kopi-padma.png",
+    image: "/assets/padma-cover.png",
     bgImage: "/images/coffee.jpg", // Placeholder
     frameworks: [
       { id: 1, name: "React" },
@@ -127,13 +205,13 @@ export const projects = [
     ],
   },
   {
-    id: 4,
+    id: 9,
     name: "Berkat Sejahtera Mobil",
     description:
       "Car Showroom Website for Berkat Sejahtera Mobil to sell or buy cars.",
     preview: "https://berkatsejahteramobil.netlify.app/",
     github: "https://github.com/firazhafiz/berkat-sejahtera-mobil",
-    image: "/assets/berkatjaya.png",
+    image: "/assets/berkat-cover.png",
     bgImage: "/images/coffee.jpg", // Placeholder
     frameworks: [
       { id: 1, name: "React" },
@@ -141,61 +219,15 @@ export const projects = [
       { id: 3, name: "Shadcn UI" },
     ],
   },
+
   {
-    id: 5,
-    name: "Diary Food",
-    description:
-      "A website used as inspiration for finding various local and international recipes for food and drinks.",
-    preview: "https://diary-food1222.vercel.app/",
-    github: "https://github.com/firazhafiz/FE-DiaryFood",
-    image: "/assets/diaryfood.png",
-    bgImage: "/images/kitchen.jpg", // Placeholder
-    frameworks: [
-      { id: 1, name: "React" },
-      { id: 2, name: "Next.js" },
-      { id: 3, name: "Express.js" },
-      { id: 4, name: "AI Integration" },
-    ],
-  },
-  {
-    id: 6,
-    name: "Nesavent",
-    description:
-      "Landing page website for an event management platform at Surabaya State University.",
-    preview: "https://nesavent.vercel.app/",
-    github: "https://github.com/firazhafiz/landingpage-nesavent",
-    image: "/assets/nesavent.png",
-    bgImage: "/images/event.jpg", // Placeholder
-    frameworks: [
-      { id: 1, name: "Next.js" },
-      { id: 2, name: "React" },
-      { id: 3, name: "Tailwind CSS" },
-    ],
-  },
-  {
-    id: 7,
-    name: "Angkutin",
-    description:
-      "A smart waste management system designed to optimize waste collection and monitoring through intelligent technology.",
-    preview: "https://angkutin-omega.vercel.app/",
-    github: "https://github.com/firazhafiz/fe-angkutin",
-    image: "/assets/angkutin.png",
-    bgImage: "/images/trash.jpg", // Placeholder
-    frameworks: [
-      { id: 1, name: "Next.js" },
-      { id: 2, name: "React" },
-      { id: 3, name: "Laravel as BE" },
-      { id: 4, name: "Express.js" },
-    ],
-  },
-  {
-    id: 8,
+    id: 10,
     name: "Sadari 4Life",
     description:
       "A hypertension screening website that allows users to perform self-assessments through interactive tests for early detection and management.",
     preview: "https://sadari4life.vercel.app/",
     github: "https://github.com/firazhafiz/fe-sadari",
-    image: "/assets/sadari.png",
+    image: "/assets/sadari4life-cover.png",
     bgImage: "/images/hospital.jpg", // Placeholder
     frameworks: [
       { id: 1, name: "Next.js" },
@@ -205,7 +237,7 @@ export const projects = [
     ],
   },
   {
-    id: 9,
+    id: 11,
     name: "Catatan Akhir Sekolah 74 SMAN 1 Madiun",
     description:
       "A documentary film capturing the journey of the Class of 74 at SMAN 1 Madiun and preserving their final moments of high school years.",
@@ -219,7 +251,7 @@ export const projects = [
     ],
   },
   {
-    id: 10,
+    id: 12,
     name: "BANGKIT - Cinematography SMA Awards",
     description:
       "A prestigious high school cinematography awards event celebrating outstanding filmmaking in the Indonesian education community.",
@@ -232,7 +264,7 @@ export const projects = [
     ],
   },
   {
-    id: 11,
+    id: 13,
     name: "Teaser PKKMB FT Unesa 2024",
     description:
       "A promotional teaser video for the Freshman Orientation Program (PKKMB) at the Faculty of Engineering, State University of Surabaya.",
@@ -247,7 +279,7 @@ export const projects = [
     ],
   },
   {
-    id: 12,
+    id: 14,
     name: "Aftermovie PKKMB FT Unesa 2024",
     description:
       "A cinematic aftermovie capturing the highlights and memorable moments from the Freshman Orientation Program (PKKMB) at the Faculty of Engineering, State University of Surabaya, celebrating the beginning of new students' academic journey.",
@@ -262,7 +294,7 @@ export const projects = [
     ],
   },
   {
-    id: 13,
+    id: 15,
     name: "Aftermovie Google CNE Surabaya 2025",
     description:
       "Documenting a comprehensive tech workshop series on cloud computing, artificial intelligence, and data analytics held in Surabaya, featuring hands-on learning experiences and expert insights from industry leaders.",
@@ -289,6 +321,17 @@ export type ExperienceItem = {
 export const experiences: ExperienceItem[] = [
   {
     id: 1,
+    year: 2026,
+    title: "Google Student Ambassador 2026",
+    description: [
+      "Representing Google on campus and fostering a developer community",
+      "Organizing workshops and events focused on Google technologies",
+      "Connecting students with Google resources and career opportunities",
+    ],
+    image: "/assets/gsa26.png",
+  },
+  {
+    id: 2,
     year: 2025,
     title: "Cohort of Asah by Dicoding",
     description: [
@@ -299,7 +342,7 @@ export const experiences: ExperienceItem[] = [
     image: "/assets/asah.png",
   },
   {
-    id: 2,
+    id: 3,
     year: 2025,
     title: "Co-Director Creative Media of Google DGOC Unesa",
     description: [
@@ -310,7 +353,7 @@ export const experiences: ExperienceItem[] = [
     image: "/assets/gdgoc.png",
   },
   {
-    id: 3,
+    id: 4,
     year: 2024,
     title: "Hai.Volunteer Internship Batch 6.0",
     description: [
@@ -321,7 +364,7 @@ export const experiences: ExperienceItem[] = [
     image: "/assets/haivo.png",
   },
   {
-    id: 4,
+    id: 5,
     year: 2023,
     title: "Director of Catatan Akhir Sekolah 74 SMAN 1 Madiun",
     description: [
@@ -355,12 +398,6 @@ export const certifications: CertificationItem[] = [
     credentialUrl: "",
   },
   {
-    image: "/images/mernwpu.png",
-    title: "Mern Stack Course",
-    author: "WPU Course",
-    credentialUrl: "https://learn.wpucourse.id/certificate/TK1D1IFD",
-  },
-  {
     image: "/images/companyvisit.jpg",
     title:
       "Company Visit - Exploring Technology and Work Culture in the Digital Industry",
@@ -368,11 +405,17 @@ export const certifications: CertificationItem[] = [
     credentialUrl: "",
   },
   {
-    image: "/images/es2.jpg",
-    title:
-      "Event Series 2 Building Smarter Website: AI Powered Solutions with Google Cloud Integration",
-    author: "Google Developer Group on Campus Unesa",
-    credentialUrl: "",
+    image: "/images/gemini.jpg",
+    title: "Gemini Student University",
+    author: "Google",
+    credentialUrl:
+      "https://edu.google.accredible.com/a24f1459-9a23-4b0b-944c-4a0975079ca4#acc.aKn9tPvb",
+  },
+  {
+    image: "/images/mernwpu.png",
+    title: "Mern Stack Course",
+    author: "WPU Course",
+    credentialUrl: "https://learn.wpucourse.id/certificate/TK1D1IFD",
   },
   {
     image: "/images/es3.png",
@@ -388,11 +431,10 @@ export const certifications: CertificationItem[] = [
     credentialUrl: "",
   },
   {
-    image: "/images/pznreact.jpg",
-    title: "React.js : Pemula sampai Mahir",
-    author: "Progammer Zaman Now",
-    credentialUrl:
-      "https://www.udemy.com/certificate/UC-4fd37fe3-f98e-4054-a7ef-90c608999a87/",
+    image: "/images/hackerank.jpg",
+    title: "Software Engineer",
+    author: "HackerRank",
+    credentialUrl: "https://www.hackerrank.com/certificates/456edf13e03b",
   },
   {
     image: "/images/pzntypescript.jpg",

@@ -18,6 +18,7 @@ export default function Experiences() {
 
   // Mobile-specific refs
   const mobileLineRef = useRef<HTMLDivElement>(null);
+  const mobileContainerRef = useRef<HTMLDivElement>(null);
   const mobileNodesRef = useRef<(HTMLDivElement | null)[]>([]);
   const mobileYearRefs = useRef<(HTMLDivElement | null)[]>([]);
   const mobileContentRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -46,9 +47,10 @@ export default function Experiences() {
   useGSAP(
     () => {
       gsap.registerPlugin(ScrollTrigger);
+      const mm = gsap.matchMedia();
 
-      // --- DESKTOP ANIMATIONS ---
-      if (window.innerWidth >= 768) {
+      // Desktop Animations
+      mm.add("(min-width: 768px)", () => {
         sectionRefs.current.forEach((section, index) => {
           if (!section) return;
 
@@ -61,7 +63,7 @@ export default function Experiences() {
               trigger: section,
               start: "top 85%",
               end: "bottom 50%",
-              scrub: 0.5, // Faster scrub for tighter response
+              scrub: 0.5,
             },
           });
 
@@ -110,12 +112,14 @@ export default function Experiences() {
             );
           }
         });
-      }
+      });
 
-      // --- MOBILE ANIMATIONS (Seamless Roadmap) ---
-      if (window.innerWidth < 768) {
+      // Mobile Animations
+      mm.add("(max-width: 767px)", () => {
+        const container = mobileContainerRef.current;
+        
         // 1. Timeline Line Drawing
-        if (mobileLineRef.current) {
+        if (mobileLineRef.current && container) {
           gsap.fromTo(
             mobileLineRef.current,
             { scaleY: 0 },
@@ -123,8 +127,8 @@ export default function Experiences() {
               scaleY: 1,
               ease: "none",
               scrollTrigger: {
-                trigger: "#mobile-timeline-container",
-                start: "top 70%",
+                trigger: container,
+                start: "top 60%",
                 end: "bottom 80%",
                 scrub: 1,
               },
@@ -150,17 +154,13 @@ export default function Experiences() {
             tl.fromTo(
               node,
               { scale: 0, opacity: 0 },
-              { scale: 1, opacity: 1, duration: 0.4, ease: "back.out(1.7)" },
-            );
-
-            tl.fromTo(
+              { scale: 1, opacity: 1, duration: 0.4, ease: "back.out(1.7)" }
+            ).fromTo(
               year,
               { x: -20, opacity: 0 },
               { x: 0, opacity: 1, duration: 0.5, ease: "power3.out" },
-              "-=0.2",
-            );
-
-            tl.fromTo(
+              "-=0.2"
+            ).fromTo(
               content,
               { y: 30, opacity: 0, scale: 0.95 },
               {
@@ -171,11 +171,18 @@ export default function Experiences() {
                 ease: "power2.out",
                 force3D: true,
               },
-              "-=0.3",
+              "-=0.3"
             );
           }
         });
-      }
+      });
+
+      // Global refresh to ensure ScrollTrigger calculations are accurate
+      ScrollTrigger.refresh();
+      
+      return () => {
+        mm.revert();
+      };
     },
     { scope: containerRef },
   );
@@ -222,7 +229,7 @@ export default function Experiences() {
                 ref={(el) => {
                   if (el) imageRefs.current[index] = el;
                 }}
-                className="relative w-full max-w-[640px] h-[60vh] min-h-[420px] max-h-[560px] overflow-hidden rounded-[40px] shadow-2xl border border-black/5 will-change-transform"
+                className="relative w-full max-w-[640px] h-[60vh] min-h-[420px] max-h-[560px] overflow-hidden md:rounded-3xl shadow-md border border-black/5 will-change-transform"
               >
                 <Image
                   src={experience.image}
@@ -260,6 +267,7 @@ export default function Experiences() {
       {/* Mobile Layout (Seamless Timeline) */}
       <div
         id="mobile-timeline-container"
+        ref={mobileContainerRef}
         className="md:hidden relative px-6 pb-20 pt-4"
       >
         {/* Vertical Line */}
@@ -299,7 +307,7 @@ export default function Experiences() {
                 className="space-y-5"
               >
                 {/* Image */}
-                <div className="relative h-60 w-full rounded-3xl overflow-hidden shadow-lg border border-black/5">
+                <div className="relative h-70 w-full rounded-xl overflow-hidden shadow-md border border-black/5">
                   <Image
                     src={experience.image}
                     alt={experience.title}
