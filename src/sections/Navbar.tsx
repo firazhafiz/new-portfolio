@@ -519,7 +519,7 @@ export default function Navbar({ lenis, startAnimation = true }: NavbarProps) {
         </div>
 
         <Link
-          href="https://drive.google.com/file/d/19dPCmGHAV-JexaOaNrdrn8v3OgSkd8gd/view?usp=sharing"
+          href="https://drive.google.com/file/d/1WLtyegPGCBBI3CvrGBsOCCjIFWwgyBNZ/view?usp=drive_link"
           rel="noopener noreferrer"
           target="_blank"
         >
