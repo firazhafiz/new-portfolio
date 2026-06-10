@@ -21,6 +21,7 @@ interface MobileScrollTween extends GSAPTween {
 
 export default function Projects() {
   const [currentIndex, setCurrentIndex] = useState<number | null>(null);
+  const [activeFilter, setActiveFilter] = useState<"all" | "programming" | "creative">("all");
 
   // FIX 1: Definisikan ref array dengan tipe yang benar
   const overlayRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -34,6 +35,11 @@ export default function Projects() {
   const moveY = useRef<((value: number) => void) | null>(null);
 
   const text = `Seamlessly Transforming Ideas into Reality.`;
+
+  // Filter projects based on active filter
+  const filteredProjects = activeFilter === "all" 
+    ? projects 
+    : projects.filter(p => p.category === activeFilter);
 
   // Simple vertical animation for mobile
   useGSAP(() => {
@@ -191,11 +197,10 @@ export default function Projects() {
       document.head.appendChild(link);
 
       // Juga preload bg untuk mobile
-      if (p.bgImage) {
+      if (p.image) {
         const bgLink = document.createElement("link");
         bgLink.rel = "prefetch";
         bgLink.as = "image";
-        bgLink.href = p.bgImage;
         document.head.appendChild(bgLink);
       }
     });
@@ -211,12 +216,46 @@ export default function Projects() {
         titleColor="text-[#2056F7]"
       />
 
+      {/* Filter Tabs */}
+      <div className="flex justify-center gap-3 px-6 pb-6">
+        <button
+          onClick={() => setActiveFilter("all")}
+          className={`px-6 py-2 rounded-full font-sans font-medium text-sm transition-all duration-300 ${
+            activeFilter === "all"
+              ? "bg-[#2056F7] text-white"
+              : "bg-black-100/5 text-black-100 hover:bg-black-100/10"
+          }`}
+        >
+          All
+        </button>
+        <button
+          onClick={() => setActiveFilter("programming")}
+          className={`px-6 py-2 rounded-full font-sans font-medium text-sm transition-all duration-300 ${
+            activeFilter === "programming"
+              ? "bg-[#2056F7] text-white"
+              : "bg-black-100/5 text-black-100 hover:bg-black-100/10"
+          }`}
+        >
+          Programmer
+        </button>
+        <button
+          onClick={() => setActiveFilter("creative")}
+          className={`px-6 py-2 rounded-full font-sans font-medium text-sm transition-all duration-300 ${
+            activeFilter === "creative"
+              ? "bg-[#2056F7] text-white"
+              : "bg-black-100/5 text-black-100 hover:bg-black-100/10"
+          }`}
+        >
+          Creative
+        </button>
+      </div>
+
       {/* Desktop Layout - tetap seperti semula */}
       <div
         className="relative hidden md:flex md:flex-col font-sans font-light"
         onMouseMove={handleMouseMove}
       >
-        {projects.map((project, index) => (
+        {filteredProjects.map((project, index) => (
           <div
             className="relative flex flex-col gap-1 py-5 cursor-pointer group md:gap-4"
             key={`desktop-${project.id}`}
@@ -333,45 +372,11 @@ export default function Projects() {
                     Preview
                   </a>
                 )}
-                {project.github && (
-                  <a
-                    href={project.github}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="px-4 py-2 rounded-full bg-[#2056F7] text-white text-xs font-bold"
-                    onMouseEnter={() => {
-                      if (previewRef.current)
-                        gsap.to(previewRef.current, {
-                          opacity: 0,
-                          duration: 0.15,
-                        });
-                    }}
-                    onMouseLeave={() => {
-                      if (currentIndex !== null && previewRef.current)
-                        gsap.to(previewRef.current, {
-                          opacity: 1,
-                          duration: 0.15,
-                        });
-                    }}
-                  >
-                    Github
-                  </a>
-                )}
               </div>
             </div>
 
             {/* Mobile Preview (di desktop hidden) */}
             <div className="relative flex items-center justify-center px-10 md:hidden h-[200px] sm:h-[400px]">
-              <Image
-                src={project.bgImage}
-                alt={project.name}
-                width={400}
-                height={400}
-                sizes="(max-width: 767px) 100vw, 0px"
-                priority={index < 2}
-                className="object-cover w-full h-full rounded-xl brightness-50"
-                onError={handleImgError}
-              />
               <Image
                 src={project.image}
                 alt={project.name}
@@ -383,28 +388,16 @@ export default function Projects() {
                 onError={handleImgError}
               />
             </div>
-            {(project.preview || project.github) && (
+            {project.preview && (
               <div className="px-10 md:hidden mt-3 flex gap-3">
-                {project.preview && (
-                  <a
-                    href={project.preview}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="px-4 py-2 rounded-full bg-[#2056F7] text-white text-xs font-bold"
-                  >
-                    Preview
-                  </a>
-                )}
-                {project.github && (
-                  <a
-                    href={project.github}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="px-4 py-2 rounded-full bg-[#2056F7] text-white text-xs font-bold"
-                  >
-                    Github
-                  </a>
-                )}
+                <a
+                  href={project.preview}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-4 py-2 rounded-full bg-[#2056F7] text-white text-xs font-bold"
+                >
+                  Preview
+                </a>
               </div>
             )}
           </div>
@@ -415,7 +408,7 @@ export default function Projects() {
         >
           {currentIndex !== null && (
             <Image
-              src={projects[currentIndex].image}
+              src={filteredProjects[currentIndex].image}
               alt="preview"
               width={2000}
               height={2000}
@@ -431,7 +424,7 @@ export default function Projects() {
           aria-hidden
           className="pointer-events-none absolute w-px h-px overflow-hidden -m-px opacity-0"
         >
-          {projects.map((p, i) => (
+          {filteredProjects.map((p, i) => (
             <Image
               key={`prefetch-${p.id}`}
               src={p.image}
@@ -450,13 +443,13 @@ export default function Projects() {
 
       {/* Mobile Layout - Vertical List */}
       <div className="md:hidden flex flex-col gap-12 px-6 pb-10 mt-8">
-        {projects.map((project, index) => (
+        {filteredProjects.map((project, index) => (
           <div
             key={`mobile-${project.id}`}
             className="mobile-project-card flex flex-col gap-5"
           >
             {/* Project Image - 16:9 Aspect Ratio & HD */}
-            <div className="relative w-full aspect-video rounded-2xl overflow-hidden shadow-lg border border-black-100/10">
+            <div className="relative w-full aspect-video rounded-2xl overflow-hidden">
               <Image
                 src={project.image}
                 alt={project.name}
@@ -485,17 +478,6 @@ export default function Projects() {
                       aria-label="Preview"
                     >
                       <Icon icon="mdi:eye" className="w-4 h-4" />
-                    </a>
-                  )}
-                  {project.github && (
-                    <a
-                      href={project.github}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="p-2 bg-black-100 text-white rounded-full hover:bg-[#2056F7] transition-colors"
-                      aria-label="Github"
-                    >
-                      <Icon icon="mdi:github" className="w-4 h-4" />
                     </a>
                   )}
                 </div>

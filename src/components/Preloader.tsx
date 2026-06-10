@@ -31,6 +31,7 @@ export default function Preloader({
   const [hasLoaded, setHasLoaded] = useState(false);
   const [isWindowLoaded, setIsWindowLoaded] = useState(false);
   const [displayedProgress, setDisplayedProgress] = useState(0);
+  const progressObjRef = useRef({ value: 0 });
 
   // 1. Listen for window load
   useEffect(() => {
@@ -43,10 +44,10 @@ export default function Preloader({
     }
   }, []);
 
-  // 2. Sophisticated Progression
+  // 2. Initial Progress Animation (runs once)
   useGSAP(
     () => {
-      const progressObj = { value: 0 };
+      const progressObj = progressObjRef.current;
 
       // Initial fast progress to 85%
       const tl = gsap.timeline({
@@ -61,55 +62,42 @@ export default function Preloader({
 
       tl.to(progressObj, {
         value: 85,
-        duration: 3,
+        duration: 2,
         ease: "power2.out",
       });
-
-      // Conditional completion
-      const checkAndComplete = () => {
-        // If 3D assets (progress) and Window are both ready
-        if (progress >= 100 && isWindowLoaded) {
-          gsap.to(progressObj, {
-            value: 100,
-            duration: 0.8,
-            ease: "power4.out",
-            onUpdate: () => {
-              const val = Math.floor(progressObj.value);
-              setDisplayedProgress(val);
-              if (progressLineRef.current) {
-                gsap.set(progressLineRef.current, { width: val + "%" });
-              }
-            },
-            onComplete: () => setHasLoaded(true),
-          });
-        } else {
-          // Slow crawl if not ready
-          gsap.to(progressObj, {
-            value: 99,
-            duration: 10,
-            ease: "none",
-            onUpdate: () => {
-              const val = Math.floor(progressObj.value);
-              setDisplayedProgress(val);
-              if (progressLineRef.current) {
-                gsap.set(progressLineRef.current, { width: val + "%" });
-              }
-            },
-          });
-        }
-      };
-
-      // Watch for readiness
-      if (progress >= 100 && isWindowLoaded) {
-        checkAndComplete();
-      }
-
-      // We use a watcher effect to jump to 100 when ready
     },
-    { dependencies: [progress, isWindowLoaded], scope: containerRef },
+    { scope: containerRef },
   );
 
-  // 2b. Trigger onHalfway at 50%
+  // 3. Watch for completion conditions
+  useEffect(() => {
+    // Only proceed if both conditions are met and we haven't already loaded
+    if (progress >= 100 && isWindowLoaded && !hasLoaded && displayedProgress < 100) {
+      const progressObj = progressObjRef.current;
+      
+      // Kill any existing animations on progressObj
+      gsap.killTweensOf(progressObj);
+
+      // Animate to 100%
+      gsap.to(progressObj, {
+        value: 100,
+        duration: 0.6,
+        ease: "power2.out",
+        onUpdate: () => {
+          const val = Math.floor(progressObj.value);
+          setDisplayedProgress(val);
+          if (progressLineRef.current) {
+            gsap.set(progressLineRef.current, { width: val + "%" });
+          }
+        },
+        onComplete: () => {
+          setHasLoaded(true);
+        },
+      });
+    }
+  }, [progress, isWindowLoaded, hasLoaded, displayedProgress]);
+
+  // 4. Trigger onHalfway at 92%
   useGSAP(
     () => {
       if (displayedProgress >= 92 && onHalfway) {
@@ -119,7 +107,7 @@ export default function Preloader({
     { dependencies: [displayedProgress, onHalfway], scope: containerRef },
   );
 
-  // 3. Scroll Locking & Image Flip Interval
+  // 5. Scroll Locking & Image Flip Interval
   useGSAP(
     () => {
       // FORCE HIDE SCROLLBAR & PREVENT SCROLL
@@ -138,7 +126,7 @@ export default function Preloader({
     { scope: containerRef },
   );
 
-  // 4. Text Flip Animation
+  // 6. Text Flip Animation
   useGSAP(
     () => {
       // Select all individual letters
@@ -166,7 +154,7 @@ export default function Preloader({
     { scope: containerRef },
   );
 
-  // 5. Exit Animation
+  // 7. Exit Animation
   useGSAP(() => {
     if (hasLoaded && containerRef.current) {
       // Kill all ongoing animations first to prevent conflicts

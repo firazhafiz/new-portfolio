@@ -87,9 +87,8 @@ export const projects = [
     description:
       "A comprehensive Human Resource Information System designed to manage employee attendance, payroll, and data specifically for Toshin Prima Fine Blanking.",
     preview: "https://angkutin-omega.vercel.app/",
-    github: "https://github.com/firazhafiz/fe-angkutin",
     image: "/assets/hris-cover.png",
-    bgImage: "/images/trash.jpg", // Placeholder
+    category: "programming",
     frameworks: [
       { id: 1, name: "React Native" },
       { id: 2, name: "Node.js" },
@@ -103,9 +102,8 @@ export const projects = [
     description:
       "A smart waste management system designed to optimize waste collection and monitoring through intelligent technology.",
     preview: "https://angkutin-ten.vercel.app/",
-    github: "https://github.com/firazhafiz/fe-angkutin",
     image: "/assets/angkutin-cover.png",
-    bgImage: "/images/trash.jpg", // Placeholder
+    category: "programming",
     frameworks: [
       { id: 1, name: "Next.js" },
       { id: 2, name: "Nest.js" },
@@ -120,7 +118,7 @@ export const projects = [
       "A specialized transportation booking and management platform for Gundul Trans, facilitating seamless travel reservations and fleet scheduling.",
     preview: "https://pm-copilot.vercel.app/",
     image: "/assets/gundul-cover.png",
-    bgImage: "/images/maintenance.jpg", // Placeholder
+    category: "programming",
     frameworks: [
       { id: 1, name: "React" },
       { id: 2, name: "Supabase" },
@@ -135,7 +133,7 @@ export const projects = [
       "An AI powered predictive maintenance web application that leverages machine learning to forecast equipment failures, optimize maintenance schedules, and reduce downtime for industrial operations.",
     preview: "https://pm-copilot.vercel.app/",
     image: "/assets/copilot-cover.png",
-    bgImage: "/images/maintenance.jpg", // Placeholder
+    category: "programming",
     frameworks: [
       { id: 1, name: "React" },
       { id: 2, name: "Gemini API" },
@@ -149,9 +147,8 @@ export const projects = [
     description:
       "A point of sale and inventory management system designed for coffee shops to streamline transactions and monitor real-time stock levels.",
     preview: "https://dcoffeecup.vercel.app/",
-    github: "https://github.com/firazhafiz/bankdash",
     image: "/assets/dcoffee-cover.png",
-    bgImage: "/images/bank-digital.jpg", // Placeholder
+    category: "programming",
     frameworks: [
       { id: 1, name: "React" },
       { id: 2, name: "Tailwind CSS" },
@@ -164,9 +161,8 @@ export const projects = [
     description:
       "A dynamic employee scheduling dashboard that allows managers to organize work shifts, track employee hours, and optimize workforce distribution.",
     preview: "https://bankdash-indol.vercel.app/",
-    github: "https://github.com/firazhafiz/bankdash",
     image: "/assets/shiftplanner-cover.png",
-    bgImage: "/images/bank-digital.jpg", // Placeholder
+    category: "programming",
     frameworks: [
       { id: 1, name: "React" },
       { id: 2, name: "Tailwind CSS" },
@@ -180,9 +176,8 @@ export const projects = [
     description:
       "Dashboard for bank for user to manage their accounts and transactions.",
     preview: "https://bankdash-indol.vercel.app/",
-    github: "https://github.com/firazhafiz/bankdash",
     image: "/assets/bankdash-cover.png",
-    bgImage: "/images/bank-digital.jpg", // Placeholder
+    category: "programming",
     frameworks: [
       { id: 1, name: "React" },
       { id: 2, name: "Tailwind CSS" },
@@ -195,9 +190,8 @@ export const projects = [
     description:
       "Wesbite for coffee shop to manage their inventory and transactions.",
     preview: "https://kopipadma.vercel.app/",
-    github: "https://github.com/firazhafiz/tokokopi-padma",
     image: "/assets/padma-cover.png",
-    bgImage: "/images/coffee.jpg", // Placeholder
+    category: "programming",
     frameworks: [
       { id: 1, name: "React" },
       { id: 2, name: "Tailwind CSS" },
@@ -210,9 +204,8 @@ export const projects = [
     description:
       "Car Showroom Website for Berkat Sejahtera Mobil to sell or buy cars.",
     preview: "https://berkatsejahteramobil.netlify.app/",
-    github: "https://github.com/firazhafiz/berkat-sejahtera-mobil",
     image: "/assets/berkat-cover.png",
-    bgImage: "/images/coffee.jpg", // Placeholder
+    category: "programming",
     frameworks: [
       { id: 1, name: "React" },
       { id: 2, name: "Tailwind CSS" },
@@ -226,9 +219,8 @@ export const projects = [
     description:
       "A hypertension screening website that allows users to perform self-assessments through interactive tests for early detection and management.",
     preview: "https://sadari4life.vercel.app/",
-    github: "https://github.com/firazhafiz/fe-sadari",
     image: "/assets/sadari4life-cover.png",
-    bgImage: "/images/hospital.jpg", // Placeholder
+    category: "programming",
     frameworks: [
       { id: 1, name: "Next.js" },
       { id: 2, name: "React" },
@@ -238,12 +230,26 @@ export const projects = [
   },
   {
     id: 11,
+    name: "Aftermovie BWAI x IWD 2026",
+    description:
+      "An aftermovie capturing the highlights, insights, and key moments from the Build With AI x International Women's Day 2026 workshop. ",
+    preview: "https://www.instagram.com/reel/DYPKkJSzaYr/?igsh=cTh2OW9tZHo3eDY1",
+    image: "/assets/aftermovie-bwai.png",
+    category: "creative",
+    frameworks: [
+      { id: 1, name: "Coordinator" },
+      { id: 2, name: "Photographer" },
+      { id: 3, name: "Graphic Designer" },
+    ],
+  },
+  {
+    id: 12,
     name: "Catatan Akhir Sekolah 74 SMAN 1 Madiun",
     description:
       "A documentary film capturing the journey of the Class of 74 at SMAN 1 Madiun and preserving their final moments of high school years.",
     preview: "https://www.youtube.com/watch?v=KYcp1ZC5v-U&t=71s",
     image: "/assets/cas74.jpg",
-    bgImage: "/images/cas.JPG", // Placeholder
+    category: "creative",
     frameworks: [
       { id: 1, name: "Director" },
       { id: 2, name: "Script Writer" },
@@ -251,27 +257,27 @@ export const projects = [
     ],
   },
   {
-    id: 12,
+    id: 13,
     name: "BANGKIT - Cinematography SMA Awards",
     description:
       "A prestigious high school cinematography awards event celebrating outstanding filmmaking in the Indonesian education community.",
     preview: "https://www.youtube.com/watch?v=KTGtOQgDrOo&t=344s",
     image: "/assets/bangkit.jpg",
-    bgImage: "/images/cinemato.jpg", // Placeholder
+    category: "creative",
     frameworks: [
       { id: 1, name: "Director" },
       { id: 2, name: "Cinematographer" },
     ],
   },
   {
-    id: 13,
+    id: 14,
     name: "Teaser PKKMB FT Unesa 2024",
     description:
       "A promotional teaser video for the Freshman Orientation Program (PKKMB) at the Faculty of Engineering, State University of Surabaya.",
     preview:
       "https://www.instagram.com/reel/C99mrI6pU8d/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA%3D%3D",
     image: "/assets/teaser-ft.png",
-    bgImage: "/images/ft.jpg", // Placeholder
+    category: "creative",
     frameworks: [
       { id: 1, name: "Director" },
       { id: 2, name: "Cinematographer" },
@@ -279,14 +285,14 @@ export const projects = [
     ],
   },
   {
-    id: 14,
+    id: 15,
     name: "Aftermovie PKKMB FT Unesa 2024",
     description:
       "A cinematic aftermovie capturing the highlights and memorable moments from the Freshman Orientation Program (PKKMB) at the Faculty of Engineering, State University of Surabaya, celebrating the beginning of new students' academic journey.",
     preview:
       "https://www.instagram.com/reel/C_xt9xsAvCj/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA%3D%3D",
     image: "/assets/aftermovie-ft.png",
-    bgImage: "/images/aftermovie-ft.JPG", // Placeholder
+    category: "creative",
     frameworks: [
       { id: 1, name: "Editor" },
       { id: 2, name: "Director" },
@@ -294,14 +300,14 @@ export const projects = [
     ],
   },
   {
-    id: 15,
+    id: 16,
     name: "Aftermovie Google CNE Surabaya 2025",
     description:
       "Documenting a comprehensive tech workshop series on cloud computing, artificial intelligence, and data analytics held in Surabaya, featuring hands-on learning experiences and expert insights from industry leaders.",
     preview:
       "https://www.instagram.com/reel/DNDBqCfxHWb/?igsh=d3NzdjZtOGpwdmFx",
     image: "/assets/aftermovie-cne.png",
-    bgImage: "/images/cne.JPG", // Placeholder
+    category: "creative",
     frameworks: [
       { id: 1, name: "Editor" },
       { id: 2, name: "Director" },

@@ -8,11 +8,9 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 
 export default function About() {
-  const aboutText = `As an Informatics Engineering student at Universitas Negeri Surabaya, I am a passionate and self driven developer with a flair for fullstack development, specializing in React.js and Node.js. Since embarking on my web development journey in 2022, I've immersed myself in creating intuitive, pixel perfect interfaces and robust, high performance applications. Now, in my early thirties, I leverage cutting edge tools like Next.js, TypeScript, Tailwind CSS, Laravel, and Supabase to craft seamless digital experiences that blend technical precision with creative vision. 
-  `;
+  const aboutText = `As an Informatics Engineering student at Universitas Negeri Surabaya, i am a versatile professional bridging the gap between software engineering and creative media. Since embarking on my digital journey in 2022, I've immersed myself not just in writing clean, efficient code, but also in visual storytelling through videography, content direction, and modern UI design.`;
 
-  const aboutText2 = `Now in my early thirties, I leverage a powerful stack of modern technologies including Next.js, TypeScript, Tailwind CSS, Laravel, and Supabase to build cutting edge web applications that push the boundaries of innovation. Over the past two years, I've evolved from a budding developer into a confident creator, taking on increasingly ambitious projects that demand both technical rigor and creative flair.`;
-
+  const aboutText2 = `Right now, i leverage a powerful stack of modern technologies including Next.js, TypeScript, Flutter, React Native, and Golang to build robust applications. Over the past five years, I've evolved into a confident creator who thrives on ambitious projects, seamlessly blending the technical rigor of a backend engineer with the creative flair of a visual director.`;
   const containerRef = useRef<HTMLDivElement>(null);
   const imgRef = useRef<HTMLImageElement>(null);
 
