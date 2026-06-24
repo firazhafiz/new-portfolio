@@ -624,7 +624,6 @@ export default function Preloader({
         }
         .pl-name-word {
           position: relative;
-          filter: drop-shadow(4px 4px 0 rgba(32,86,247,0.08));
         }
         .pl-name-word::after {
           content: "";
@@ -692,13 +691,14 @@ export default function Preloader({
 
           .pl-right-panel .pl-pct-block {
             border-bottom: none !important;
-            border-right: 2.5px solid ${C.ink} !important;
+            border-right: 2.5px solid #111111 !important;
             display: flex !important;
             flex-direction: column !important;
             align-items: center !important;
             justify-content: center !important;
             padding: 6px 4px !important;
             height: 100% !important;
+            box-sizing: border-box !important;
           }
           .pl-right-panel .pl-pct-num {
             font-size: 3rem !important;
@@ -716,27 +716,43 @@ export default function Preloader({
           }
 
           .pl-bottom-section { grid-template-columns: 1fr !important; }
+          .pl-term-log {
+            border-right: none !important;
+            border-bottom: 1px solid rgba(17,17,17,0.15) !important;
+            min-height: 120px !important;
+          }
           .pl-name-row {
-            flex-direction: column !important;
-            gap: 0 !important;
-            align-items: center !important;
+            flex-direction: row !important;
+            flex-wrap: nowrap !important;
+            gap: 0.2em !important;
+            align-items: baseline !important;
             justify-content: center !important;
             text-align: center !important;
             width: 100% !important;
           }
           .pl-name-word {
-            font-size: clamp(3.2rem, 15vw, 5rem) !important;
-            display: block !important;
+            font-size: clamp(2.8rem, 7vw, 4rem) !important;
+            display: inline-block !important;
             text-align: center !important;
             line-height: 0.9 !important;
-            overflow: hidden !important;
+            overflow: visible !important;
+          }
+          .pl-outline { -webkit-text-stroke: 1px #111111 !important; }
+          .pl-outline-b { -webkit-text-stroke: 1px #2056F7 !important; }
+          .pl-icon-glow {
+            width: 72px !important;
+            height: 72px !important;
           }
           .pl-name-fill-layer {
             font-size: inherit !important;
-            display: block !important;
+            display: flex !important;
+            align-items: center !important;
             top: 0 !important;
           }
-          .pl-name-sep  { display: none !important; }
+          .pl-name-sep { 
+            display: inline-block !important; 
+            font-size: clamp(1.2rem, 4vw, 3rem) !important;
+          }
           .pl-footer-left { font-size: 8px !important; }
           .pl-header-right { display: none !important; }
         }
@@ -1136,6 +1152,7 @@ export default function Preloader({
             >
               {/* Terminal log */}
               <div
+                className="pl-term-log"
                 style={{
                   borderRight: `1px solid rgba(17,17,17,0.15)`,
                   padding: "12px 18px",
@@ -1344,8 +1361,8 @@ export default function Preloader({
                   src="/preloader/vector.svg"
                   alt=""
                   aria-hidden
-                  width={72}
-                  height={72}
+                  width={140}
+                  height={140}
                   className="pl-icon-glow"
                 />
               </div>
