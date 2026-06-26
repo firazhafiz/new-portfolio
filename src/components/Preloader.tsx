@@ -107,7 +107,7 @@ export default function Preloader({
     const t = setTimeout(() => {
       const id = setInterval(() => {
         if (i < LOGS.length) {
-          setTermLines((p) => [...p.slice(-4), LOGS[i]]);
+          setTermLines((p) => [...p.slice(-3), LOGS[i]]);
           i++;
         } else clearInterval(id);
       }, 1800);
@@ -624,9 +624,6 @@ export default function Preloader({
         .pl-name-word {
           position: relative;
         }
-        .pl-mobile-filler {
-          display: none;
-        }
         .pl-name-word::after {
           content: "";
           position: absolute;
@@ -729,13 +726,6 @@ export default function Preloader({
             flex: 1 !important;
             display: flex !important;
             flex-direction: column !important;
-          }
-          .pl-mobile-filler {
-            display: flex !important;
-            flex-direction: column;
-            margin-top: auto;
-            padding-top: 16px;
-            opacity: 0.35;
           }
           .pl-name-wrap {
             flex: none !important;
@@ -1216,23 +1206,6 @@ export default function Preloader({
                     )}
                   </div>
                 ))}
-
-                {/* Decorative Mobile Filler (Barcode) */}
-                <div className="pl-mobile-filler">
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 6 }}>
-                    <span style={{ fontSize: 7, letterSpacing: "0.2em", textTransform: "uppercase" }}>Security Token</span>
-                    <span style={{ fontSize: 7, letterSpacing: "0.1em" }}>[VALID]</span>
-                  </div>
-                  <div style={{ display: "flex", gap: "2px", height: "24px", width: "100%" }}>
-                    {[3, 1, 2, 4, 1, 1, 3, 2, 1, 5, 1, 2, 3, 1, 1, 4, 2, 1, 3, 2].map((w, idx) => (
-                      <div key={idx} style={{ flex: w, background: C.ink, height: "100%" }} />
-                    ))}
-                  </div>
-                  <div style={{ fontSize: 8, fontFamily: "monospace", marginTop: 6, display: "flex", justifyContent: "space-between" }}>
-                     <span>8F9A-2B4C-99X</span>
-                     <span>FZF-{new Date().getFullYear()}</span>
-                  </div>
-                </div>
               </div>
 
               {/* Stack info */}
