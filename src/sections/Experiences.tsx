@@ -117,7 +117,7 @@ export default function Experiences() {
       // Mobile Animations
       mm.add("(max-width: 767px)", () => {
         const container = mobileContainerRef.current;
-        
+
         // 1. Timeline Line Drawing
         if (mobileLineRef.current && container) {
           gsap.fromTo(
@@ -154,32 +154,34 @@ export default function Experiences() {
             tl.fromTo(
               node,
               { scale: 0, opacity: 0 },
-              { scale: 1, opacity: 1, duration: 0.4, ease: "back.out(1.7)" }
-            ).fromTo(
-              year,
-              { x: -20, opacity: 0 },
-              { x: 0, opacity: 1, duration: 0.5, ease: "power3.out" },
-              "-=0.2"
-            ).fromTo(
-              content,
-              { y: 30, opacity: 0, scale: 0.95 },
-              {
-                y: 0,
-                opacity: 1,
-                scale: 1,
-                duration: 0.6,
-                ease: "power2.out",
-                force3D: true,
-              },
-              "-=0.3"
-            );
+              { scale: 1, opacity: 1, duration: 0.4, ease: "back.out(1.7)" },
+            )
+              .fromTo(
+                year,
+                { x: -20, opacity: 0 },
+                { x: 0, opacity: 1, duration: 0.5, ease: "power3.out" },
+                "-=0.2",
+              )
+              .fromTo(
+                content,
+                { y: 30, opacity: 0, scale: 0.95 },
+                {
+                  y: 0,
+                  opacity: 1,
+                  scale: 1,
+                  duration: 0.6,
+                  ease: "power2.out",
+                  force3D: true,
+                },
+                "-=0.3",
+              );
           }
         });
       });
 
       // Global refresh to ensure ScrollTrigger calculations are accurate
       ScrollTrigger.refresh();
-      
+
       return () => {
         mm.revert();
       };
@@ -229,7 +231,7 @@ export default function Experiences() {
                 ref={(el) => {
                   if (el) imageRefs.current[index] = el;
                 }}
-                className="relative w-full max-w-[640px] h-[60vh] min-h-[420px] max-h-[560px] overflow-hidden md:rounded-3xl shadow-md border border-black/5"
+                className="relative w-full max-w-[640px] h-[60vh] min-h-[420px] max-h-[560px] overflow-hidden md:rounded-3xl border border-navy/50"
               >
                 <Image
                   src={experience.image}
@@ -248,7 +250,7 @@ export default function Experiences() {
                 ref={(el) => {
                   if (el) cardRefs.current[index] = el;
                 }}
-                className="absolute -right-10 bottom-10 bg-white rounded-3xl shadow-xl border border-black/5 max-w-sm w-[55%] p-6"
+                className="absolute -right-10 bottom-10 bg-white rounded-3xl border-2 border-black/50 max-w-sm w-[55%] p-6"
               >
                 <h3 className="text-3xl font-semibold text-black-100 mb-3">
                   {experience.title}
