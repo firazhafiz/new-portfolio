@@ -64,7 +64,7 @@ export default function Certifications() {
                 className="cert-card group bg-gray-100 rounded-2xl border border-gray-500/40 hover:shadow-md transition-all duration-400 flex flex-col overflow-hidden
                  mx-auto                           /* center di mobile */
                  w-full max-w-md sm:max-w-none     /* batas lebar maksimal di mobile */
-                 h-full will-change-transform"
+                 h-full"
               >
                 {/* Gambar – tinggi lebih pendek di mobile */}
                 <div

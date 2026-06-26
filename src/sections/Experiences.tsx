@@ -217,7 +217,7 @@ export default function Experiences() {
                 ref={(el) => {
                   if (el) yearRefs.current[index] = el;
                 }}
-                className="text-[110px] xl:text-[150px] font-black leading-none text-black-100 will-change-transform"
+                className="text-[110px] xl:text-[150px] font-black leading-none text-black-100"
               >
                 {experience.year}
               </div>
@@ -229,7 +229,7 @@ export default function Experiences() {
                 ref={(el) => {
                   if (el) imageRefs.current[index] = el;
                 }}
-                className="relative w-full max-w-[640px] h-[60vh] min-h-[420px] max-h-[560px] overflow-hidden md:rounded-3xl shadow-md border border-black/5 will-change-transform"
+                className="relative w-full max-w-[640px] h-[60vh] min-h-[420px] max-h-[560px] overflow-hidden md:rounded-3xl shadow-md border border-black/5"
               >
                 <Image
                   src={experience.image}
@@ -248,7 +248,7 @@ export default function Experiences() {
                 ref={(el) => {
                   if (el) cardRefs.current[index] = el;
                 }}
-                className="absolute -right-10 bottom-10 bg-white rounded-3xl shadow-xl border border-black/5 max-w-sm w-[55%] p-6 will-change-transform"
+                className="absolute -right-10 bottom-10 bg-white rounded-3xl shadow-xl border border-black/5 max-w-sm w-[55%] p-6"
               >
                 <h3 className="text-3xl font-semibold text-black-100 mb-3">
                   {experience.title}

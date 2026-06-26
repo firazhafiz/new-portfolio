@@ -107,7 +107,7 @@ export default function Preloader({
     const t = setTimeout(() => {
       const id = setInterval(() => {
         if (i < LOGS.length) {
-          setTermLines((p) => [...p.slice(-3), LOGS[i]]);
+          setTermLines((p) => [...p.slice(-4), LOGS[i]]);
           i++;
         } else clearInterval(id);
       }, 1800);
@@ -154,10 +154,9 @@ export default function Preloader({
       // ── Phase 0: container eases in from slight scale — feels organic not abrupt
       tl.fromTo(
         containerRef.current,
-        { opacity: 0, scale: 0.97, filter: "blur(6px)" },
+        { opacity: 0, filter: "blur(6px)" },
         {
           opacity: 1,
-          scale: 1,
           filter: "blur(0px)",
           duration: 0.65,
           ease: "expo.out",
@@ -625,6 +624,9 @@ export default function Preloader({
         .pl-name-word {
           position: relative;
         }
+        .pl-mobile-filler {
+          display: none;
+        }
         .pl-name-word::after {
           content: "";
           position: absolute;
@@ -715,11 +717,29 @@ export default function Preloader({
             height: 100% !important;
           }
 
-          .pl-bottom-section { grid-template-columns: 1fr !important; }
+          .pl-bottom-section { 
+            display: flex !important;
+            flex-direction: column !important;
+            flex: 1 !important;
+          }
           .pl-term-log {
             border-right: none !important;
             border-bottom: 1px solid rgba(17,17,17,0.15) !important;
             min-height: 120px !important;
+            flex: 1 !important;
+            display: flex !important;
+            flex-direction: column !important;
+          }
+          .pl-mobile-filler {
+            display: flex !important;
+            flex-direction: column;
+            margin-top: auto;
+            padding-top: 16px;
+            opacity: 0.35;
+          }
+          .pl-name-wrap {
+            flex: none !important;
+            padding: 80px 10px !important;
           }
           .pl-name-row {
             flex-direction: row !important;
@@ -986,6 +1006,7 @@ export default function Preloader({
           >
             {/* ── NAME ROW — horizontal full-width ── */}
             <div
+              className="pl-name-wrap"
               style={{
                 flex: 1,
                 display: "flex",
@@ -1195,6 +1216,23 @@ export default function Preloader({
                     )}
                   </div>
                 ))}
+
+                {/* Decorative Mobile Filler (Barcode) */}
+                <div className="pl-mobile-filler">
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 6 }}>
+                    <span style={{ fontSize: 7, letterSpacing: "0.2em", textTransform: "uppercase" }}>Security Token</span>
+                    <span style={{ fontSize: 7, letterSpacing: "0.1em" }}>[VALID]</span>
+                  </div>
+                  <div style={{ display: "flex", gap: "2px", height: "24px", width: "100%" }}>
+                    {[3, 1, 2, 4, 1, 1, 3, 2, 1, 5, 1, 2, 3, 1, 1, 4, 2, 1, 3, 2].map((w, idx) => (
+                      <div key={idx} style={{ flex: w, background: C.ink, height: "100%" }} />
+                    ))}
+                  </div>
+                  <div style={{ fontSize: 8, fontFamily: "monospace", marginTop: 6, display: "flex", justifyContent: "space-between" }}>
+                     <span>8F9A-2B4C-99X</span>
+                     <span>FZF-{new Date().getFullYear()}</span>
+                  </div>
+                </div>
               </div>
 
               {/* Stack info */}
