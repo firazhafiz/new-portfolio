@@ -78,6 +78,7 @@ export default function Preloader({
     return () => {
       document.body.style.overflow = "";
     };
+    ``;
   }, []);
 
   // ── Window ready ─────────────────────────────────────────────────────────
@@ -714,22 +715,15 @@ export default function Preloader({
             height: 100% !important;
           }
 
-          .pl-bottom-section { 
-            display: flex !important;
-            flex-direction: column !important;
-            flex: 1 !important;
-          }
+          .pl-bottom-section { grid-template-columns: 1fr !important; }
           .pl-term-log {
             border-right: none !important;
             border-bottom: 1px solid rgba(17,17,17,0.15) !important;
             min-height: 120px !important;
-            flex: 1 !important;
-            display: flex !important;
-            flex-direction: column !important;
           }
           .pl-name-wrap {
             flex: none !important;
-            padding: 80px 10px !important;
+            padding: 40px 10px !important;
           }
           .pl-name-row {
             flex-direction: row !important;
@@ -1230,7 +1224,7 @@ export default function Preloader({
                   Stack
                 </p>
                 {[
-                  ["Framework", "Next.js 14"],
+                  ["Framework", "Next.js 16"],
                   ["Motion", "GSAP"],
                   ["Design", "Figma"],
                   ["Language", "TypeScript"],
