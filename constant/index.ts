@@ -233,7 +233,8 @@ export const projects = [
     name: "Aftermovie BWAI x IWD 2026",
     description:
       "An aftermovie capturing the highlights, insights, and key moments from the Build With AI x International Women's Day 2026 workshop. ",
-    preview: "https://www.instagram.com/reel/DYPKkJSzaYr/?igsh=cTh2OW9tZHo3eDY1",
+    preview:
+      "https://www.instagram.com/reel/DYPKkJSzaYr/?igsh=cTh2OW9tZHo3eDY1",
     image: "/assets/aftermovie-bwai.png",
     category: "creative",
     frameworks: [
@@ -391,6 +392,12 @@ export type CertificationItem = {
 
 export const certifications: CertificationItem[] = [
   {
+    image: "/images/gsa.png",
+    title: "Google Student Ambassador 2026",
+    author: "Google Indonesia",
+    credentialUrl: "",
+  },
+  {
     image: "/images/asah.jpg",
     title: "Cohort of Asah 2025 React Backend & AI",
     author: "Dicoding Academy",
@@ -448,12 +455,6 @@ export const certifications: CertificationItem[] = [
     author: "Progammer Zaman Now",
     credentialUrl:
       "https://www.udemy.com/certificate/UC-9a07da83-6e60-4cd2-aeb6-b4a894adb681/",
-  },
-  {
-    image: "/images/dicoding-ai.jpg",
-    title: "Belajar Dasar AI",
-    author: "Dicoding Academy",
-    credentialUrl: "https://www.dicoding.com/certificates/N9ZO2D8DRPG5",
   },
   {
     image: "/images/pemateri.png",
