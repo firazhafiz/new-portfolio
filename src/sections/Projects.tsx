@@ -178,7 +178,7 @@ export default function Projects() {
   const handleImgError = (e: React.SyntheticEvent<HTMLImageElement>) => {
     const img = e.currentTarget;
     if (img.dataset["fallbackApplied"]) return;
-    img.src = "/assets/header-profile.jpg";
+    img.src = "/assets/header-profile.webp";
     img.dataset["fallbackApplied"] = "true";
   };
 

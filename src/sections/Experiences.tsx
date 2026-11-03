@@ -61,16 +61,16 @@ export default function Experiences() {
           const tl = gsap.timeline({
             scrollTrigger: {
               trigger: section,
-              start: "top 85%",
-              end: "bottom 50%",
-              scrub: 0.5,
+              start: "top 90%",
+              end: "bottom 60%",
+              scrub: 1,
             },
           });
 
           if (year) {
             tl.fromTo(
               year,
-              { yPercent: 40, opacity: 0.25 },
+              { yPercent: 20, opacity: 0 },
               {
                 yPercent: 0,
                 opacity: 1,
@@ -85,10 +85,9 @@ export default function Experiences() {
           if (image) {
             tl.fromTo(
               image,
-              { yPercent: 8, scale: 0.95 },
+              { yPercent: 6 },
               {
                 yPercent: 0,
-                scale: 1,
                 duration: 0.5,
                 ease: "power2.out",
                 force3D: true,
@@ -100,7 +99,7 @@ export default function Experiences() {
           if (card) {
             tl.fromTo(
               card,
-              { opacity: 0, y: 30 },
+              { opacity: 0, y: 20 },
               {
                 opacity: 1,
                 y: 0,
@@ -164,12 +163,11 @@ export default function Experiences() {
               )
               .fromTo(
                 content,
-                { y: 30, opacity: 0, scale: 0.95 },
+                { y: 20, opacity: 0 },
                 {
                   y: 0,
                   opacity: 1,
-                  scale: 1,
-                  duration: 0.6,
+                  duration: 0.5,
                   ease: "power2.out",
                   force3D: true,
                 },

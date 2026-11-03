@@ -1,7 +1,10 @@
 import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
+import ScrollTrigger from "gsap/ScrollTrigger";
 import AnimatedTextLines from "./AnimatedTextLines";
+
+gsap.registerPlugin(ScrollTrigger);
 
 export default function AnimatedHeaderSection({
   title,
@@ -26,13 +29,15 @@ export default function AnimatedHeaderSection({
       scrollTrigger: withScrollTrigger
         ? {
             trigger: contextRef.current,
+            start: "top 88%",
+            once: true,
           }
         : undefined,
     });
-    const isMobile = window.innerWidth < 768;
     tl.from(contextRef.current, {
-      y: isMobile ? 50 : "50vh", // Reduced for mobile
-      duration: 1,
+      y: 24,
+      opacity: 0,
+      duration: 0.6,
       ease: "power2.out",
       force3D: true,
     });
@@ -40,23 +45,20 @@ export default function AnimatedHeaderSection({
       headerRef.current,
       {
         opacity: 0,
-        y: isMobile ? 30 : 200, // Reduced for mobile
-        duration: 1,
+        y: 30,
+        duration: 0.6,
         ease: "power2.out",
         force3D: true,
       },
-      "<=0.2",
+      "-=0.4",
     );
   }, []);
   return (
     <div ref={contextRef}>
-      <div
-        style={{ clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)" }}
-        className="will-change-[clip-path]"
-      >
+      <div className="overflow-hidden">
         <div
           ref={headerRef}
-          className="flex flex-col justify-center gap-12 pt-12 sm:gap-16 will-change-transform"
+          className="flex flex-col justify-center gap-12 pt-12 sm:gap-16"
         >
           <p
             className={`text-sm font-light font-sans tracking-[0.5rem] uppercase px-10 ${textColor}`}

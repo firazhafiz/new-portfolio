@@ -19,12 +19,16 @@ export default function AnimatedTextLines({
   useGSAP(() => {
     if (lineRefs.current.length > 0) {
       gsap.from(lineRefs.current, {
-        y: "100%",
-        duration: 1,
+        y: 24,
+        duration: 0.6,
         opacity: 0,
-        stagger: 0.3,
+        stagger: 0.08,
+        ease: "power2.out",
+        force3D: true,
         scrollTrigger: {
           trigger: containerRef.current,
+          start: "top 92%",
+          once: true,
         },
       });
     }

@@ -9,16 +9,12 @@ import Image from "next/image";
 // Sesuaikan path ini jika lokasi file constants Anda berbeda
 import { socials } from "../../constant";
 import Link from "next/link";
-// Import tipe Lenis dari 'lenis'
-import Lenis from "lenis";
 
 interface NavbarProps {
-  // Mengganti 'any' dengan tipe Lenis | null | undefined
-  lenis: Lenis | null | undefined;
   startAnimation?: boolean;
 }
 
-export default function Navbar({ lenis, startAnimation = true }: NavbarProps) {
+export default function Navbar({ startAnimation = true }: NavbarProps) {
   // Refs
   const navToggleRef = useRef<HTMLDivElement | null>(null);
   const menuOverlayRef = useRef<HTMLDivElement | null>(null);
@@ -59,10 +55,6 @@ export default function Navbar({ lenis, startAnimation = true }: NavbarProps) {
 
     if (!isMenuOpen.current) {
       // BUKA MENU
-      if (lenis) {
-        lenis.stop();
-      }
-
       // Hide scrollbar and prevent scrolling
       document.body.style.overflow = "hidden";
 
@@ -268,23 +260,17 @@ export default function Navbar({ lenis, startAnimation = true }: NavbarProps) {
           // Restore scrollbar and scrolling
           document.body.style.overflow = "";
 
-          // Lenis Start dan Scroll
-          if (lenis) {
-            lenis.start();
-          }
-
-          if (pendingScrollTarget.current && lenis) {
-            lenis.scrollTo(pendingScrollTarget.current, {
-              offset: 0,
-              duration: 1.5,
-              easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-            });
+          if (pendingScrollTarget.current) {
+            const target = pendingScrollTarget.current;
             pendingScrollTarget.current = null;
+            setTimeout(() => {
+              target.scrollIntoView({ behavior: "smooth" });
+            }, 100);
           }
         },
       });
     }
-  }, [lenis]);
+  }, []);
 
   const handleMenuLinkClick = useCallback(
     (sectionId: string) => {
@@ -454,23 +440,25 @@ export default function Navbar({ lenis, startAnimation = true }: NavbarProps) {
 
       let raf = 0;
       const animate = () => {
-        currentX.current += (targetX.current - currentX.current) * lerpFactor;
-        currentHighlighterX.current +=
-          (targetHighlighterX.current - currentHighlighterX.current) *
-          lerpFactor;
-        currentHighlighterWidth.current +=
-          (targetHighlighterWidth.current - currentHighlighterWidth.current) *
-          lerpFactor;
+        if (isMenuOpen.current) {
+          currentX.current += (targetX.current - currentX.current) * lerpFactor;
+          currentHighlighterX.current +=
+            (targetHighlighterX.current - currentHighlighterX.current) *
+            lerpFactor;
+          currentHighlighterWidth.current +=
+            (targetHighlighterWidth.current - currentHighlighterWidth.current) *
+            lerpFactor;
 
-        gsap.set(menuLinksWrapperRef.current, {
-          x: currentX.current,
-          force3D: true,
-        });
-        gsap.set(linkHighlighterRef.current, {
-          x: currentHighlighterX.current,
-          width: currentHighlighterWidth.current,
-          force3D: true,
-        });
+          gsap.set(menuLinksWrapperRef.current, {
+            x: currentX.current,
+            force3D: true,
+          });
+          gsap.set(linkHighlighterRef.current, {
+            x: currentHighlighterX.current,
+            width: currentHighlighterWidth.current,
+            force3D: true,
+          });
+        }
 
         raf = requestAnimationFrame(animate);
       };
@@ -496,13 +484,7 @@ export default function Navbar({ lenis, startAnimation = true }: NavbarProps) {
     { scope: menuOverlayRef, dependencies: [toggleMenu] },
   );
 
-  // 2. Lenis Control
-  useGSAP(
-    () => {
-      // Empty for now, as stop/start are handled in toggleMenu
-    },
-    { dependencies: [lenis, toggleMenu] },
-  );
+
 
   return (
     <div className="relative isolate w-screen h-screen text-[#2056F7] overflow-x-hidden">
@@ -602,7 +584,7 @@ export default function Navbar({ lenis, startAnimation = true }: NavbarProps) {
           className="menu-img absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-2/3 w-[200px] hidden lg:block"
         >
           <Image
-            src="/assets/header-profile.jpg"
+            src="/assets/header-profile.webp"
             alt="profile"
             width={600}
             height={600}

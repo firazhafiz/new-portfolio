@@ -87,7 +87,7 @@ export const projects = [
     description:
       "A comprehensive Human Resource Information System designed to manage employee attendance, payroll, and data specifically for Toshin Prima Fine Blanking.",
     preview: "https://angkutin-omega.vercel.app/",
-    image: "/assets/hris-cover.png",
+    image: "/assets/hris-cover.webp",
     category: "programming",
     frameworks: [
       { id: 1, name: "React Native" },
@@ -102,7 +102,7 @@ export const projects = [
     description:
       "A smart waste management system designed to optimize waste collection and monitoring through intelligent technology.",
     preview: "https://angkutin-ten.vercel.app/",
-    image: "/assets/angkutin-cover.png",
+    image: "/assets/angkutin-cover.webp",
     category: "programming",
     frameworks: [
       { id: 1, name: "Next.js" },
@@ -117,7 +117,7 @@ export const projects = [
     description:
       "A specialized transportation booking and management platform for Gundul Trans, facilitating seamless travel reservations and fleet scheduling.",
     preview: "https://pm-copilot.vercel.app/",
-    image: "/assets/gundul-cover.png",
+    image: "/assets/gundul-cover.webp",
     category: "programming",
     frameworks: [
       { id: 1, name: "React" },
@@ -132,7 +132,7 @@ export const projects = [
     description:
       "An AI powered predictive maintenance web application that leverages machine learning to forecast equipment failures, optimize maintenance schedules, and reduce downtime for industrial operations.",
     preview: "https://pm-copilot.vercel.app/",
-    image: "/assets/copilot-cover.png",
+    image: "/assets/copilot-cover.webp",
     category: "programming",
     frameworks: [
       { id: 1, name: "React" },
@@ -147,7 +147,7 @@ export const projects = [
     description:
       "A point of sale and inventory management system designed for coffee shops to streamline transactions and monitor real-time stock levels.",
     preview: "https://dcoffeecup.vercel.app/",
-    image: "/assets/dcoffee-cover.png",
+    image: "/assets/dcoffee-cover.webp",
     category: "programming",
     frameworks: [
       { id: 1, name: "React" },
@@ -161,7 +161,7 @@ export const projects = [
     description:
       "A dynamic employee scheduling dashboard that allows managers to organize work shifts, track employee hours, and optimize workforce distribution.",
     preview: "https://bankdash-indol.vercel.app/",
-    image: "/assets/shiftplanner-cover.png",
+    image: "/assets/shiftplanner-cover.webp",
     category: "programming",
     frameworks: [
       { id: 1, name: "React" },
@@ -176,7 +176,7 @@ export const projects = [
     description:
       "Dashboard for bank for user to manage their accounts and transactions.",
     preview: "https://bankdash-indol.vercel.app/",
-    image: "/assets/bankdash-cover.png",
+    image: "/assets/bankdash-cover.webp",
     category: "programming",
     frameworks: [
       { id: 1, name: "React" },
@@ -190,7 +190,7 @@ export const projects = [
     description:
       "Wesbite for coffee shop to manage their inventory and transactions.",
     preview: "https://kopipadma.vercel.app/",
-    image: "/assets/padma-cover.png",
+    image: "/assets/padma-cover.webp",
     category: "programming",
     frameworks: [
       { id: 1, name: "React" },
@@ -204,7 +204,7 @@ export const projects = [
     description:
       "Car Showroom Website for Berkat Sejahtera Mobil to sell or buy cars.",
     preview: "https://berkatsejahteramobil.netlify.app/",
-    image: "/assets/berkat-cover.png",
+    image: "/assets/berkat-cover.webp",
     category: "programming",
     frameworks: [
       { id: 1, name: "React" },
@@ -219,7 +219,7 @@ export const projects = [
     description:
       "A hypertension screening website that allows users to perform self-assessments through interactive tests for early detection and management.",
     preview: "https://sadari4life.vercel.app/",
-    image: "/assets/sadari4life-cover.png",
+    image: "/assets/sadari4life-cover.webp",
     category: "programming",
     frameworks: [
       { id: 1, name: "Next.js" },
@@ -235,7 +235,7 @@ export const projects = [
       "An aftermovie capturing the highlights, insights, and key moments from the Build With AI x International Women's Day 2026 workshop. ",
     preview:
       "https://www.instagram.com/reel/DYPKkJSzaYr/?igsh=cTh2OW9tZHo3eDY1",
-    image: "/assets/aftermovie-bwai.png",
+    image: "/assets/aftermovie-bwai.webp",
     category: "creative",
     frameworks: [
       { id: 1, name: "Coordinator" },
@@ -249,7 +249,7 @@ export const projects = [
     description:
       "A documentary film capturing the journey of the Class of 74 at SMAN 1 Madiun and preserving their final moments of high school years.",
     preview: "https://www.youtube.com/watch?v=KYcp1ZC5v-U&t=71s",
-    image: "/assets/cas74.jpg",
+    image: "/assets/cas74.webp",
     category: "creative",
     frameworks: [
       { id: 1, name: "Director" },
@@ -263,7 +263,7 @@ export const projects = [
     description:
       "A prestigious high school cinematography awards event celebrating outstanding filmmaking in the Indonesian education community.",
     preview: "https://www.youtube.com/watch?v=KTGtOQgDrOo&t=344s",
-    image: "/assets/bangkit.jpg",
+    image: "/assets/bangkit.webp",
     category: "creative",
     frameworks: [
       { id: 1, name: "Director" },
@@ -277,7 +277,7 @@ export const projects = [
       "A promotional teaser video for the Freshman Orientation Program (PKKMB) at the Faculty of Engineering, State University of Surabaya.",
     preview:
       "https://www.instagram.com/reel/C99mrI6pU8d/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA%3D%3D",
-    image: "/assets/teaser-ft.png",
+    image: "/assets/teaser-ft.webp",
     category: "creative",
     frameworks: [
       { id: 1, name: "Director" },
@@ -292,7 +292,7 @@ export const projects = [
       "A cinematic aftermovie capturing the highlights and memorable moments from the Freshman Orientation Program (PKKMB) at the Faculty of Engineering, State University of Surabaya, celebrating the beginning of new students' academic journey.",
     preview:
       "https://www.instagram.com/reel/C_xt9xsAvCj/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA%3D%3D",
-    image: "/assets/aftermovie-ft.png",
+    image: "/assets/aftermovie-ft.webp",
     category: "creative",
     frameworks: [
       { id: 1, name: "Editor" },
@@ -307,7 +307,7 @@ export const projects = [
       "Documenting a comprehensive tech workshop series on cloud computing, artificial intelligence, and data analytics held in Surabaya, featuring hands-on learning experiences and expert insights from industry leaders.",
     preview:
       "https://www.instagram.com/reel/DNDBqCfxHWb/?igsh=d3NzdjZtOGpwdmFx",
-    image: "/assets/aftermovie-cne.png",
+    image: "/assets/aftermovie-cne.webp",
     category: "creative",
     frameworks: [
       { id: 1, name: "Editor" },
@@ -335,7 +335,7 @@ export const experiences: ExperienceItem[] = [
       "Organizing workshops and events focused on Google technologies",
       "Connecting students with Google resources and career opportunities",
     ],
-    image: "/assets/gsa26.png",
+    image: "/assets/gsa26.webp",
   },
   {
     id: 2,
@@ -346,7 +346,7 @@ export const experiences: ExperienceItem[] = [
       "Created projects to apply learned concepts",
       "Explored React and modern frontend frameworks",
     ],
-    image: "/assets/asah.png",
+    image: "/assets/asah.webp",
   },
   {
     id: 3,
@@ -357,7 +357,7 @@ export const experiences: ExperienceItem[] = [
       "Collaborated with teams on large-scale projects",
       "Expanded expertise in cloud computing and AI",
     ],
-    image: "/assets/gdgoc.png",
+    image: "/assets/gdgoc.webp",
   },
   {
     id: 4,
@@ -368,7 +368,7 @@ export const experiences: ExperienceItem[] = [
       "Worked as graphic designer for the event",
       "Make some contents for event media partnership",
     ],
-    image: "/assets/haivo.png",
+    image: "/assets/haivo.webp",
   },
   {
     id: 5,
@@ -379,7 +379,7 @@ export const experiences: ExperienceItem[] = [
       "Worked as a script writer and gaffer",
       "Collaborated with teams on the film production",
     ],
-    image: "/assets/cas.JPG",
+    image: "/assets/cas.webp",
   },
 ];
 
@@ -392,78 +392,78 @@ export type CertificationItem = {
 
 export const certifications: CertificationItem[] = [
   {
-    image: "/images/gsa.png",
+    image: "/images/gsa.webp",
     title: "Google Student Ambassador 2026",
     author: "Google Indonesia",
     credentialUrl: "",
   },
   {
-    image: "/images/asah.jpg",
+    image: "/images/asah.webp",
     title: "Cohort of Asah 2025 React Backend & AI",
     author: "Dicoding Academy",
     credentialUrl: "",
   },
   {
-    image: "/images/gdgoc.jpg",
+    image: "/images/gdgoc.webp",
     title:
       "Core Team Google Developer Group on Campus State University of Surabaya",
     author: "GDGOC Unesa",
     credentialUrl: "",
   },
   {
-    image: "/images/companyvisit.jpg",
+    image: "/images/companyvisit.webp",
     title:
       "Company Visit - Exploring Technology and Work Culture in the Digital Industry",
     author: "Google Developer Group on Campus Unesa",
     credentialUrl: "",
   },
   {
-    image: "/images/gemini.jpg",
+    image: "/images/gemini.webp",
     title: "Gemini Student University",
     author: "Google",
     credentialUrl:
       "https://edu.google.accredible.com/a24f1459-9a23-4b0b-944c-4a0975079ca4#acc.aKn9tPvb",
   },
   {
-    image: "/images/mernwpu.png",
+    image: "/images/mernwpu.webp",
     title: "Mern Stack Course",
     author: "WPU Course",
     credentialUrl: "https://learn.wpucourse.id/certificate/TK1D1IFD",
   },
   {
-    image: "/images/es3.png",
+    image: "/images/es3.webp",
     title:
       "Event Series 3 - Exploring AI and Blockchain for a Smarter Digital Economy",
     author: "Google Developer Group on Campus Unesa",
     credentialUrl: "",
   },
   {
-    image: "/images/konaspi.jpg",
+    image: "/images/konaspi.webp",
     title: "Konvensi Nasional Pendidikan Indonesia 2024",
     author: "Kece Media Unesa",
     credentialUrl: "",
   },
   {
-    image: "/images/hackerank.jpg",
+    image: "/images/hackerank.webp",
     title: "Software Engineer",
     author: "HackerRank",
     credentialUrl: "https://www.hackerrank.com/certificates/456edf13e03b",
   },
   {
-    image: "/images/pzntypescript.jpg",
+    image: "/images/pzntypescript.webp",
     title: "Pemrograman TypeScript : Pemula sampai Mahir",
     author: "Progammer Zaman Now",
     credentialUrl:
       "https://www.udemy.com/certificate/UC-9a07da83-6e60-4cd2-aeb6-b4a894adb681/",
   },
   {
-    image: "/images/pemateri.png",
+    image: "/images/pemateri.webp",
     title: "Pemateri Youth Public Innovation Research",
     author: "YPIR Unesa",
     credentialUrl: "",
   },
   {
-    image: "/images/fundamental-be.jpg",
+    image: "/images/fundamental-be.webp",
     title: "Belajar Fundamental Backend dengan JavaScript",
     author: "Dicoding Academy",
     credentialUrl: "https://www.dicoding.com/certificates/KEXL2WMVWZG2",

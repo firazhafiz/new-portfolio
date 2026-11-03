@@ -69,7 +69,7 @@ export default function Preloader({
   const finishing = useRef(false);
   const finishScheduled = useRef(false);
   const mountTime = useRef(Date.now());
-  const MIN_DURATION = 14500;
+  const MIN_DURATION = 5000;
   const synthTweens = useRef<gsap.core.Animation[]>([]);
 
   // ── Scroll lock ──────────────────────────────────────────────────────────
@@ -78,7 +78,6 @@ export default function Preloader({
     return () => {
       document.body.style.overflow = "";
     };
-    ``;
   }, []);
 
   // ── Window ready ─────────────────────────────────────────────────────────

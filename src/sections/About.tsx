@@ -16,34 +16,23 @@ export default function About() {
 
   useGSAP(
     () => {
-      // Scale out effect - Using containerRef.current directly as target
-      if (containerRef.current) {
-        gsap.to(containerRef.current, {
-          scale: 0.95,
-          scrollTrigger: {
-            trigger: containerRef.current,
-            start: "bottom 95%",
-            end: "bottom 5%",
-            scrub: true,
-          },
-          ease: "power1.inOut",
+      // Image reveal effect only - scale scrub dihapus (memaksa GPU re-rasterize seluruh section)
+      gsap.fromTo(
+        imgRef.current,
+        { opacity: 0, y: 24 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.7,
+          ease: "power2.out",
           force3D: true,
-        });
-      }
-
-      // Image reveal effect
-      gsap.set(imgRef.current, {
-        clipPath: "polygon(0 100%, 100% 100%, 100% 100%, 0% 100%)",
-      });
-      gsap.to(imgRef.current, {
-        clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
-        duration: 1.5,
-        ease: "power4.out",
-        scrollTrigger: {
-          trigger: imgRef.current,
-          start: "top 85%",
+          scrollTrigger: {
+            trigger: imgRef.current,
+            start: "top 88%",
+            once: true,
+          },
         },
-      });
+      );
     },
     { scope: containerRef },
   );
@@ -62,10 +51,10 @@ export default function About() {
         titleColor="text-[#FFE093]"
       />
       <div className="flex flex-col items-center justify-evenly gap-12 lg:gap-16 px-6 md:px-10 pb-24 md:pb-34 text-xl font-light tracking-wide lg:flex-row md:text-2xl lg:text-3xl text-white/80">
-        <div className="relative w-full max-w-md lg:w-md will-change-transform">
+        <div className="relative w-full max-w-md lg:w-md">
           <Image
             ref={imgRef}
-            src="/images/firaz-linkedin.jpg"
+            src="/images/firaz-linkedin.webp"
             alt="programmer"
             className="w-full rounded-3xl shadow-2xl border border-white/5"
             width={375}
@@ -73,7 +62,7 @@ export default function About() {
             priority
           />
         </div>
-        <div className="gap-6 md:gap-8 flex flex-col w-full lg:max-w-2xl will-change-transform">
+        <div className="gap-6 md:gap-8 flex flex-col w-full lg:max-w-2xl">
           <AnimatedTextLines
             text={aboutText}
             className="sm:text-xl text-[0.95rem] leading-relaxed font-sans font-extralight text-white/70"

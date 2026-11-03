@@ -3,29 +3,20 @@
 import ServiceSummary from "@/sections/ServiceSummary";
 import Navbar from "@/sections/Navbar";
 import Services from "@/sections/Services";
-import ReactLenis, { useLenis } from "lenis/react";
 import About from "@/sections/About";
 import Projects from "@/sections/Projects";
 import Experiences from "@/sections/Experiences";
 import Certifications from "@/sections/Certifications";
 import Contact from "@/sections/Contact";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useProgress } from "@react-three/drei";
 import ScrollProgress from "@/components/ScrollProgress";
 import BackToTop from "@/components/BackToTop";
 import Preloader from "@/components/Preloader";
-import Lenis from "lenis";
 
-// Mengganti 'any' dengan tipe Lenis yang diimpor
-type LenisInstance = Lenis | null | undefined;
-
-function HomeContent() {
-  const lenis = useLenis() as LenisInstance;
-
-  // Preloader Logic
+export default function Home() {
   const { progress } = useProgress();
   const [isReady, setIsReady] = useState(false);
-  const [planetReady, setPlanetReady] = useState(false);
 
   return (
     <>
@@ -39,7 +30,7 @@ function HomeContent() {
       >
         <div className="overflow-hidden bg-gray-50">
           <div id="home">
-            <Navbar lenis={lenis} startAnimation={isReady} />
+            <Navbar startAnimation={isReady} />
           </div>
           <ServiceSummary />
         </div>
@@ -53,20 +44,5 @@ function HomeContent() {
       {/* BACK TO TOP BUTTON */}
       <BackToTop />
     </>
-  );
-}
-
-export default function Home() {
-  return (
-    <ReactLenis
-      root
-      options={{
-        lerp: 0.1,
-        duration: 2,
-        smoothWheel: true,
-      }}
-    >
-      <HomeContent />
-    </ReactLenis>
   );
 }

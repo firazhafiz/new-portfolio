@@ -1,14 +1,49 @@
 "use client";
 
-import { Canvas } from "@react-three/fiber";
+import { Canvas, useFrame } from "@react-three/fiber";
 import { Planet } from "@/components/Planet";
-import { Environment, Float, Lightformer } from "@react-three/drei";
+import { Environment, Lightformer } from "@react-three/drei";
 import { useMediaQuery } from "react-responsive";
 import AnimatedHeaderSection from "@/components/AnimatedHeaderSection";
-import { Suspense } from "react";
+import { Suspense, useEffect, useRef } from "react";
+import * as THREE from "three";
 
 interface HeroProps {
   startAnimation?: boolean;
+}
+
+// Custom Float yang kompatibel dengan frameloop="demand"
+function FloatingPlanet({ scale, startAnimation }: { scale: number; startAnimation: boolean }) {
+  const groupRef = useRef<THREE.Group>(null);
+  const timeRef = useRef(0);
+  const activeRef = useRef(true);
+
+  useEffect(() => {
+    // Hentikan animasi float setelah 14 detik (GSAP planet drop selesai ~12 detik)
+    const timer = setTimeout(() => {
+      activeRef.current = false;
+    }, 14000);
+    return () => {
+      clearTimeout(timer);
+      activeRef.current = false;
+    };
+  }, []);
+
+  useFrame((state, delta) => {
+    if (!groupRef.current || !activeRef.current) return;
+    timeRef.current += delta * 0.5; // speed = 0.5
+    // Float behavior: gentle up/down oscillation
+    groupRef.current.position.y = Math.sin(timeRef.current) * 0.1;
+    groupRef.current.rotation.y = Math.sin(timeRef.current * 0.5) * 0.05;
+  });
+
+  return (
+    <group ref={groupRef}>
+      <Suspense fallback={null}>
+        <Planet scale={scale} startAnimation={startAnimation} />
+      </Suspense>
+    </group>
+  );
 }
 
 export default function Hero({ startAnimation = true }: HeroProps) {
@@ -29,42 +64,39 @@ export default function Hero({ startAnimation = true }: HeroProps) {
       />
       <figure className="absolute inset-0 -z-50 w-screen h-screen overflow-hidden">
         <Canvas
-          shadows={!isMobile}
-          dpr={[1, isMobile ? 1.5 : 2]} // Prevent 4K+ rendering on small mobile screens
+          shadows={false}
+          dpr={[1, 1.5]}
+          gl={{ powerPreference: "high-performance", antialias: false }}
           camera={{ position: [0, 0, -10], fov: 17.5, near: 0.1, far: 50 }}
         >
           <ambientLight intensity={0.5} />
-          <Float speed={0.5}>
-            <Suspense fallback={null}>
-              <Planet
-                scale={isMobile ? 0.7 : 1}
-                startAnimation={startAnimation}
-              />
-            </Suspense>
-          </Float>
-          <Environment resolution={isMobile ? 128 : 256}>
+          <FloatingPlanet
+            scale={isMobile ? 0.7 : 1}
+            startAnimation={startAnimation}
+          />
+          <Environment resolution={128}>
             <group rotation={[-Math.PI / 3, 4, 1]}>
               <Lightformer
                 form={"circle"}
-                intensity={2}
+                intensity={1.8}
                 position={[0, 5, -9]}
                 scale={10}
               />
               <Lightformer
                 form={"circle"}
-                intensity={2}
+                intensity={1.8}
                 position={[0, 3, 1]}
                 scale={10}
               />
               <Lightformer
                 form={"circle"}
-                intensity={2}
+                intensity={1.8}
                 position={[-5, -1, -1]}
                 scale={10}
               />
               <Lightformer
                 form={"circle"}
-                intensity={2}
+                intensity={1.8}
                 position={[10, 1, 0]}
                 scale={16}
               />

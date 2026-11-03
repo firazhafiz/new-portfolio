@@ -224,27 +224,24 @@ body {
   }
 }
 
-/* --- 6. Performance Optimizations: will-change hints --- */
-/* These hints tell the browser which properties will animate, allowing GPU optimization */
+/* --- 6. Performance Optimizations --- */
 .scroll-progress-fill {
   will-change: width;
-}
-
-.char-flip-inner {
-  will-change: transform;
 }
 
 .menu-overlay {
   will-change: clip-path;
 }
 
-/* GSAP animated elements */
-[data-gsap-animated],
-[id^="title-service"] {
-  will-change: transform;
+/* content-visibility: auto = skip paint off-screen sections */
+#about,
+#experiences,
+#projects,
+#certifications,
+#contact {
+  content-visibility: auto;
+  contain-intrinsic-size: 0 800px;
 }
-
-/* Back to top button */
-.fixed.bottom-8.right-8 {
-  will-change: transform, opacity;
+.animate-marquee-infinite {
+  will-change: transform;
 }
