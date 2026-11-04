@@ -1372,6 +1372,25 @@ export default function Preloader({
                   className="pl-icon-glow"
                 />
               </div>
+              <div
+                style={{
+                  position: "absolute",
+                  top: 10,
+                  right: 10,
+                  background: C.bg,
+                  border: `2px solid ${C.ink}`,
+                  padding: "2px 7px",
+                  fontSize: 8,
+                  letterSpacing: "0.18em",
+                  textTransform: "uppercase",
+                  color: C.ink,
+                  transform: "rotate(2.5deg)",
+                  boxShadow: `2px 2px 0 ${C.ink}`,
+                  zIndex: 3,
+                }}
+              >
+                Hey!
+              </div>
             </div>
 
             {/* Percentage */}
