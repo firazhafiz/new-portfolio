@@ -95,8 +95,20 @@ export default function Contact() {
               className="group inline-flex items-center gap-3 text-lg sm:text-4xl md:text-5xl lg:text-6xl font-sans font-light tracking-tight text-white hover:text-[#FFE093] transition-colors duration-300 break-all"
             >
               <span>{contactInfo.email}</span>
-              <span className="text-xl sm:text-3xl text-[#FFE093] transform group-hover:translate-x-2 group-hover:-translate-y-2 transition-transform duration-300 shrink-0">
-                ↗
+              <span className="text-[#FFE093] transform group-hover:translate-x-2 group-hover:-translate-y-2 transition-transform duration-300 shrink-0 inline-flex items-center">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="w-5 h-5 sm:w-8 sm:h-8"
+                >
+                  <line x1="7" y1="17" x2="17" y2="7" />
+                  <polyline points="7 7 17 7 17 17" />
+                </svg>
               </span>
             </a>
 
@@ -183,8 +195,20 @@ export default function Contact() {
                   <span className="group-hover:text-[#FFE093] group-hover:translate-x-2 transition-transform duration-300">
                     {social.label}
                   </span>
-                  <span className="text-xs text-white/30 group-hover:text-[#FFE093] group-hover:translate-x-1 group-hover:-translate-y-1 transition-all duration-300">
-                    ↗
+                  <span className="text-white/40 group-hover:text-[#FFE093] transform group-hover:translate-x-1 group-hover:-translate-y-1 transition-all duration-300 shrink-0 inline-flex items-center">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="w-4 h-4 sm:w-5 sm:h-5"
+                    >
+                      <line x1="7" y1="17" x2="17" y2="7" />
+                      <polyline points="7 7 17 7 17 17" />
+                    </svg>
                   </span>
                 </a>
               ))}
