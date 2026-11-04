@@ -14,47 +14,42 @@ export default function Contact() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const [copied, setCopied] = useState<"email" | "phone" | null>(null);
 
-  // Efek Overlap Curtain + Zoom Out Parallax:
-  // Certifications berhenti saat akhir scroll dan zoom out (scale down & fade),
-  // sementara Contact (Footer) meluncur naik overlap di atas Certifications
+  // Efek Overlap Curtain + Zoom Out Parallax Mulus (60/120 FPS):
+  // Memisahkan elemen pin (outer section) dan elemen scale (inner wrapper)
+  // sesuai aturan baku GSAP untuk mencegah jitter/konflik transform matriks.
+  // Murni zoom out pada GPU tanpa blur dan tanpa opacity software-blending.
   useGSAP(
     () => {
-      const certEl = document.getElementById("certifications");
-      if (!certEl || !sectionRef.current) return;
+      const certSection = document.getElementById("certifications");
+      const certInner = document.getElementById("certifications-inner");
+      if (!certSection || !certInner || !sectionRef.current) return;
 
       const getContactHeight = () =>
         sectionRef.current?.offsetHeight || window.innerHeight;
 
-      // 1. Pin Certifications di viewport saat bottom-nya menyentuh bottom layar
-      const pinTrigger = ScrollTrigger.create({
-        trigger: certEl,
-        start: "bottom bottom",
-        end: () => `+=${getContactHeight()}`,
-        pin: true,
-        pinSpacing: false,
-        anticipatePin: 1,
-      });
-
-      // 2. Efek Zoom Out halus pada Certifications saat Contact meluncur naik
-      const zoomTrigger = gsap.to(certEl, {
-        scale: 0.92,
-        opacity: 0.55,
-        filter: "blur(3px)",
-        transformOrigin: "center center",
-        ease: "none",
-        force3D: true,
+      // Master timeline: pin outer section dan scale inner content secara independen
+      const tl = gsap.timeline({
         scrollTrigger: {
-          trigger: certEl,
+          trigger: certSection,
           start: "bottom bottom",
           end: () => `+=${getContactHeight()}`,
-          scrub: true,
+          pin: certSection,
+          pinSpacing: false,
+          scrub: 1, // Smooth dampening untuk menghilangkan getaran scroll
+          anticipatePin: 1,
         },
       });
 
+      tl.to(certInner, {
+        scale: 0.94,
+        transformOrigin: "bottom center",
+        ease: "none",
+        force3D: true,
+      });
+
       return () => {
-        pinTrigger.kill();
-        zoomTrigger.scrollTrigger?.kill();
-        zoomTrigger.kill();
+        tl.scrollTrigger?.kill();
+        tl.kill();
       };
     },
     { scope: sectionRef },
