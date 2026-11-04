@@ -27,7 +27,9 @@
 }
 
 /* --- 3. Gaya Dasar Body --- */
+html,
 body {
+  overflow-x: clip;
   background: var(--light);
   color: var(--foreground);
   font-family: var(--font-poppins), sans-serif; /* Default: Poppins */
@@ -233,15 +235,7 @@ body {
   will-change: clip-path;
 }
 
-/* content-visibility: auto = skip paint off-screen sections */
-#about,
-#experiences,
-#projects,
-#certifications,
-#contact {
-  content-visibility: auto;
-  contain-intrinsic-size: 0 800px;
-}
+/* Marquee GPU compositing */
 .animate-marquee-infinite {
   will-change: transform;
 }

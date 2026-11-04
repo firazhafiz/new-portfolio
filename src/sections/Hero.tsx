@@ -62,7 +62,7 @@ export default function Hero({ startAnimation = true }: HeroProps) {
         textColor="text-black-100"
         titleColor="text-[#2056F7]"
       />
-      <figure className="absolute inset-0 -z-50 w-screen h-screen overflow-hidden">
+      <figure className="absolute inset-0 -z-50 w-full h-screen overflow-hidden">
         <Canvas
           shadows={false}
           dpr={[1, 1.5]}

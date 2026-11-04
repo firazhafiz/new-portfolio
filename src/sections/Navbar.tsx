@@ -56,6 +56,7 @@ export default function Navbar({ startAnimation = true }: NavbarProps) {
     if (!isMenuOpen.current) {
       // BUKA MENU
       // Hide scrollbar and prevent scrolling
+      document.documentElement.style.overflow = "hidden";
       document.body.style.overflow = "hidden";
 
       // Animate navbar text colors to white
@@ -258,6 +259,7 @@ export default function Navbar({ startAnimation = true }: NavbarProps) {
           isMenuAnimating.current = false;
 
           // Restore scrollbar and scrolling
+          document.documentElement.style.overflow = "";
           document.body.style.overflow = "";
 
           if (pendingScrollTarget.current) {
@@ -487,9 +489,9 @@ export default function Navbar({ startAnimation = true }: NavbarProps) {
 
 
   return (
-    <div className="relative isolate w-screen h-screen text-[#2056F7] overflow-x-hidden">
+    <div className="relative isolate w-full h-screen text-[#2056F7] overflow-x-hidden">
       {/* NAVBAR */}
-      <nav className="absolute top-0 left-0 w-screen pt-4 px-4 flex justify-between z-1000">
+      <nav className="absolute top-0 left-0 w-full pt-4 px-4 flex justify-between z-1000">
         <div
           ref={(el) => {
             navToggleRef.current = el;
@@ -516,7 +518,7 @@ export default function Navbar({ startAnimation = true }: NavbarProps) {
 
       <div
         ref={menuOverlayRef}
-        className="menu-overlay min-h-screen fixed top-0 left-0 w-screen h-svh bg-[#1e1e1e] text-[#fefff8] z-40 pt-16 [clip-path:polygon(0%_100%,100%_100%,100%_100%,0%_100%)] will-change-[clip-path,transform]"
+        className="menu-overlay min-h-screen fixed top-0 left-0 w-full h-svh bg-[#1e1e1e] text-[#fefff8] z-40 pt-16 [clip-path:polygon(0%_100%,100%_100%,100%_100%,0%_100%)] will-change-[clip-path,transform]"
       >
         {/* Mobile Decor */}
         <div className="md:hidden flex flex-col items-center gap-4 pt-12 pb-6 text-center">

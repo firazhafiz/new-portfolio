@@ -8,7 +8,7 @@ import Projects from "@/sections/Projects";
 import Experiences from "@/sections/Experiences";
 import Certifications from "@/sections/Certifications";
 import Contact from "@/sections/Contact";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useProgress } from "@react-three/drei";
 import ScrollProgress from "@/components/ScrollProgress";
 import BackToTop from "@/components/BackToTop";
@@ -17,6 +17,21 @@ import Preloader from "@/components/Preloader";
 export default function Home() {
   const { progress } = useProgress();
   const [isReady, setIsReady] = useState(false);
+
+  // Kunci scroll halaman utama selama preloader aktif
+  useEffect(() => {
+    if (!isReady) {
+      document.documentElement.style.overflow = "hidden";
+      document.body.style.overflow = "hidden";
+    } else {
+      document.documentElement.style.overflow = "";
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.documentElement.style.overflow = "";
+      document.body.style.overflow = "";
+    };
+  }, [isReady]);
 
   return (
     <>

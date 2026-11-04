@@ -8,27 +8,14 @@ import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-// Definisikan tipe untuk GSAP/ScrollTrigger yang digunakan di sini
-type GSAPTween = gsap.core.Tween;
-type GSAPTimeline = gsap.core.Timeline;
-type GSAPAnimation = GSAPTween | GSAPTimeline;
-
-// Definisikan tipe untuk ScrollTrigger Tween yang menyimpan properti tambahan
-interface MobileScrollTween extends GSAPTween {
-  animationTriggers?: ScrollTrigger[];
-  hostSection?: HTMLElement;
-}
-
 export default function Projects() {
   const [currentIndex, setCurrentIndex] = useState<number | null>(null);
   const [activeFilter, setActiveFilter] = useState<"all" | "programming" | "creative">("all");
+  const [isSticky, setIsSticky] = useState(false);
 
-  // FIX 1: Definisikan ref array dengan tipe yang benar
   const overlayRefs = useRef<(HTMLDivElement | null)[]>([]);
-
-  // FIX 2: previewRef harus HTMLDivElement | null (namun di code sudah ada default null)
-  // Berdasarkan penggunaan, previewRef memang akan berisi HTMLDivElement.
   const previewRef = useRef<HTMLDivElement>(null);
+  const sentinelRef = useRef<HTMLDivElement>(null); // Untuk deteksi sticky
 
   const mouse = useRef({ x: 0, y: 0 });
   const moveX = useRef<((value: number) => void) | null>(null);
@@ -37,9 +24,22 @@ export default function Projects() {
   const text = `Seamlessly Transforming Ideas into Reality.`;
 
   // Filter projects based on active filter
-  const filteredProjects = activeFilter === "all" 
-    ? projects 
+  const filteredProjects = activeFilter === "all"
+    ? projects
     : projects.filter(p => p.category === activeFilter);
+
+  // Deteksi filter tabs sticky sinkron dengan scroll Projects
+  useGSAP(() => {
+    if (!sentinelRef.current) return;
+    const st = ScrollTrigger.create({
+      trigger: sentinelRef.current,
+      start: "top top+=16",
+      endTrigger: "#projects",
+      end: "bottom top+=70",
+      onToggle: (self) => setIsSticky(self.isActive),
+    });
+    return () => st.kill();
+  }, []);
 
   // Simple vertical animation for mobile
   useGSAP(() => {
@@ -65,7 +65,7 @@ export default function Projects() {
     });
   }, []);
 
-  // FIX 3: Desktop animations
+  // Desktop animations
   useGSAP(() => {
     gsap.registerPlugin(ScrollTrigger);
     if (!previewRef.current) return;
@@ -106,12 +106,9 @@ export default function Projects() {
 
     gsap.killTweensOf(el);
 
-    // FIX 4: Tambahkan spasi di polygon! (0% vs 0 %)
     gsap.fromTo(
       el,
-      {
-        clipPath: "polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)",
-      },
+      { clipPath: "polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)" },
       {
         clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
         duration: 0.15,
@@ -169,12 +166,10 @@ export default function Projects() {
     mouse.current.x = x;
     mouse.current.y = y;
 
-    // FIX 5: Pastikan moveX dan moveY sudah ada
     if (moveX.current) moveX.current(mouse.current.x);
     if (moveY.current) moveY.current(mouse.current.y);
   };
 
-  // Fallback handler untuk kegagalan pemuatan gambar (production-safe)
   const handleImgError = (e: React.SyntheticEvent<HTMLImageElement>) => {
     const img = e.currentTarget;
     if (img.dataset["fallbackApplied"]) return;
@@ -182,32 +177,19 @@ export default function Projects() {
     img.dataset["fallbackApplied"] = "true";
   };
 
-  // Preload semua gambar preview (desktop) dengan kualitas tinggi sejak awal
   useEffect(() => {
     if (typeof window === "undefined") return;
-
-    // Preload semua gambar desktop preview dengan kualitas tinggi
-    // Menggunakan link prefetch untuk memanfaatkan Next.js Image optimization
     projects.forEach((p) => {
-      // Preload gambar utama untuk desktop preview
       const link = document.createElement("link");
       link.rel = "prefetch";
       link.as = "image";
       link.href = p.image;
       document.head.appendChild(link);
-
-      // Juga preload bg untuk mobile
-      if (p.image) {
-        const bgLink = document.createElement("link");
-        bgLink.rel = "prefetch";
-        bgLink.as = "image";
-        document.head.appendChild(bgLink);
-      }
     });
   }, []);
 
   return (
-    <section className="flex flex-col  min-h-screen" id="projects">
+    <section className="flex flex-col min-h-screen relative" id="projects">
       <AnimatedHeaderSection
         subtitle=""
         title="Projects"
@@ -216,38 +198,53 @@ export default function Projects() {
         titleColor="text-[#2056F7]"
       />
 
-      {/* Filter Tabs */}
-      <div className="flex justify-center gap-3 px-6 pb-6">
-        <button
-          onClick={() => setActiveFilter("all")}
-          className={`px-6 py-2 rounded-full font-sans font-medium text-sm transition-all duration-300 ${
-            activeFilter === "all"
-              ? "bg-[#2056F7] text-white"
-              : "bg-black-100/5 text-black-100 hover:bg-black-100/10"
+      {/* Sentinel: 1px invisible div tepat sebelum filter tabs */}
+      <div ref={sentinelRef} className="h-px w-full" aria-hidden />
+
+      {/* Filter Tabs — sticky ketika sentinel meninggalkan viewport */}
+      <div
+        className={`sticky top-3 z-30 flex justify-center transition-all duration-300 pointer-events-none ${
+          isSticky ? "py-2" : "pb-6 pt-0"
+        }`}
+      >
+        <div
+          className={`flex items-center gap-2 rounded-full border transition-all duration-300 pointer-events-auto ${
+            isSticky
+              ? "bg-white/80 backdrop-blur-md border-black/10 px-3 py-1.5"
+              : "bg-transparent border-transparent px-2 py-0"
           }`}
         >
-          All
-        </button>
-        <button
-          onClick={() => setActiveFilter("programming")}
-          className={`px-6 py-2 rounded-full font-sans font-medium text-sm transition-all duration-300 ${
-            activeFilter === "programming"
-              ? "bg-[#2056F7] text-white"
-              : "bg-black-100/5 text-black-100 hover:bg-black-100/10"
-          }`}
-        >
-          Programmer
-        </button>
-        <button
-          onClick={() => setActiveFilter("creative")}
-          className={`px-6 py-2 rounded-full font-sans font-medium text-sm transition-all duration-300 ${
-            activeFilter === "creative"
-              ? "bg-[#2056F7] text-white"
-              : "bg-black-100/5 text-black-100 hover:bg-black-100/10"
-          }`}
-        >
-          Creative
-        </button>
+          <button
+            onClick={() => setActiveFilter("all")}
+            className={`px-5 py-2 rounded-full font-sans font-medium text-sm transition-all duration-300 ${
+              activeFilter === "all"
+                ? "bg-[#2056F7] text-white shadow-sm"
+                : "bg-black-100/5 text-black-100 hover:bg-black-100/10"
+            }`}
+          >
+            All
+          </button>
+          <button
+            onClick={() => setActiveFilter("programming")}
+            className={`px-5 py-2 rounded-full font-sans font-medium text-sm transition-all duration-300 ${
+              activeFilter === "programming"
+                ? "bg-[#2056F7] text-white shadow-sm"
+                : "bg-black-100/5 text-black-100 hover:bg-black-100/10"
+            }`}
+          >
+            Programmer
+          </button>
+          <button
+            onClick={() => setActiveFilter("creative")}
+            className={`px-5 py-2 rounded-full font-sans font-medium text-sm transition-all duration-300 ${
+              activeFilter === "creative"
+                ? "bg-[#2056F7] text-white shadow-sm"
+                : "bg-black-100/5 text-black-100 hover:bg-black-100/10"
+            }`}
+          >
+            Creative
+          </button>
+        </div>
       </div>
 
       {/* Desktop Layout - tetap seperti semula */}
@@ -274,7 +271,7 @@ export default function Projects() {
               }}
             />
 
-            {/* Title + Description with Zigzag, Icon opposite side */}
+            {/* Title + Description with Zigzag */}
             <div
               className={`flex justify-between px-10 text-black-100 transition-all duration-500 md:group-hover:px-12 md:group-hover:text-[#FFE093] flex-row ${
                 index % 2 === 1 ? "md:flex-row-reverse" : "md:flex-row"
@@ -297,7 +294,6 @@ export default function Projects() {
                 )}
               </div>
 
-              {/* Right/Left side (desktop): arrow only; buttons moved to frameworks row */}
               <div
                 className={`hidden md:flex ${
                   index % 2 === 1
@@ -313,18 +309,16 @@ export default function Projects() {
                 />
               </div>
 
-              {/* Icon mobile */}
               <Icon icon="uim:arrow-up-right" className="size-5 md:hidden" />
             </div>
 
             {/* Divider */}
             <div className="w-full border-t border-black-100" />
 
-            {/* Frameworks row + Desktop Buttons (same row, buttons on arrow side) */}
+            {/* Frameworks row + Desktop Buttons */}
             <div
               className={`flex items-center justify-between px-10 transition-all duration-500 md:group-hover:px-12`}
             >
-              {/* Frameworks list */}
               <div
                 className={`flex text-xs font-sans font-light leading-loose uppercase md:text-sm gap-x-5 ${
                   index % 2 === 1 ? "md:order-2 md:text-right" : "md:order-1"
@@ -340,7 +334,6 @@ export default function Projects() {
                 ))}
               </div>
 
-              {/* Desktop buttons on arrow side, only visible on hover */}
               <div
                 className={`hidden md:flex gap-3 opacity-0 group-hover:opacity-100 ${
                   index % 2 === 1
@@ -375,7 +368,7 @@ export default function Projects() {
               </div>
             </div>
 
-            {/* Mobile Preview (di desktop hidden) */}
+            {/* Mobile Preview */}
             <div className="relative flex items-center justify-center px-10 md:hidden h-[200px] sm:h-[400px]">
               <Image
                 src={project.image}
@@ -419,7 +412,7 @@ export default function Projects() {
             />
           )}
         </div>
-        {/* Hidden prefetcher for desktop hover previews - render semua gambar dengan kualitas tinggi sejak awal */}
+        {/* Hidden prefetcher */}
         <div
           aria-hidden
           className="pointer-events-none absolute w-px h-px overflow-hidden -m-px opacity-0"
@@ -448,7 +441,7 @@ export default function Projects() {
             key={`mobile-${project.id}`}
             className="mobile-project-card flex flex-col gap-5"
           >
-            {/* Project Image - 16:9 Aspect Ratio & HD */}
+            {/* Project Image - 16:9 Aspect Ratio */}
             <div className="relative w-full aspect-video rounded-2xl overflow-hidden">
               <Image
                 src={project.image}

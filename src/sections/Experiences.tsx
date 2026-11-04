@@ -119,20 +119,22 @@ export default function Experiences() {
 
         // 1. Timeline Line Drawing
         if (mobileLineRef.current && container) {
-          gsap.fromTo(
-            mobileLineRef.current,
-            { scaleY: 0 },
-            {
-              scaleY: 1,
-              ease: "none",
-              scrollTrigger: {
-                trigger: container,
-                start: "top 60%",
-                end: "bottom 80%",
-                scrub: 1,
-              },
+          // Set initial state via gsap agar kontrol penuh transformOrigin
+          gsap.set(mobileLineRef.current, {
+            scaleY: 0,
+            transformOrigin: "top center",
+          });
+          gsap.to(mobileLineRef.current, {
+            scaleY: 1,
+            ease: "none",
+            scrollTrigger: {
+              trigger: container,
+              start: "top 70%",
+              end: "bottom 85%",
+              scrub: 1.5,
+              invalidateOnRefresh: true,
             },
-          );
+          });
         }
 
         // 2. Individual Item Reveal
@@ -248,7 +250,7 @@ export default function Experiences() {
                 ref={(el) => {
                   if (el) cardRefs.current[index] = el;
                 }}
-                className="absolute -right-10 bottom-10 bg-white rounded-3xl border-2 border-black/50 max-w-sm w-[55%] p-6"
+                className="absolute -right-10 bottom-10 bg-white rounded-3xl border border-black/50 max-w-sm w-[55%] p-6"
               >
                 <h3 className="text-3xl font-semibold text-black-100 mb-3">
                   {experience.title}
@@ -274,8 +276,7 @@ export default function Experiences() {
         <div className="absolute left-10 top-0 bottom-0 w-[2px] bg-black/5" />
         <div
           ref={mobileLineRef}
-          className="absolute left-10 top-0 bottom-0 w-[2px] bg-[#2056F7] origin-top"
-          style={{ transform: "scaleY(0)" }}
+          className="absolute left-10 top-0 bottom-0 w-[2px] bg-[#2056F7]"
         />
 
         <div className="space-y-16">

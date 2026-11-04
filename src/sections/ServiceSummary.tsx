@@ -32,7 +32,7 @@ export default function ServiceSummary() {
   return (
     <section
       ref={sectionRef}
-      className="sm:text-4xl text-lg sm:mt-20 overflow-hidden font-extralight font-sans leading-snug text-center sm:mb-42 mb-25 contact-text-responsive max-w-screen"
+      className="sm:text-4xl text-lg sm:mt-20 overflow-hidden font-extralight font-sans leading-snug text-center sm:mb-42 mb-25 contact-text-responsive max-w-full"
     >
       <div id="title-service-1">
         <p className="italic">Architecture</p>
