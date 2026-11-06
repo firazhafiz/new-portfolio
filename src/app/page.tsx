@@ -13,6 +13,7 @@ import { useProgress } from "@react-three/drei";
 import ScrollProgress from "@/components/ScrollProgress";
 import BackToTop from "@/components/BackToTop";
 import Preloader from "@/components/Preloader";
+import SmoothScroll from "@/components/SmoothScroll";
 
 export default function Home() {
   const { progress } = useProgress();
@@ -38,6 +39,8 @@ export default function Home() {
       {!isReady && (
         <Preloader progress={progress} onComplete={() => setIsReady(true)} />
       )}
+      {/* Smooth scroll — only active after preloader completes */}
+      {isReady && <SmoothScroll />}
       {/* SCROLL PROGRESS BAR */}
       {isReady && <ScrollProgress />}
       <div

@@ -20,7 +20,6 @@ export default function About() {
 
   useGSAP(
     () => {
-      // Image reveal effect
       if (imgWrapperRef.current) {
         gsap.fromTo(
           imgWrapperRef.current,
@@ -56,7 +55,7 @@ export default function About() {
         textColor="text-white/75"
         titleColor="text-[#FFE093]"
       />
-      <div className="flex flex-col items-center justify-evenly gap-12 lg:gap-16 px-6 md:px-10 pb-24 md:pb-34 text-xl font-light tracking-wide lg:flex-row md:text-2xl lg:text-3xl text-white/80">
+      <div className="flex flex-col items-center justify-evenly gap-10 lg:gap-16 px-6 md:px-10 pb-20 md:pb-34 text-xl font-light tracking-wide lg:flex-row md:text-2xl lg:text-3xl text-white/80">
         {/* Gambar: aspect-square di mobile, natural ratio di tablet & desktop */}
         <div
           ref={imgWrapperRef}
@@ -67,11 +66,12 @@ export default function About() {
             alt="Firaz Fulvian Hafiz"
             width={460}
             height={575}
-            className="w-full aspect-square md:aspect-auto object-cover object-top rounded-3xl shadow-2xl border border-white/5"
+            className="w-full aspect-square md:aspect-auto object-cover object-top rounded-3xl border border-white/5"
             priority
           />
         </div>
 
+        {/* Deskripsi: Tampil utuh lengkap di semua perangkat */}
         <div className="gap-6 md:gap-8 flex flex-col w-full lg:max-w-2xl">
           <AnimatedTextLines
             text={aboutText}

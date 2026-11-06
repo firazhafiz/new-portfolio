@@ -61,8 +61,6 @@ export default function Contact() {
     setTimeout(() => setCopied(null), 2000);
   };
 
-  const currentYear = new Date().getFullYear();
-
   return (
     <section
       id="contact"
@@ -70,11 +68,11 @@ export default function Contact() {
       className="relative z-20 min-h-screen bg-linear-to-b from-[#141416] via-[#0f0f11] to-[#0a0a0c] sm:rounded-t-[64px] rounded-t-3xl text-white overflow-hidden border-t border-white/10 flex flex-col justify-between"
     >
       {/* 1. Header Section - Template Konsisten */}
-      <div className="pt-8 sm:pt-12 pb-8">
+      <div className="pt-8 sm:pt-12 ">
         <AnimatedHeaderSection
-          subtitle="YOU DREAM IT. I EXECUTE IT"
+          subtitle="READY TO START?"
           title="CONTACT"
-          text="Got a question, bold vision, or project idea? Let's build something remarkable together."
+          text="Let's build something remarkable together."
           textColor="text-white/60"
           titleColor="text-[#FFE093]"
           withScrollTrigger={true}
@@ -133,7 +131,7 @@ export default function Contact() {
         </div>
 
         {/* Minimal Editorial Two-Column Information */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-10 lg:gap-16 border-t border-white/15 pt-10 pb-6">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-10 lg:gap-16 border-t border-white/15 pt-10 sm:pb-10 pb-0">
           {/* Kolom Kiri: Direct Details */}
           <div className="md:col-span-5 flex flex-col justify-between gap-8">
             <div>
@@ -217,28 +215,11 @@ export default function Contact() {
         </div>
       </div>
 
-      {/* 3. Refined Fluid "LET'S CONNECT" Ambient Ribbon */}
-      <div className="border-t border-white/10 bg-black/20 overflow-hidden py-6 sm:py-8">
-        <div className="flex animate-marquee-infinite whitespace-nowrap">
-          {Array.from({ length: 14 }, (_, i) => (
-            <div key={i} className="flex items-center shrink-0 px-8 sm:px-12">
-              <span className="text-2xl sm:text-3xl lg:text-4xl font-sans font-extralight tracking-[0.25em] uppercase text-white/25 hover:text-white/50 transition-colors select-none">
-                Let&apos;s Connect
-              </span>
-              <span className="mx-8 sm:mx-12 text-sm sm:text-base text-[#FFE093]/40">
-                ✦
-              </span>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* 4. Minimalist Footer Bottom Bar (No Back to top button) */}
-      <div className="border-t border-white/5 bg-black/50 px-6 sm:px-12 py-4">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 text-xs font-sans font-light text-white/40">
-          <p>© {currentYear} Firaz Fulvian Hafiz. All rights reserved.</p>
-          <p>Designed & Built with precision</p>
-        </div>
+      {/* 3. Monumental Static "LET'S CONNECT" Typography (MAHISWARA Reference Style) */}
+      <div className="w-full overflow-hidden select-none pb-6 pt-6 pointer-events-none border-t border-white/10">
+        <h2 className="font-heading font-black text-6xl lg:text-[13.4vw] text-center tracking-wide text-white uppercase w-full whitespace-nowrap block">
+          LET&apos;S CONNECT
+        </h2>
       </div>
     </section>
   );

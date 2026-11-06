@@ -5,7 +5,7 @@ import { Planet } from "@/components/Planet";
 import { Environment, Lightformer } from "@react-three/drei";
 import { useMediaQuery } from "react-responsive";
 import AnimatedHeaderSection from "@/components/AnimatedHeaderSection";
-import { Suspense, useEffect, useRef } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 
 interface HeroProps {
@@ -49,9 +49,25 @@ function FloatingPlanet({ scale, startAnimation }: { scale: number; startAnimati
 export default function Hero({ startAnimation = true }: HeroProps) {
   const isMobile = useMediaQuery({ maxWidth: 853 });
   const text = `Creativity beyond the screen.`;
+  const sectionRef = useRef<HTMLElement>(null);
+  const [isInView, setIsInView] = useState(true);
+
+  // Pause Three.js render loop saat preloader berjalan atau saat hero scroll keluar layar
+  useEffect(() => {
+    if (!sectionRef.current) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsInView(entry.isIntersecting);
+      },
+      { threshold: 0.05 }
+    );
+    observer.observe(sectionRef.current);
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <section
+      ref={sectionRef}
       id="home"
       className="flex sm:pb-0 pb-10 flex-col justify-end min-h-screen overflow-hidden"
     >
@@ -64,6 +80,7 @@ export default function Hero({ startAnimation = true }: HeroProps) {
       />
       <figure className="absolute inset-0 -z-50 w-full h-screen overflow-hidden">
         <Canvas
+          frameloop={startAnimation && isInView ? "always" : "never"}
           shadows={false}
           dpr={[1, 1.5]}
           gl={{ powerPreference: "high-performance", antialias: false }}

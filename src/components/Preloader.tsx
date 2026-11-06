@@ -156,10 +156,10 @@ export default function Preloader({
       // ── Phase 0: container eases in from slight scale — feels organic not abrupt
       tl.fromTo(
         containerRef.current,
-        { opacity: 0, filter: "blur(6px)" },
+        { opacity: 0, scale: 0.98 },
         {
           opacity: 1,
-          filter: "blur(0px)",
+          scale: 1,
           duration: 0.65,
           ease: "expo.out",
         },
@@ -309,8 +309,8 @@ export default function Preloader({
       );
       tl.fromTo(
         nameRowRef.current,
-        { filter: "blur(8px)" },
-        { filter: "blur(0px)", duration: 0.5, ease: "sine.out" },
+        { opacity: 0, y: 15 },
+        { opacity: 1, y: 0, duration: 0.5, ease: "expo.out" },
         "<",
       );
 

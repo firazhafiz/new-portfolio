@@ -25,7 +25,7 @@ export const servicesData = [
   {
     title: "FullStack Development",
     description:
-      "Your business deserves a fast, secure, and future-proof digital foundation. I develop custom web apps with clean architecture, optimized databases, and seamless integrations—ensuring reliability at every layer.",
+      "Your business deserves a fast, secure, and future proof digital foundation. I develop custom web apps with clean architecture, optimized databases, and seamless integrations ensuring reliability at every layer.",
     items: [
       {
         title: "Frontend Excellence",
@@ -44,7 +44,7 @@ export const servicesData = [
   {
     title: "Creative Creator",
     description:
-      "Turn ideas into captivating visuals that resonate. I deliver high-quality photography, videography, and graphic design using the latest industry-standard tools to bring your brand story to life.",
+      "Turn ideas into captivating visuals that resonate. I deliver high quality photography, videography, and graphic design using the latest industry standard tools to bring your brand story to life.",
     items: [
       {
         title: "Photography",
@@ -63,7 +63,7 @@ export const servicesData = [
   {
     title: "Cinematography",
     description:
-      "Craft cinematic stories with professional direction, lighting, and narrative depth. From concept to final cut, I bring film-grade production quality to your visual projects.",
+      "Craft cinematic stories with professional direction, lighting, and narrative depth. From concept to final cut, I bring film grade production quality to your visual projects.",
     items: [
       {
         title: "Director",

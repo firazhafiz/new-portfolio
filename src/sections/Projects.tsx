@@ -397,16 +397,16 @@ export default function Projects() {
         ))}
         <div
           ref={previewRef}
-          className="fixed top-0 left-0 z-50 overflow-hidden border-2 rounded-xl border-black-100 pointer-events-none w-[600px] hidden md:block opacity-0"
+          className="fixed top-0 left-0 z-50 overflow-hidden aspect-video rounded-lg border border-black/20 pointer-events-none w-[360px] lg:w-[400px] hidden md:block opacity-0"
         >
           {currentIndex !== null && (
             <Image
               src={filteredProjects[currentIndex].image}
               alt="preview"
-              width={2000}
-              height={2000}
-              sizes="(min-width: 768px) 600px, 100vw"
-              quality={100}
+              width={1200}
+              height={800}
+              sizes="(min-width: 768px) 400px, 100vw"
+              quality={90}
               className="object-cover w-full h-full"
               onError={handleImgError}
             />
