@@ -14,6 +14,7 @@ import ScrollProgress from "@/components/ScrollProgress";
 import BackToTop from "@/components/BackToTop";
 import Preloader from "@/components/Preloader";
 import SmoothScroll from "@/components/SmoothScroll";
+import CustomCursor from "@/components/CustomCursor";
 
 export default function Home() {
   const { progress } = useProgress();
@@ -36,6 +37,7 @@ export default function Home() {
 
   return (
     <>
+      <CustomCursor />
       {!isReady && (
         <Preloader progress={progress} onComplete={() => setIsReady(true)} />
       )}

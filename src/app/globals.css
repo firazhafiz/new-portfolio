@@ -239,3 +239,45 @@ body {
 .animate-marquee-infinite {
   will-change: transform;
 }
+
+/* --- 7. Planet Custom Cursor --- */
+@keyframes cursor-orbit {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes cursor-satellite {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
+.animate-cursor-orbit {
+  animation: cursor-orbit 14s linear infinite;
+  transform-origin: center center;
+}
+
+.animate-cursor-satellite {
+  animation: cursor-satellite 6s linear infinite;
+  transform-origin: center center;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  body.custom-cursor-active,
+  body.custom-cursor-active a,
+  body.custom-cursor-active button,
+  body.custom-cursor-active input,
+  body.custom-cursor-active textarea,
+  body.custom-cursor-active select,
+  body.custom-cursor-active [role="button"],
+  body.custom-cursor-active .cursor-pointer {
+    cursor: none !important;
+  }
+}

@@ -3,7 +3,7 @@ import AnimatedHeaderSection from "@/components/AnimatedHeaderSection";
 import { projects } from "../../constant";
 import { Icon } from "@iconify/react";
 import Image from "next/image";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -18,6 +18,8 @@ export default function Projects() {
   const sentinelRef = useRef<HTMLDivElement>(null); // Untuk deteksi sticky
 
   const mouse = useRef({ x: 0, y: 0 });
+  const lastMousePos = useRef<{ x: number; y: number } | null>(null);
+  const currentIndexRef = useRef<number | null>(null);
   const moveX = useRef<((value: number) => void) | null>(null);
   const moveY = useRef<((value: number) => void) | null>(null);
 
@@ -97,15 +99,146 @@ export default function Projects() {
     }
   }, []); // <--- PENTING: hanya sekali
 
+  // Deteksi elemen project di bawah kursor saat scroll / wheel
+  const checkElementUnderCursor = useCallback(
+    (clientX: number, clientY: number) => {
+      if (window.innerWidth < 768) return;
+
+      const el = document.elementFromPoint(clientX, clientY);
+      if (!el) return;
+
+      const projectRow = el.closest<HTMLElement>("[data-project-index]");
+      if (projectRow) {
+        const idxAttr = projectRow.getAttribute("data-project-index");
+        const newIndex = idxAttr !== null ? parseInt(idxAttr, 10) : null;
+
+        if (newIndex !== null && newIndex !== currentIndexRef.current) {
+          // Tutup overlay project lama
+          if (currentIndexRef.current !== null) {
+            const prevEl = overlayRefs.current[currentIndexRef.current];
+            if (prevEl) {
+              gsap.killTweensOf(prevEl);
+              gsap.to(prevEl, {
+                clipPath: "polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)",
+                duration: 0.3,
+                ease: "power2.in",
+              });
+            }
+          }
+
+          // Buka overlay project baru & ganti preview seketika
+          currentIndexRef.current = newIndex;
+          setCurrentIndex(newIndex);
+
+          const nextEl = overlayRefs.current[newIndex];
+          if (nextEl) {
+            gsap.killTweensOf(nextEl);
+            gsap.fromTo(
+              nextEl,
+              { clipPath: "polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)" },
+              {
+                clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
+                duration: 0.15,
+                ease: "power2.out",
+              }
+            );
+          }
+
+          if (previewRef.current) {
+            gsap.to(previewRef.current, {
+              opacity: 1,
+              scale: 1,
+              duration: 0.25,
+              ease: "power2.out",
+            });
+          }
+        }
+      } else {
+        // Kursor keluar dari baris project (misal scroll ke header / luar section)
+        if (currentIndexRef.current !== null) {
+          const prevEl = overlayRefs.current[currentIndexRef.current];
+          if (prevEl) {
+            gsap.killTweensOf(prevEl);
+            gsap.to(prevEl, {
+              clipPath: "polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)",
+              duration: 0.4,
+              ease: "power2.in",
+            });
+          }
+          currentIndexRef.current = null;
+          setCurrentIndex(null);
+
+          if (previewRef.current) {
+            gsap.to(previewRef.current, {
+              opacity: 0,
+              scale: 0.95,
+              duration: 0.25,
+              ease: "power2.out",
+            });
+          }
+        }
+      }
+    },
+    []
+  );
+
+  // Rekam posisi mouse secara global & re-check saat scroll / wheel
+  useEffect(() => {
+    const onGlobalMouseMove = (e: MouseEvent) => {
+      lastMousePos.current = { x: e.clientX, y: e.clientY };
+    };
+
+    let ticking = false;
+    const onScrollOrWheel = () => {
+      if (!lastMousePos.current) return;
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          if (lastMousePos.current) {
+            checkElementUnderCursor(
+              lastMousePos.current.x,
+              lastMousePos.current.y
+            );
+          }
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    window.addEventListener("mousemove", onGlobalMouseMove, { passive: true });
+    window.addEventListener("scroll", onScrollOrWheel, { passive: true });
+    window.addEventListener("wheel", onScrollOrWheel, { passive: true });
+
+    return () => {
+      window.removeEventListener("mousemove", onGlobalMouseMove);
+      window.removeEventListener("scroll", onScrollOrWheel);
+      window.removeEventListener("wheel", onScrollOrWheel);
+    };
+  }, [checkElementUnderCursor]);
+
   const handleMouseEnter = (index: number) => {
     if (window.innerWidth < 768) return;
+    if (currentIndexRef.current === index) return;
+
+    if (currentIndexRef.current !== null && currentIndexRef.current !== index) {
+      const prevEl = overlayRefs.current[currentIndexRef.current];
+      if (prevEl) {
+        gsap.killTweensOf(prevEl);
+        gsap.to(prevEl, {
+          clipPath: "polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)",
+          duration: 0.3,
+          ease: "power2.in",
+        });
+      }
+    }
+
+    currentIndexRef.current = index;
     setCurrentIndex(index);
 
     const el = overlayRefs.current[index];
     if (!el) return;
 
     gsap.killTweensOf(el);
-
     gsap.fromTo(
       el,
       { clipPath: "polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)" },
@@ -126,29 +259,33 @@ export default function Projects() {
 
   const handleMouseLeave = (index: number) => {
     if (window.innerWidth < 768) return;
-    setCurrentIndex(null);
+    if (currentIndexRef.current === index) {
+      currentIndexRef.current = null;
+      setCurrentIndex(null);
 
-    const el = overlayRefs.current[index];
-    if (!el) return;
+      const el = overlayRefs.current[index];
+      if (el) {
+        gsap.killTweensOf(el);
+        gsap.to(el, {
+          clipPath: "polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)",
+          duration: 0.7,
+          ease: "power2.in",
+        });
+      }
 
-    gsap.killTweensOf(el);
-
-    gsap.to(el, {
-      clipPath: "polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)",
-      duration: 0.7,
-      ease: "power2.in",
-    });
-
-    gsap.to(previewRef.current, {
-      opacity: 0,
-      scale: 0.95,
-      duration: 0.3,
-      ease: "power2.out",
-    });
+      gsap.to(previewRef.current, {
+        opacity: 0,
+        scale: 0.95,
+        duration: 0.3,
+        ease: "power2.out",
+      });
+    }
   };
 
   const handleMouseMove = (e: React.MouseEvent) => {
     if (window.innerWidth < 768) return;
+
+    lastMousePos.current = { x: e.clientX, y: e.clientY };
 
     const previewEl = previewRef.current;
     const previewWidth = previewEl ? previewEl.offsetWidth : 0;
@@ -252,11 +389,14 @@ export default function Projects() {
         className="relative hidden md:flex md:flex-col font-sans font-light"
         onMouseMove={handleMouseMove}
       >
-        {filteredProjects.map((project, index) => (
+        {filteredProjects.map((project, index) => {
+          const isActive = currentIndex === index;
+          return (
           <div
-            className="relative flex flex-col gap-1 py-5 cursor-pointer group md:gap-4"
+            className="relative flex flex-col gap-1 py-5 cursor-pointer md:gap-4"
             key={`desktop-${project.id}`}
             id="project-desktop"
+            data-project-index={index}
             onMouseEnter={() => handleMouseEnter(index)}
             onMouseLeave={() => handleMouseLeave(index)}
           >
@@ -273,7 +413,9 @@ export default function Projects() {
 
             {/* Title + Description with Zigzag */}
             <div
-              className={`flex justify-between px-10 text-black-100 transition-all duration-500 md:group-hover:px-12 md:group-hover:text-[#FFE093] flex-row ${
+              className={`flex justify-between transition-all duration-300 flex-row ${
+                isActive ? "md:px-12" : "px-10"
+              } ${
                 index % 2 === 1 ? "md:flex-row-reverse" : "md:flex-row"
               }`}
             >
@@ -284,11 +426,15 @@ export default function Projects() {
                     : "md:items-start"
                 }`}
               >
-                <h2 className="lg:text-4xl text-[26px] font-sans font-bold leading-none">
+                <h2 className={`lg:text-4xl text-[26px] font-sans font-bold leading-none transition-colors duration-300 ${
+                  isActive ? "text-[#FFE093]" : "text-black-100"
+                }`}>
                   {project.name}
                 </h2>
                 {project.description && (
-                  <p className="mt-2 max-w-[60ch] text-xs md:text-sm font-sans font-light leading-relaxed text-black-100/80 transition-colors duration-500 md:group-hover:text-white">
+                  <p className={`mt-2 max-w-[60ch] text-xs md:text-sm font-sans font-light leading-relaxed transition-colors duration-300 ${
+                    isActive ? "text-white" : "text-black-100/80"
+                  }`}>
                     {project.description}
                   </p>
                 )}
@@ -305,7 +451,9 @@ export default function Projects() {
                   icon={
                     index % 2 === 1 ? "uim:arrow-up-left" : "uim:arrow-up-right"
                   }
-                  className="md:size-6"
+                  className={`md:size-6 transition-colors duration-300 ${
+                    isActive ? "text-[#FFE093]" : "text-black-100"
+                  }`}
                 />
               </div>
 
@@ -317,7 +465,9 @@ export default function Projects() {
 
             {/* Frameworks row + Desktop Buttons */}
             <div
-              className={`flex items-center justify-between px-10 transition-all duration-500 md:group-hover:px-12`}
+              className={`flex items-center justify-between transition-all duration-300 ${
+                isActive ? "md:px-12" : "px-10"
+              }`}
             >
               <div
                 className={`flex text-xs font-sans font-light leading-loose uppercase md:text-sm gap-x-5 ${
@@ -327,7 +477,9 @@ export default function Projects() {
                 {project.frameworks.map((framework) => (
                   <p
                     key={framework.id}
-                    className="text-black-100 transition-colors duration-500 md:group-hover:text-white"
+                    className={`transition-colors duration-300 ${
+                      isActive ? "text-white" : "text-black-100"
+                    }`}
                   >
                     {framework.name}
                   </p>
@@ -335,7 +487,9 @@ export default function Projects() {
               </div>
 
               <div
-                className={`hidden md:flex gap-3 opacity-0 group-hover:opacity-100 ${
+                className={`hidden md:flex gap-3 transition-opacity duration-300 ${
+                  isActive ? "opacity-100" : "opacity-0"
+                } ${
                   index % 2 === 1
                     ? "md:order-1 justify-start"
                     : "md:order-2 justify-end"
@@ -394,7 +548,8 @@ export default function Projects() {
               </div>
             )}
           </div>
-        ))}
+          );
+        })}
         <div
           ref={previewRef}
           className="fixed top-0 left-0 z-50 overflow-hidden aspect-video rounded-lg border border-black/20 pointer-events-none w-[360px] lg:w-[400px] hidden md:block opacity-0"
