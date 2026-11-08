@@ -329,6 +329,17 @@ export const experiences: ExperienceItem[] = [
   {
     id: 1,
     year: 2026,
+    title: "Fullstack Developer Intern at Indoprima Group",
+    description: [
+      "Developed Human Resources Information System platforms to streamline operations",
+      "Translated complex manufacturing requirements into scalable digital solutions",
+      "Created realtime machine monitoring platforms to optimize production efficiency",
+    ],
+    image: "/assets/gsa26.webp",
+  },
+  {
+    id: 2,
+    year: 2026,
     title: "Google Student Ambassador 2026",
     description: [
       "Representing Google on campus and fostering a developer community",
@@ -338,7 +349,7 @@ export const experiences: ExperienceItem[] = [
     image: "/assets/gsa26.webp",
   },
   {
-    id: 2,
+    id: 3,
     year: 2025,
     title: "Cohort of Asah by Dicoding",
     description: [
@@ -349,7 +360,7 @@ export const experiences: ExperienceItem[] = [
     image: "/assets/asah.webp",
   },
   {
-    id: 3,
+    id: 4,
     year: 2025,
     title: "Co-Director Creative Media of Google DGOC Unesa",
     description: [
@@ -360,7 +371,7 @@ export const experiences: ExperienceItem[] = [
     image: "/assets/gdgoc.webp",
   },
   {
-    id: 4,
+    id: 5,
     year: 2024,
     title: "Hai.Volunteer Internship Batch 6.0",
     description: [
@@ -371,7 +382,7 @@ export const experiences: ExperienceItem[] = [
     image: "/assets/haivo.webp",
   },
   {
-    id: 5,
+    id: 6,
     year: 2023,
     title: "Director of Catatan Akhir Sekolah 74 SMAN 1 Madiun",
     description: [
