@@ -269,7 +269,7 @@ body {
   transform-origin: center center;
 }
 
-@media (hover: hover) and (pointer: fine) {
+@media (min-width: 1024px) and (hover: hover) and (pointer: fine) {
   body.custom-cursor-active,
   body.custom-cursor-active a,
   body.custom-cursor-active button,

@@ -7,29 +7,44 @@ export default function CustomCursor() {
   const [isHovered, setIsHovered] = useState(false);
   const [isPressed, setIsPressed] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(false);
 
   const dotRef = useRef<HTMLDivElement>(null);
   const planetRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Hanya aktifkan jika device mendukung mouse / hover (Desktop & Laptop)
-    const hasHover = window.matchMedia("(hover: hover)").matches;
-    if (!hasHover) return;
+    // Verifikasi ketat: Hanya aktif di Laptop / Desktop screen (>= 1024px, hover support, fine pointer / mouse / trackpad)
+    // Tablet dan mobile touchscreen otomatis diabaikan
+    const checkEligibility = () => {
+      if (typeof window === "undefined") return false;
+      const isLargeScreen = window.innerWidth >= 1024;
+      const hasFinePointer = window.matchMedia("(pointer: fine)").matches;
+      const hasHover = window.matchMedia("(hover: hover)").matches;
+      return isLargeScreen && hasFinePointer && hasHover;
+    };
+
+    const eligible = checkEligibility();
+    setIsDesktop(eligible);
+
+    if (!eligible) {
+      document.body.classList.remove("custom-cursor-active");
+      return;
+    }
 
     const dot = dotRef.current;
     const planet = planetRef.current;
     if (!dot || !planet) return;
 
-    // Set initial transform anchor point to center (-50%, -50%) di luar layar
+    // Set initial transform anchor point to center (-50%, -50%) jauh di luar layar
     gsap.set([dot, planet], {
       xPercent: -50,
       yPercent: -50,
-      x: -100,
-      y: -100,
+      x: -200,
+      y: -200,
       force3D: true,
     });
 
-    // Aktifkan styling cursor-none di body untuk menggantikan cursor default
+    // Aktifkan styling cursor-none di body untuk desktop
     document.body.classList.add("custom-cursor-active");
 
     // GSAP quickTo untuk orbit planet: 120-144 FPS smooth inertia tanpa lag
@@ -45,6 +60,16 @@ export default function CustomCursor() {
     let hasMoved = false;
 
     const onMouseMove = (e: MouseEvent) => {
+      // Abaikan simulated mouse event dari tap/touch screen
+      if (
+        (e as unknown as { sourceCapabilities?: { firesTouchEvents?: boolean } })
+          ?.sourceCapabilities?.firesTouchEvents
+      ) {
+        return;
+      }
+
+      if (!checkEligibility()) return;
+
       const { clientX, clientY } = e;
 
       // Center dot pointer: instant 0ms response tanpa delay
@@ -67,7 +92,9 @@ export default function CustomCursor() {
     const onMouseDown = () => setIsPressed(true);
     const onMouseUp = () => setIsPressed(false);
 
-    const onMouseEnter = () => setIsVisible(true);
+    const onMouseEnter = () => {
+      if (checkEligibility()) setIsVisible(true);
+    };
     const onMouseLeave = () => setIsVisible(false);
 
     const onMouseOver = (e: MouseEvent) => {
@@ -80,9 +107,21 @@ export default function CustomCursor() {
       setIsHovered(!!interactive);
     };
 
+    const onResize = () => {
+      const isEligibleNow = checkEligibility();
+      setIsDesktop(isEligibleNow);
+      if (!isEligibleNow) {
+        setIsVisible(false);
+        document.body.classList.remove("custom-cursor-active");
+      } else {
+        document.body.classList.add("custom-cursor-active");
+      }
+    };
+
     window.addEventListener("mousemove", onMouseMove, { passive: true });
     window.addEventListener("mousedown", onMouseDown);
     window.addEventListener("mouseup", onMouseUp);
+    window.addEventListener("resize", onResize, { passive: true });
     document.addEventListener("mouseenter", onMouseEnter);
     document.addEventListener("mouseleave", onMouseLeave);
     document.addEventListener("mouseover", onMouseOver, { passive: true });
@@ -92,6 +131,7 @@ export default function CustomCursor() {
       window.removeEventListener("mousemove", onMouseMove);
       window.removeEventListener("mousedown", onMouseDown);
       window.removeEventListener("mouseup", onMouseUp);
+      window.removeEventListener("resize", onResize);
       document.removeEventListener("mouseenter", onMouseEnter);
       document.removeEventListener("mouseleave", onMouseLeave);
       document.removeEventListener("mouseover", onMouseOver);
@@ -100,16 +140,16 @@ export default function CustomCursor() {
 
   return (
     <div
-      className={`fixed inset-0 pointer-events-none z-[999999] transition-opacity duration-200 ${
-        isVisible ? "opacity-100" : "opacity-0"
+      className={`hidden lg:block fixed inset-0 pointer-events-none z-[999999] transition-opacity duration-200 ${
+        isVisible && isDesktop ? "opacity-100" : "opacity-0"
       }`}
-      style={{ display: "contents" }}
       aria-hidden="true"
     >
       {/* ── 1. Planet Body & Saturn Orbital Ring (Smooth Follower) ── */}
       <div
         ref={planetRef}
         className="fixed top-0 left-0 pointer-events-none z-[999998] will-change-transform"
+        style={{ opacity: isVisible && isDesktop ? 1 : 0 }}
       >
         <div
           className={`relative flex items-center justify-center transition-all duration-300 ease-out ${
@@ -178,6 +218,7 @@ export default function CustomCursor() {
       <div
         ref={dotRef}
         className="fixed top-0 left-0 pointer-events-none z-[999999] will-change-transform"
+        style={{ opacity: isVisible && isDesktop ? 1 : 0 }}
       >
         <div
           className={`rounded-full transition-all duration-150 ${

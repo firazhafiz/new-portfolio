@@ -331,7 +331,7 @@ export const experiences: ExperienceItem[] = [
     year: 2026,
     title: "Fullstack Developer Intern at Indoprima Group",
     description: [
-      "Developed Human Resources Information System platforms to streamline operations",
+      "Developed Human Raesources Information System platforms to streamline operations",
       "Translated complex manufacturing requirements into scalable digital solutions",
       "Created realtime machine monitoring platforms to optimize production efficiency",
     ],
